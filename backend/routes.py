@@ -1,19 +1,14 @@
 from fastapi import APIRouter, HTTPException
 from models import StudentQuery, StudentQueryCreate, College, Course
-from motor.motor_asyncio import AsyncIOMotorClient
 from typing import List
-import os
-from datetime import datetime
 import logging
 
 logger = logging.getLogger(__name__)
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
-
 router = APIRouter()
+
+# Get db from server.py via dependency
+from server import db
 
 # Student Query Endpoints
 @router.post("/queries", response_model=dict)
