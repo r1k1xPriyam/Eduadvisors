@@ -46,13 +46,120 @@ export const postgraduateCourses = [
 ];
 
 export const colleges = [
-  "BITS Pilani", "MS Ramaiah", "Manipal University", "SRM University", "LPU",
-  "Aditya University", "VIT", "Chandigarh University", "KIIT University", "SOA University",
-  "Techno India Group", "Brainware University", "Adamas University", "Neotia University",
-  "IEM/UEM", "Swami Vivekananda University", "JIS University",
-  "Haldia Institute of Technology/Pharmacy", "Gurunanak Institute of Technology/Pharmacy",
-  "Narula Institute of Technology", "Heritage Institute of Technology",
-  "United World School of Business"
+  {
+    id: "bits-pilani",
+    name: "BITS Pilani",
+    logo: "https://images.unsplash.com/photo-1562774053-701939374585?w=100&h=100&fit=crop",
+    description: "Birla Institute of Technology and Science (BITS) Pilani is one of India's premier institutions, known for its excellence in engineering, science, and management education.",
+    website: "https://www.bits-pilani.ac.in",
+    nirf_rank: 30,
+    naac_grade: "A",
+    location: "Pilani, Rajasthan",
+    established_year: 1964,
+    specializations: ["Computer Science", "Electronics", "Mechanical", "Chemical", "Pharmacy", "Management"],
+    placement_stats: {
+      average_package: "₹15-18 LPA",
+      highest_package: "₹60 LPA+",
+      placement_rate: "95%"
+    },
+    facilities: ["World-class labs", "Digital library", "Sports complex", "Innovation center", "Hostels"],
+    top_recruiters: ["Google", "Microsoft", "Amazon", "Flipkart", "Goldman Sachs", "Cisco"]
+  },
+  {
+    id: "manipal-university",
+    name: "Manipal University",
+    logo: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=100&h=100&fit=crop",
+    description: "Manipal Academy of Higher Education is a multi-disciplinary institution offering programs in medicine, engineering, management, and allied sciences.",
+    website: "https://manipal.edu",
+    nirf_rank: 45,
+    naac_grade: "A++",
+    location: "Manipal, Karnataka",
+    established_year: 1953,
+    specializations: ["Medicine", "Engineering", "Pharmacy", "Management", "Architecture"],
+    placement_stats: {
+      average_package: "₹8-12 LPA",
+      highest_package: "₹45 LPA",
+      placement_rate: "92%"
+    },
+    facilities: ["Modern hospitals", "Research centers", "International collaborations", "Smart classrooms"],
+    top_recruiters: ["Cognizant", "TCS", "Infosys", "Accenture", "Deloitte", "Ernst & Young"]
+  },
+  {
+    id: "vit",
+    name: "VIT",
+    logo: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=100&h=100&fit=crop",
+    description: "Vellore Institute of Technology is recognized for its academic excellence and high-quality research in engineering and technology.",
+    website: "https://vit.ac.in",
+    nirf_rank: 15,
+    naac_grade: "A++",
+    location: "Vellore, Tamil Nadu",
+    established_year: 1984,
+    specializations: ["Computer Science", "IT", "Electronics", "Mechanical", "Civil", "Biotechnology"],
+    placement_stats: {
+      average_package: "₹9.23 LPA",
+      highest_package: "₹75 LPA",
+      placement_rate: "94%"
+    },
+    facilities: ["State-of-art labs", "Incubation center", "International exchange programs", "Sports facilities"],
+    top_recruiters: ["PayPal", "Cisco", "Amazon", "Morgan Stanley", "DE Shaw", "Qualcomm"]
+  },
+  {
+    id: "srm-university",
+    name: "SRM University",
+    logo: "https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=100&h=100&fit=crop",
+    description: "SRM Institute of Science and Technology is a leading institution with strong industry connections and excellent placement records.",
+    website: "https://www.srmist.edu.in",
+    nirf_rank: 40,
+    naac_grade: "A++",
+    location: "Chennai, Tamil Nadu",
+    established_year: 1985,
+    specializations: ["Engineering", "Management", "Medicine", "Science", "Law"],
+    placement_stats: {
+      average_package: "₹8.5 LPA",
+      highest_package: "₹54 LPA",
+      placement_rate: "90%"
+    },
+    facilities: ["Innovation labs", "Medical college", "International campus", "Entrepreneurship cell"],
+    top_recruiters: ["Cognizant", "Wipro", "TCS", "Tech Mahindra", "L&T", "Ashok Leyland"]
+  },
+  {
+    id: "lpu",
+    name: "LPU",
+    logo: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=100&h=100&fit=crop",
+    description: "Lovely Professional University is India's largest private university with diverse programs and excellent placement support.",
+    website: "https://www.lpu.in",
+    nirf_rank: 55,
+    naac_grade: "A+",
+    location: "Phagwara, Punjab",
+    established_year: 2005,
+    specializations: ["Engineering", "Management", "Design", "Agriculture", "Pharmacy", "Law"],
+    placement_stats: {
+      average_package: "₹6-8 LPA",
+      highest_package: "₹64 LPA",
+      placement_rate: "88%"
+    },
+    facilities: ["Massive campus", "Industry tie-ups", "International collaborations", "Skill development"],
+    top_recruiters: ["Amazon", "Cognizant", "TCS", "Tech Mahindra", "IBM", "Infosys"]
+  },
+  {
+    id: "chandigarh-university",
+    name: "Chandigarh University",
+    logo: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=100&h=100&fit=crop",
+    description: "A fast-growing university known for its modern infrastructure and industry-oriented curriculum.",
+    website: "https://www.cuchd.in",
+    nirf_rank: 85,
+    naac_grade: "A+",
+    location: "Mohali, Punjab",
+    established_year: 2012,
+    specializations: ["Engineering", "Management", "Hotel Management", "Design", "Pharmacy"],
+    placement_stats: {
+      average_package: "₹6.5 LPA",
+      highest_package: "₹50 LPA",
+      placement_rate: "85%"
+    },
+    facilities: ["Modern campus", "Incubation center", "Sports complex", "International programs"],
+    top_recruiters: ["Microsoft", "Oracle", "Wipro", "Capgemini", "Cognizant", "Adobe"]
+  }
 ];
 
 export const whyChooseUs = [
