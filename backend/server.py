@@ -1,7 +1,6 @@
-from fastapi import FastAPI, APIRouter, Request
+from fastapi import FastAPI, APIRouter
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
@@ -9,19 +8,14 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# Import database
+from database import db, client
+
+# Import routes
+from routes import router as api_routes
 
 # Create the main app without a prefix
 app = FastAPI()
-
-# Store db in app state for access in routes
-app.state.db = db
-
-# Import routes after db is initialized
-from routes import create_router
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
@@ -31,8 +25,8 @@ api_router = APIRouter(prefix="/api")
 async def root():
     return {"message": "Edu Advisor API - Welcome!"}
 
-# Include API routes with db access
-api_router.include_router(create_router())
+# Include API routes
+api_router.include_router(api_routes)
 
 # Include the router in the main app
 app.include_router(api_router)
