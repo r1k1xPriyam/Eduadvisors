@@ -65,7 +65,7 @@ async def get_query(query_id: str):
 @router.get("/colleges", response_model=dict)
 async def get_all_colleges():
     try:
-        colleges = await db.colleges.find().to_list(1000)
+        colleges = await db.colleges.find({}, {"_id": 0}).to_list(1000)
         return {
             "success": True,
             "colleges": colleges,
@@ -78,7 +78,7 @@ async def get_all_colleges():
 @router.get("/colleges/{college_id}", response_model=dict)
 async def get_college(college_id: str):
     try:
-        college = await db.colleges.find_one({"id": college_id})
+        college = await db.colleges.find_one({"id": college_id}, {"_id": 0})
         if not college:
             raise HTTPException(status_code=404, detail="College not found")
         
@@ -96,7 +96,7 @@ async def get_college(college_id: str):
 @router.get("/courses", response_model=dict)
 async def get_all_courses():
     try:
-        courses = await db.courses.find().to_list(1000)
+        courses = await db.courses.find({}, {"_id": 0}).to_list(1000)
         return {
             "success": True,
             "courses": courses,
@@ -115,7 +115,7 @@ async def get_course(course_id: str):
                 {"id": course_id},
                 {"name": {"$regex": f"^{course_id}$", "$options": "i"}}
             ]
-        })
+        }, {"_id": 0})
         
         if not course:
             raise HTTPException(status_code=404, detail="Course not found")
