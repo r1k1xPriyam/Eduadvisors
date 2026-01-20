@@ -34,7 +34,7 @@ async def create_query(query_data: StudentQueryCreate):
 @router.get("/queries", response_model=dict)
 async def get_all_queries():
     try:
-        queries = await db.student_queries.find().sort("created_at", -1).to_list(1000)
+        queries = await db.student_queries.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
         return {
             "success": True,
             "queries": queries,
@@ -47,7 +47,7 @@ async def get_all_queries():
 @router.get("/queries/{query_id}", response_model=dict)
 async def get_query(query_id: str):
     try:
-        query = await db.student_queries.find_one({"id": query_id})
+        query = await db.student_queries.find_one({"id": query_id}, {"_id": 0})
         if not query:
             raise HTTPException(status_code=404, detail="Query not found")
         
