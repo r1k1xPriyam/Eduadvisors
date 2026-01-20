@@ -1,9 +1,26 @@
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { testimonials } from '../mockData';
 
 const Testimonials = () => {
+  const [startIndex, setStartIndex] = React.useState(0);
+  const testimonialsPerPage = 3;
+
+  const nextTestimonials = () => {
+    if (startIndex + testimonialsPerPage < testimonials.length) {
+      setStartIndex(startIndex + testimonialsPerPage);
+    }
+  };
+
+  const prevTestimonials = () => {
+    if (startIndex - testimonialsPerPage >= 0) {
+      setStartIndex(startIndex - testimonialsPerPage);
+    }
+  };
+
+  const currentTestimonials = testimonials.slice(startIndex, startIndex + testimonialsPerPage);
+
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
@@ -15,23 +32,46 @@ const Testimonials = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gray-50">
-              <CardContent className="p-8">
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                  ))}
-                </div>
-                <p className="text-gray-700 leading-relaxed mb-6 italic">"{testimonial.text}"</p>
-                <div className="border-t border-gray-200 pt-4">
-                  <p className="font-bold text-gray-900">{testimonial.name}</p>
-                  <p className="text-sm text-gray-600">{testimonial.course}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
+            {currentTestimonials.map((testimonial, index) => (
+              <Card key={startIndex + index} className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gray-50">
+                <CardContent className="p-8">
+                  <div className="flex mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 leading-relaxed mb-6 italic">"{testimonial.text}"</p>
+                  <div className="border-t border-gray-200 pt-4">
+                    <p className="font-bold text-gray-900">{testimonial.name}</p>
+                    <p className="text-sm text-gray-600">{testimonial.course}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Navigation Buttons */}
+          <div className="flex items-center justify-center gap-4 mt-8">
+            <button
+              onClick={prevTestimonials}
+              disabled={startIndex === 0}
+              className="p-3 rounded-full bg-gray-200 hover:bg-yellow-500 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-200 disabled:hover:text-gray-900"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <span className="text-gray-600">
+              {startIndex + 1}-{Math.min(startIndex + testimonialsPerPage, testimonials.length)} of {testimonials.length}
+            </span>
+            <button
+              onClick={nextTestimonials}
+              disabled={startIndex + testimonialsPerPage >= testimonials.length}
+              className="p-3 rounded-full bg-gray-200 hover:bg-yellow-500 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-200 disabled:hover:text-gray-900"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </div>
     </section>
