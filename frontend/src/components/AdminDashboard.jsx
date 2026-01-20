@@ -1,0 +1,407 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table';
+import { Search, Download, Phone, Mail, Calendar, BookOpen, MessageSquare, Filter } from 'lucide-react';
+import axios from 'axios';
+import { toast } from 'sonner';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
+const AdminDashboard = () => {
+  const [queries, setQueries] = useState([]);
+  const [filteredQueries, setFilteredQueries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [selectedQuery, setSelectedQuery] = useState(null);
+
+  useEffect(() => {
+    fetchQueries();
+  }, []);
+
+  useEffect(() => {
+    filterQueries();
+  }, [queries, searchTerm, filterStatus]);
+
+  const fetchQueries = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API}/queries`);
+      if (response.data.success) {
+        setQueries(response.data.queries);
+      }
+    } catch (error) {
+      console.error('Error fetching queries:', error);
+      toast.error('Failed to load queries');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterQueries = () => {
+    let filtered = [...queries];
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (query) =>
+          query.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          query.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          query.phone.includes(searchTerm) ||
+          query.course.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Status filter
+    if (filterStatus !== 'all') {
+      filtered = filtered.filter((query) => query.status === filterStatus);
+    }
+
+    setFilteredQueries(filtered);
+  };
+
+  const exportToCSV = () => {
+    const headers = ['Date', 'Name', 'Phone', 'Email', 'Course', 'Message', 'Status'];
+    const csvData = filteredQueries.map((query) => [
+      new Date(query.created_at).toLocaleDateString(),
+      query.name,
+      query.phone,
+      query.email,
+      query.course,
+      query.message.replace(/,/g, ';'),
+      query.status,
+    ]);
+
+    const csv = [
+      headers.join(','),
+      ...csvData.map((row) => row.map((cell) => `"${cell}"`).join(',')),
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `student-queries-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    toast.success('Queries exported to CSV');
+  };
+
+  const getStatusBadge = (status) => {
+    const statusColors = {
+      new: 'bg-blue-100 text-blue-800',
+      contacted: 'bg-yellow-100 text-yellow-800',
+      closed: 'bg-green-100 text-green-800',
+    };
+    return (
+      <Badge className={statusColors[status] || 'bg-gray-100 text-gray-800'}>
+        {status}
+      </Badge>
+    );
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-IN', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading queries...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+          <p className="text-gray-600">Manage student queries and inquiries</p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid md:grid-cols-4 gap-6 mb-8">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Total Queries</p>
+                  <p className="text-3xl font-bold text-gray-900">{queries.length}</p>
+                </div>
+                <MessageSquare className="h-10 w-10 text-blue-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">New</p>
+                  <p className="text-3xl font-bold text-blue-600">
+                    {queries.filter((q) => q.status === 'new').length}
+                  </p>
+                </div>
+                <Calendar className="h-10 w-10 text-blue-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Contacted</p>
+                  <p className="text-3xl font-bold text-yellow-600">
+                    {queries.filter((q) => q.status === 'contacted').length}
+                  </p>
+                </div>
+                <Phone className="h-10 w-10 text-yellow-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Closed</p>
+                  <p className="text-3xl font-bold text-green-600">
+                    {queries.filter((q) => q.status === 'closed').length}
+                  </p>
+                </div>
+                <BookOpen className="h-10 w-10 text-green-500" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Filters and Actions */}
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="flex-1 w-full md:w-auto">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="Search by name, email, phone, or course..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 w-full md:w-auto">
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                >
+                  <option value="all">All Status</option>
+                  <option value="new">New</option>
+                  <option value="contacted">Contacted</option>
+                  <option value="closed">Closed</option>
+                </select>
+
+                <Button
+                  onClick={exportToCSV}
+                  className="bg-yellow-500 text-gray-900 hover:bg-yellow-600"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export CSV
+                </Button>
+
+                <Button
+                  onClick={fetchQueries}
+                  variant="outline"
+                  className="border-gray-300"
+                >
+                  Refresh
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Queries Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Student Queries ({filteredQueries.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {filteredQueries.length === 0 ? (
+              <div className="text-center py-12">
+                <MessageSquare className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">No queries found</p>
+                <p className="text-gray-400 text-sm mt-2">
+                  {searchTerm || filterStatus !== 'all'
+                    ? 'Try adjusting your filters'
+                    : 'Student queries will appear here'}
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Contact</TableHead>
+                      <TableHead>Course</TableHead>
+                      <TableHead>Message</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredQueries.map((query) => (
+                      <TableRow key={query.id} className="hover:bg-gray-50">
+                        <TableCell className="text-sm text-gray-600">
+                          {formatDate(query.created_at)}
+                        </TableCell>
+                        <TableCell className="font-medium">{query.name}</TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-sm">
+                              <Phone className="h-3 w-3 text-gray-400" />
+                              <a href={`tel:${query.phone}`} className="text-blue-600 hover:underline">
+                                {query.phone}
+                              </a>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <Mail className="h-3 w-3 text-gray-400" />
+                              <a href={`mailto:${query.email}`} className="text-blue-600 hover:underline">
+                                {query.email}
+                              </a>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="bg-yellow-50">
+                            {query.course}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="max-w-xs">
+                          <p className="text-sm text-gray-600 truncate">
+                            {query.message || 'No message'}
+                          </p>
+                        </TableCell>
+                        <TableCell>{getStatusBadge(query.status)}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setSelectedQuery(query)}
+                            className="text-xs"
+                          >
+                            View Details
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Query Detail Modal */}
+        {selectedQuery && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <CardHeader className="border-b">
+                <div className="flex items-center justify-between">
+                  <CardTitle>Query Details</CardTitle>
+                  <button
+                    onClick={() => setSelectedQuery(null)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Name</label>
+                    <p className="text-gray-900 mt-1">{selectedQuery.name}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Status</label>
+                    <div className="mt-1">{getStatusBadge(selectedQuery.status)}</div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Phone</label>
+                    <p className="text-gray-900 mt-1">
+                      <a href={`tel:${selectedQuery.phone}`} className="text-blue-600 hover:underline">
+                        {selectedQuery.phone}
+                      </a>
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Email</label>
+                    <p className="text-gray-900 mt-1">
+                      <a href={`mailto:${selectedQuery.email}`} className="text-blue-600 hover:underline">
+                        {selectedQuery.email}
+                      </a>
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Course Interest</label>
+                    <p className="text-gray-900 mt-1">{selectedQuery.course}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Submitted On</label>
+                    <p className="text-gray-900 mt-1">{formatDate(selectedQuery.created_at)}</p>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700">Message</label>
+                  <p className="text-gray-900 mt-2 bg-gray-50 p-4 rounded-lg">
+                    {selectedQuery.message || 'No message provided'}
+                  </p>
+                </div>
+                <div className="flex gap-3 pt-4 border-t">
+                  <Button
+                    onClick={() => setSelectedQuery(null)}
+                    className="flex-1 bg-yellow-500 text-gray-900 hover:bg-yellow-600"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;
