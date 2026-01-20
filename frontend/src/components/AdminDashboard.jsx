@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
@@ -11,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-import { Search, Download, Phone, Mail, Calendar, BookOpen, MessageSquare, Filter } from 'lucide-react';
+import { Search, Download, Phone, Mail, Calendar, BookOpen, MessageSquare, Filter, LogOut } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -19,12 +20,24 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [queries, setQueries] = useState([]);
   const [filteredQueries, setFilteredQueries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedQuery, setSelectedQuery] = useState(null);
+
+  // Check authentication on component mount
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem('adminAuth');
+    if (!isAuthenticated) {
+      toast.error('Unauthorized Access', {
+        description: 'Please login to access the admin dashboard',
+      });
+      navigate('/admin');
+    }
+  }, [navigate]);
 
   useEffect(() => {
     fetchQueries();
@@ -33,6 +46,14 @@ const AdminDashboard = () => {
   useEffect(() => {
     filterQueries();
   }, [queries, searchTerm, filterStatus]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminAuth');
+    localStorage.removeItem('adminUsername');
+    localStorage.removeItem('adminLoginTime');
+    toast.success('Logged out successfully');
+    navigate('/admin');
+  };
 
   const fetchQueries = async () => {
     try {
