@@ -351,51 +351,86 @@ const AdminDashboard = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredQueries.map((query) => (
-                      <TableRow key={query.id} className="hover:bg-gray-50">
-                        <TableCell className="text-sm text-gray-600">
-                          {formatDate(query.created_at)}
-                        </TableCell>
-                        <TableCell className="font-medium">{query.name}</TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2 text-sm">
-                              <Phone className="h-3 w-3 text-gray-400" />
-                              <a href={`tel:${query.phone}`} className="text-blue-600 hover:underline">
-                                {query.phone}
-                              </a>
+                    {filteredQueries.map((query) => {
+                      const isNew = isNewQuery(query.created_at);
+                      return (
+                        <TableRow 
+                          key={query.id} 
+                          className={`hover:bg-gray-50 ${isNew ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''}`}
+                        >
+                          <TableCell className="text-sm text-gray-600">
+                            <div className="flex items-center gap-2">
+                              {formatDate(query.created_at)}
+                              {isNew && (
+                                <Badge className="bg-blue-500 text-white text-xs">NEW</Badge>
+                              )}
                             </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <Mail className="h-3 w-3 text-gray-400" />
-                              <a href={`mailto:${query.email}`} className="text-blue-600 hover:underline">
-                                {query.email}
-                              </a>
+                          </TableCell>
+                          <TableCell className="font-medium">{query.name}</TableCell>
+                          <TableCell>
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2 text-sm">
+                                <Phone className="h-3 w-3 text-gray-400" />
+                                <a href={`tel:${query.phone}`} className="text-blue-600 hover:underline">
+                                  {query.phone}
+                                </a>
+                              </div>
+                              <div className="flex items-center gap-2 text-sm">
+                                <Mail className="h-3 w-3 text-gray-400" />
+                                <a href={`mailto:${query.email}`} className="text-blue-600 hover:underline">
+                                  {query.email}
+                                </a>
+                              </div>
                             </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="bg-yellow-50">
-                            {query.course}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="max-w-xs">
-                          <p className="text-sm text-gray-600 truncate">
-                            {query.message || 'No message'}
-                          </p>
-                        </TableCell>
-                        <TableCell>{getStatusBadge(query.status)}</TableCell>
-                        <TableCell>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedQuery(query)}
-                            className="text-xs"
-                          >
-                            View Details
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="bg-yellow-50">
+                              {query.course}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="max-w-xs">
+                            <p className="text-sm text-gray-600 truncate">
+                              {query.message || 'No message'}
+                            </p>
+                          </TableCell>
+                          <TableCell>{getStatusBadge(query.status)}</TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setSelectedQuery(query)}
+                                className="text-xs"
+                              >
+                                View
+                              </Button>
+                              {query.status !== 'closed' && (
+                                <>
+                                  {query.status === 'new' && (
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => handleMarkContacted(query.id)}
+                                      className="text-xs bg-yellow-50 border-yellow-300 text-yellow-700 hover:bg-yellow-100"
+                                    >
+                                      Mark Contacted
+                                    </Button>
+                                  )}
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleCloseQuery(query.id)}
+                                    className="text-xs bg-green-50 border-green-300 text-green-700 hover:bg-green-100"
+                                  >
+                                    Close
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>
