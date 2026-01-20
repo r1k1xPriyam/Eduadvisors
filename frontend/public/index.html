@@ -68,6 +68,33 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
         <script>
+            // Remove Emergent badge
+            function removeBadge() {
+                const badge = document.getElementById('emergent-badge');
+                if (badge) {
+                    badge.remove();
+                }
+                // Also remove any links to emergent.sh that are fixed positioned
+                const links = document.querySelectorAll('a[href*="emergent.sh"]');
+                links.forEach(link => {
+                    const style = window.getComputedStyle(link);
+                    if (style.position === 'fixed') {
+                        link.remove();
+                    }
+                });
+            }
+            
+            // Try to remove on load
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', removeBadge);
+            } else {
+                removeBadge();
+            }
+            
+            // Also check periodically for dynamically added badges
+            setInterval(removeBadge, 1000);
+        </script>
+        <script>
             !(function (t, e) {
                 var o, n, p, r;
                 e.__SV ||
