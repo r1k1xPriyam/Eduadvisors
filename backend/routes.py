@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from models import StudentQuery, StudentQueryCreate, College, Course
 from typing import List
 import logging
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
