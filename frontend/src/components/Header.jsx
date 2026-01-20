@@ -113,9 +113,9 @@ const Header = () => {
                 Contact
               </button>
               <div className="pt-3 border-t border-gray-200">
-                <a href="tel:+919332641552" className="flex items-center text-sm text-gray-700 mb-2">
+                <a href="tel:9332641552" className="flex items-center text-sm text-gray-700 mb-2">
                   <Phone className="h-4 w-4 mr-2" />
-                  +91-9332641552
+                  9332641552
                 </a>
                 <a href="mailto:info.eduadvisor26@gmail.com" className="flex items-center text-sm text-gray-700">
                   <Mail className="h-4 w-4 mr-2" />
