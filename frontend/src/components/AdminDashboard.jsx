@@ -495,9 +495,34 @@ const AdminDashboard = () => {
                   </p>
                 </div>
                 <div className="flex gap-3 pt-4 border-t">
+                  {selectedQuery.status !== 'closed' && (
+                    <>
+                      {selectedQuery.status === 'new' && (
+                        <Button
+                          onClick={() => {
+                            handleMarkContacted(selectedQuery.id);
+                            setSelectedQuery(null);
+                          }}
+                          className="bg-yellow-500 text-gray-900 hover:bg-yellow-600"
+                        >
+                          Mark as Contacted
+                        </Button>
+                      )}
+                      <Button
+                        onClick={() => {
+                          handleCloseQuery(selectedQuery.id);
+                          setSelectedQuery(null);
+                        }}
+                        className="bg-green-500 text-white hover:bg-green-600"
+                      >
+                        Close Query
+                      </Button>
+                    </>
+                  )}
                   <Button
                     onClick={() => setSelectedQuery(null)}
-                    className="flex-1 bg-yellow-500 text-gray-900 hover:bg-yellow-600"
+                    variant="outline"
+                    className="flex-1"
                   >
                     Close
                   </Button>
