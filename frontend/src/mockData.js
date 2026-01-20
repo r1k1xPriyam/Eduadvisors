@@ -362,6 +362,42 @@ export const testimonials = [
     course: "MBA, SRM University",
     text: "Transparent process, no hidden charges, and excellent support throughout my admission journey.",
     rating: 5
+  },
+  {
+    name: "Arjun Kumar",
+    course: "B.Tech ECE, BITS Pilani",
+    text: "The team at Edu Advisor guided me through the entire JEE-MAINS preparation and college selection process. Best decision ever!",
+    rating: 5
+  },
+  {
+    name: "Sneha Patel",
+    course: "BCA, Chandigarh University",
+    text: "I was confused about which stream to choose. Their career counselling helped me find the perfect path!",
+    rating: 5
+  },
+  {
+    name: "Karan Singh",
+    course: "B.Pharm, Manipal University",
+    text: "From entrance exam guidance to admission completion - they handled everything professionally. Highly recommend!",
+    rating: 5
+  },
+  {
+    name: "Meera Reddy",
+    course: "BDS, MS Ramaiah",
+    text: "The educational loan assistance and transparent admission process made everything so easy for my family.",
+    rating: 5
+  },
+  {
+    name: "Vikram Joshi",
+    course: "M.Tech CSE, VIT",
+    text: "Their knowledge about different colleges and placement records helped me make an informed decision.",
+    rating: 5
+  },
+  {
+    name: "Pooja Agarwal",
+    course: "BSC Nursing, LPU",
+    text: "Edu Advisor provided complete support from counselling to course registration. Thank you team!",
+    rating: 5
   }
 ];
 
