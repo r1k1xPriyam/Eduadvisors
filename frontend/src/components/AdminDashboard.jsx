@@ -143,6 +143,47 @@ const AdminDashboard = () => {
     });
   };
 
+  const isNewQuery = (dateString) => {
+    const queryDate = new Date(dateString);
+    const now = new Date();
+    const hoursDiff = (now - queryDate) / (1000 * 60 * 60);
+    return hoursDiff < 24; // Query is "new" if less than 24 hours old
+  };
+
+  const handleCloseQuery = async (queryId) => {
+    try {
+      const response = await axios.patch(`${API}/queries/${queryId}/status?status=closed`);
+      if (response.data.success) {
+        toast.success('Query Closed', {
+          description: 'The query has been marked as closed.',
+        });
+        fetchQueries(); // Refresh the list
+      }
+    } catch (error) {
+      console.error('Error closing query:', error);
+      toast.error('Failed to close query', {
+        description: 'Please try again.',
+      });
+    }
+  };
+
+  const handleMarkContacted = async (queryId) => {
+    try {
+      const response = await axios.patch(`${API}/queries/${queryId}/status?status=contacted`);
+      if (response.data.success) {
+        toast.success('Query Updated', {
+          description: 'The query has been marked as contacted.',
+        });
+        fetchQueries(); // Refresh the list
+      }
+    } catch (error) {
+      console.error('Error updating query:', error);
+      toast.error('Failed to update query', {
+        description: 'Please try again.',
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
