@@ -389,7 +389,7 @@ export const faqs = [
 ];
 
 export const contactInfo = {
-  phones: ["+91-9332641552", "9339475845"],
+  phones: ["9332641552", "9382454940"],
   email: "info.eduadvisor26@gmail.com",
   tagline: "Learn Today Earn tomorrow"
 };
