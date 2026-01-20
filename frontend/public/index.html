@@ -56,7 +56,32 @@
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
+        <div id="root">
+            <!-- Loading screen -->
+            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                <div style="text-align: center;">
+                    <div style="font-size: 48px; font-weight: bold; color: #1F2937; letter-spacing: 4px; margin-bottom: 20px; animation: pulse 2s ease-in-out infinite;">
+                        EDUADVISOR
+                    </div>
+                    <div style="font-size: 16px; color: #374151; margin-top: 10px;">
+                        Learn Today Earn Tomorrow
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <div style="width: 50px; height: 50px; border: 5px solid #1F2937; border-top: 5px solid transparent; border-radius: 50%; margin: 0 auto; animation: spin 1s linear infinite;"></div>
+                    </div>
+                </div>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.6; }
+                }
+            </style>
+        </div>
         <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
