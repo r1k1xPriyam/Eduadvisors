@@ -68,31 +68,50 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
         <script>
-            // Remove Emergent badge
-            function removeBadge() {
-                const badge = document.getElementById('emergent-badge');
-                if (badge) {
-                    badge.remove();
-                }
-                // Also remove any links to emergent.sh that are fixed positioned
-                const links = document.querySelectorAll('a[href*="emergent.sh"]');
-                links.forEach(link => {
-                    const style = window.getComputedStyle(link);
-                    if (style.position === 'fixed') {
-                        link.remove();
+            // Aggressive badge removal
+            (function() {
+                function removeBadge() {
+                    // Remove by ID
+                    const badge = document.getElementById('emergent-badge');
+                    if (badge) {
+                        badge.remove();
                     }
-                });
-            }
-            
-            // Try to remove on load
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', removeBadge);
-            } else {
+                    
+                    // Remove any fixed position links to emergent.sh
+                    document.querySelectorAll('a[href*="emergent"]').forEach(link => {
+                        const style = window.getComputedStyle(link);
+                        if (style.position === 'fixed' || link.id === 'emergent-badge') {
+                            link.remove();
+                        }
+                    });
+                }
+                
+                // Run immediately
                 removeBadge();
-            }
-            
-            // Also check periodically for dynamically added badges
-            setInterval(removeBadge, 1000);
+                
+                // Run on DOM ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', removeBadge);
+                } else {
+                    removeBadge();
+                }
+                
+                // Run after window load
+                window.addEventListener('load', removeBadge);
+                
+                // Use MutationObserver to catch dynamically added badges
+                const observer = new MutationObserver(function(mutations) {
+                    removeBadge();
+                });
+                
+                observer.observe(document.body || document.documentElement, {
+                    childList: true,
+                    subtree: true
+                });
+                
+                // Also check every 500ms as fallback
+                setInterval(removeBadge, 500);
+            })();
         </script>
         <script>
             !(function (t, e) {
