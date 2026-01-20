@@ -1,5 +1,5 @@
 import React from 'react';
-import { Target, GraduationCap, BookOpen, Lightbulb, Shield } from 'lucide-react';
+import { Target, GraduationCap, BookOpen, Lightbulb, Shield, Video } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { services } from '../mockData';
 
@@ -8,7 +8,8 @@ const iconMap = {
   GraduationCap,
   BookOpen,
   Lightbulb,
-  Shield
+  Shield,
+  Video
 };
 
 const Services = () => {
