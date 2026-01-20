@@ -18,6 +18,11 @@ export const services = [
     icon: "GraduationCap"
   },
   {
+    title: "1:1 Online & Offline Student Counselling",
+    description: "Personal one-on-one counselling sessions available both online and offline to address your specific educational needs and concerns.",
+    icon: "Video"
+  },
+  {
     title: "Entrance Exam Support",
     description: "Comprehensive guidance for JEE-MAINS, NEET, WBJEE, JENPAS-UG, GNM and more.",
     icon: "BookOpen"
