@@ -5,10 +5,13 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { Phone, Mail, Send } from 'lucide-react';
-import { useToast } from '../hooks/use-toast';
+import { toast } from 'sonner';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Contact = () => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     phone: '+91',
@@ -16,31 +19,42 @@ const Contact = () => {
     course: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    // Mock submission - will be replaced with backend API
-    console.log('Form submitted:', formData);
-    
-    toast({
-      title: "Query Submitted!",
-      description: "We'll contact you soon. Thank you for reaching out!",
-    });
+    try {
+      const response = await axios.post(`${API}/queries`, formData);
+      
+      if (response.data.success) {
+        toast.success('Query Submitted!', {
+          description: response.data.message,
+        });
 
-    // Reset form
-    setFormData({
-      name: '',
-      phone: '+91',
-      email: '',
-      course: '',
-      message: ''
-    });
+        // Reset form
+        setFormData({
+          name: '',
+          phone: '+91',
+          email: '',
+          course: '',
+          message: ''
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting query:', error);
+      toast.error('Submission Failed', {
+        description: 'Unable to submit your query. Please try again or call us directly.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -124,6 +138,7 @@ const Contact = () => {
                     onChange={handleChange}
                     placeholder="Enter your name"
                     className="mt-2 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -138,6 +153,7 @@ const Contact = () => {
                     onChange={handleChange}
                     placeholder="+91XXXXXXXXXX"
                     className="mt-2 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -152,6 +168,7 @@ const Contact = () => {
                     onChange={handleChange}
                     placeholder="your.email@example.com"
                     className="mt-2 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -166,6 +183,7 @@ const Contact = () => {
                     onChange={handleChange}
                     placeholder="e.g., B.Tech CSE, MBBS, MBA"
                     className="mt-2 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -179,15 +197,17 @@ const Contact = () => {
                     placeholder="Tell us about your educational goals..."
                     rows={4}
                     className="mt-2 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 resize-none"
+                    disabled={isSubmitting}
                   />
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 font-semibold text-lg py-6 group"
+                  disabled={isSubmitting}
+                  className="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 font-semibold text-lg py-6 group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Submit Query
-                  <Send className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  {isSubmitting ? 'Submitting...' : 'Submit Query'}
+                  {!isSubmitting && <Send className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
                 </Button>
               </form>
             </CardContent>
