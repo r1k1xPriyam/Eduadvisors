@@ -1,3 +1,5 @@
+import { allCoursesData } from './allCoursesData';
+
 export const heroImages = [
   "https://customer-assets.emergentagent.com/job_7c233dd2-f1b6-43b7-976c-4fdf6cdbe91b/artifacts/2yjqaxce_WhatsApp%20Image%202025-12-25%20at%2011.47.59%20AM%20%281%29.jpeg",
   "https://customer-assets.emergentagent.com/job_7c233dd2-f1b6-43b7-976c-4fdf6cdbe91b/artifacts/3pbtktgr_WhatsApp%20Image%202025-12-25%20at%2011.47.59%20AM%20%282%29.jpeg",
