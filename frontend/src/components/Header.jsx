@@ -69,9 +69,9 @@ const Header = () => {
 
           {/* Contact Info & CTA */}
           <div className="hidden lg:flex items-center space-x-4">
-            <a href="tel:+919332641552" className="flex items-center text-sm text-gray-700 hover:text-yellow-500 transition-colors">
+            <a href="tel:9332641552" className="flex items-center text-sm text-gray-700 hover:text-yellow-500 transition-colors">
               <Phone className="h-4 w-4 mr-1" />
-              +91-9332641552
+              9332641552
             </a>
             <Button
               onClick={() => scrollToSection('contact')}
