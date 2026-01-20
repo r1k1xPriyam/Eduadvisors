@@ -187,12 +187,12 @@ export const coursesData = [
 export const undergraduateCourses = [
   "CSE", "CSE Specialization", "IT", "ECE", "EEE", "B Pharm", "MBBS", "BDS", "BAMS", "BHMS", "BOTT",
   "BPT", "BMLT", "BOPTO", "BSC Nursing", "BCA", "BBA", "BA LLB", "BBA LLB", "BSC LLB",
-  "BSC Agriculture", "B.Tech Agriculture", "BSC Biotech", "B.Tech Biotech", "BHM", "BHA"
+  "BSC Agriculture", "B.Tech Agriculture", "BSC Biotech", "B.Tech Biotech", "BHM", "BHA", "Mechanical", "Civil"
 ];
 
 export const postgraduateCourses = [
-  "M.Tech (CSE, CSE Specialization, IT, ECE, EEE)", "M.Pharm", "MD", "MS", "MDS",
-  "MD/MS in Ayurveda", "M.D in Homeopathy", "MPT", "MLT", "M.Optom", "MSC Nursing",
+  "M.Tech CSE", "M.Tech IT", "M.Tech ECE", "M.Tech EEE", "M.Pharm", "MD", "MS", "MDS",
+  "MD/MS Ayurveda", "M.D Homeopathy", "MPT", "MLT", "M.Optom", "MSC Nursing",
   "MCA", "MBA", "LLM", "MSC Agriculture", "M.Tech Agriculture", "MSC Biotech",
   "MSC in Biotech", "MHIM", "MHA"
 ];
