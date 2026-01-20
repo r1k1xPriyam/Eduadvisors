@@ -61,6 +61,43 @@ async def get_query(query_id: str):
         logger.error(f"Error fetching query: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch query")
 
+# Update query status
+@router.patch("/queries/{query_id}/status", response_model=dict)
+async def update_query_status(query_id: str, status: str):
+    try:
+        # Validate status
+        valid_statuses = ["new", "contacted", "closed"]
+        if status not in valid_statuses:
+            raise HTTPException(status_code=400, detail=f"Invalid status. Must be one of: {valid_statuses}")
+        
+        # Update the query
+        result = await db.student_queries.update_one(
+            {"id": query_id},
+            {
+                "$set": {
+                    "status": status,
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Query not found")
+        
+        logger.info(f"Query {query_id} status updated to {status}")
+        
+        return {
+            "success": True,
+            "message": f"Query status updated to {status}",
+            "query_id": query_id,
+            "new_status": status
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating query status: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update query status")
+
 # College Endpoints
 @router.get("/colleges", response_model=dict)
 async def get_all_colleges():
