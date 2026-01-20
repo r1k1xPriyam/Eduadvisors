@@ -7,8 +7,8 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Get db from server.py via dependency
-from server import db
+# Import db from database module
+from database import db
 
 # Student Query Endpoints
 @router.post("/queries", response_model=dict)
