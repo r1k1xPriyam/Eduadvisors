@@ -390,6 +390,9 @@ const AdminDashboard = () => {
                             </div>
                           </TableCell>
                           <TableCell>
+                            <p className="text-sm text-gray-700 font-medium">{query.current_institution || 'Not provided'}</p>
+                          </TableCell>
+                          <TableCell>
                             <Badge variant="outline" className="bg-yellow-50">
                               {query.course}
                             </Badge>
