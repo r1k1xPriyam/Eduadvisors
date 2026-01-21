@@ -16,6 +16,7 @@ const Contact = () => {
     name: '',
     phone: '+91',
     email: '',
+    current_institution: '',
     course: '',
     message: ''
   });
