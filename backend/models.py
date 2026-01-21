@@ -8,6 +8,7 @@ class StudentQueryCreate(BaseModel):
     name: str
     phone: str
     email: EmailStr
+    current_institution: str
     course: str
     message: Optional[str] = ""
 
@@ -16,6 +17,7 @@ class StudentQuery(BaseModel):
     name: str
     phone: str
     email: str
+    current_institution: str
     course: str
     message: str
     status: str = "new"
