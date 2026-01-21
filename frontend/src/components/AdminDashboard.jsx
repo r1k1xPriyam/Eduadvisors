@@ -489,6 +489,10 @@ const AdminDashboard = () => {
                     </p>
                   </div>
                   <div>
+                    <label className="text-sm font-semibold text-gray-700">Current Institution</label>
+                    <p className="text-gray-900 mt-1">{selectedQuery.current_institution || 'Not provided'}</p>
+                  </div>
+                  <div>
                     <label className="text-sm font-semibold text-gray-700">Course Interest</label>
                     <p className="text-gray-900 mt-1">{selectedQuery.course}</p>
                   </div>
