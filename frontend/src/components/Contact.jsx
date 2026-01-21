@@ -175,6 +175,21 @@ const Contact = () => {
                 </div>
 
                 <div>
+                  <Label htmlFor="current_institution" className="text-gray-900 font-semibold">Current Institution *</Label>
+                  <Input
+                    id="current_institution"
+                    name="current_institution"
+                    type="text"
+                    required
+                    value={formData.current_institution}
+                    onChange={handleChange}
+                    placeholder="e.g., ABC High School, XYZ College"
+                    className="mt-2 border-gray-300 focus:border-yellow-500 focus:ring-yellow-500"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
                   <Label htmlFor="course" className="text-gray-900 font-semibold">Course of Interest *</Label>
                   <Input
                     id="course"
