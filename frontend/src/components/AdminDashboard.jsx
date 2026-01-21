@@ -346,9 +346,10 @@ const AdminDashboard = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Date</TableHead>
+                      <TableHead>Date (IST)</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Contact</TableHead>
+                      <TableHead>Institution</TableHead>
                       <TableHead>Course</TableHead>
                       <TableHead>Message</TableHead>
                       <TableHead>Status</TableHead>
