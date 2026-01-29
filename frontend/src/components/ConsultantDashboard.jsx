@@ -125,6 +125,19 @@ const ConsultantDashboard = () => {
     }
   };
 
+  // Filter reports by selected date
+  useEffect(() => {
+    if (selectedDate) {
+      const filtered = myReports.filter(report => {
+        const reportDate = new Date(report.created_at);
+        return reportDate.toDateString() === selectedDate.toDateString();
+      });
+      setFilteredReports(filtered);
+    } else {
+      setFilteredReports(myReports);
+    }
+  }, [myReports, selectedDate]);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-IN', {
@@ -152,6 +165,10 @@ const ConsultantDashboard = () => {
       const reportDate = new Date(report.created_at);
       return reportDate >= weekAgo;
     }).length;
+  };
+
+  const getFilteredReportsCount = () => {
+    return filteredReports.length;
   };
 
   const handleLogout = () => {
