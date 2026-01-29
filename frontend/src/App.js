@@ -45,6 +45,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          
+          {/* Admin Routes */}
           <Route path="/admin" element={<AdminLogin />} />
           <Route 
             path="/admin/dashboard" 
@@ -52,6 +54,17 @@ function App() {
               <ProtectedRoute>
                 <AdminDashboard />
               </ProtectedRoute>
+            } 
+          />
+          
+          {/* Consultant Routes */}
+          <Route path="/consultant" element={<ConsultantLogin />} />
+          <Route 
+            path="/consultant/dashboard" 
+            element={
+              <ProtectedConsultantRoute>
+                <ConsultantDashboard />
+              </ProtectedConsultantRoute>
             } 
           />
         </Routes>
