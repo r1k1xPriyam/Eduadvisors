@@ -100,6 +100,103 @@ async def update_query_status(query_id: str, status: str):
         logger.error(f"Error updating query status: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to update query status")
 
+# Consultant Authentication
+@router.post("/consultant/login", response_model=dict)
+async def consultant_login(user_id: str, password: str):
+    try:
+        result = verify_consultant(user_id, password)
+        if result["success"]:
+            logger.info(f"Consultant {user_id} logged in successfully")
+            return result
+        else:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during consultant login: {str(e)}")
+        raise HTTPException(status_code=500, detail="Login failed")
+
+# Consultant Report Endpoints
+@router.post("/consultant/reports", response_model=dict)
+async def create_consultant_report(report_data: ConsultantReportCreate, consultant_id: str):
+    try:
+        # Verify consultant
+        consultant_name = get_consultant_name(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+        
+        # Create report
+        report_dict = report_data.dict()
+        report_dict["consultant_id"] = consultant_id
+        report_dict["consultant_name"] = consultant_name
+        report_obj = ConsultantReport(**report_dict)
+        
+        # Insert into database
+        result = await db.consultant_reports.insert_one(report_obj.dict())
+        
+        logger.info(f"Consultant report created by {consultant_name}: {report_obj.id}")
+        
+        return {
+            "success": True,
+            "message": "Report submitted successfully",
+            "report_id": report_obj.id
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating consultant report: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to submit report")
+
+@router.get("/consultant/reports/{consultant_id}", response_model=dict)
+async def get_consultant_reports(consultant_id: str):
+    try:
+        # Verify consultant exists
+        consultant_name = get_consultant_name(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+        
+        # Fetch reports for this consultant only
+        reports = await db.consultant_reports.find(
+            {"consultant_id": consultant_id}, 
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(1000)
+        
+        return {
+            "success": True,
+            "consultant_name": consultant_name,
+            "reports": reports,
+            "count": len(reports)
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching consultant reports: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch reports")
+
+# Admin: Get all consultant reports
+@router.get("/admin/consultant-reports", response_model=dict)
+async def get_all_consultant_reports():
+    try:
+        reports = await db.consultant_reports.find({}, {"_id": 0}).sort("created_at", -1).to_list(10000)
+        
+        # Group by consultant
+        reports_by_consultant = {}
+        for report in reports:
+            consultant_name = report.get("consultant_name", "Unknown")
+            if consultant_name not in reports_by_consultant:
+                reports_by_consultant[consultant_name] = []
+            reports_by_consultant[consultant_name].append(report)
+        
+        return {
+            "success": True,
+            "reports": reports,
+            "reports_by_consultant": reports_by_consultant,
+            "total_count": len(reports)
+        }
+    except Exception as e:
+        logger.error(f"Error fetching all consultant reports: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch consultant reports")
+
 # College Endpoints
 @router.get("/colleges", response_model=dict)
 async def get_all_colleges():
