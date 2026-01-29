@@ -83,7 +83,7 @@ const Courses = () => {
                       >
                         <p className="text-sm font-medium text-gray-700">
                           {course}
-                          {hasDetails && <span className="ml-1 text-yellow-500">\u2192</span>}
+                          {hasDetails && <span className="ml-1 text-yellow-500">→</span>}
                         </p>
                       </div>
                     );

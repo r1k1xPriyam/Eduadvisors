@@ -54,6 +54,32 @@ class CollegeOffering(BaseModel):
     specialization: str
     why_recommended: str
 
+# Consultant Report Models
+class ConsultantReportCreate(BaseModel):
+    student_name: str
+    contact_number: str
+    institution_name: str
+    competitive_exam_preference: str
+    career_interest: str
+    college_interest: Optional[str] = ""
+    interest_scope: str  # ACTIVELY INTERESTED, LESS INTERESTED, RECALLING NEEDED, DROPOUT THIS YEAR, ALREADY COLLEGE SELECTED, NOT INTERESTED
+    other_remarks: Optional[str] = ""
+
+class ConsultantReport(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    consultant_id: str
+    consultant_name: str
+    student_name: str
+    contact_number: str
+    institution_name: str
+    competitive_exam_preference: str
+    career_interest: str
+    college_interest: str
+    interest_scope: str
+    other_remarks: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
 class Course(BaseModel):
     id: str
     name: str
