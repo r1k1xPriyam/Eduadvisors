@@ -20,6 +20,9 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 ### Consultant Portal (`/consultant`)
 - **Unique Logins**: 25 consultants with individual credentials
 - **Daily Report Submission**: Consultants submit student calling reports
+- **My Reports Tab**: Each consultant can view their own submitted reports with date/time (IST)
+- **Report Statistics**: Total reports, Today's count, This Week's count
+- **Report Detail Modal**: View full details of any submitted report
 - **Protected Routes**: Only authenticated consultants can access
 
 ## Tech Stack
@@ -32,11 +35,12 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - `PATCH /api/queries/{query_id}/status` - Update query status
 - `POST /api/consultant/login` - Authenticate consultant
 - `POST /api/consultant/reports` - Submit consultant report
+- `GET /api/consultant/reports/{consultant_id}` - Fetch reports for specific consultant
 - `GET /api/admin/consultant-reports` - Fetch all consultant reports
 
 ## Database Schema
 - **student_queries**: `{name, phone, email, course_of_interest, message, current_institution, status, timestamp}`
-- **consultant_reports**: `{consultant_name, student_name, contact_number, institution_name, interest_scope, ...}`
+- **consultant_reports**: `{consultant_name, consultant_id, student_name, contact_number, institution_name, interest_scope, ...}`
 
 ---
 
@@ -47,8 +51,13 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - Landing page with all sections
 - Student query submission system
 - Admin dashboard with login
-- Consultant portal with 25 unique logins
+- Consultant portal with 25 unique logins (+ SOYALI_EDU added)
 - Daily report submission for consultants
+- **NEW: "My Reports" tab for consultants** - Each consultant can view their own reports with:
+  - Stats cards (Total, Today, This Week)
+  - Reports table with Date/Time (IST), Student Name, Contact, Institution, Interest Scope
+  - View button to see full report details in modal
+  - Refresh button to reload reports
 - Admin view of consultant reports (grouped by consultant)
 - Route protection for admin and consultant dashboards
 - IST timestamp formatting
@@ -70,9 +79,10 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - User ID: `ADMIN`
 - Password: `Eduadvisors@2026`
 
-### Consultants (Sample)
+### Consultants (25 total)
 - PRIYAMPATRA / Priyam123!@#
 - AK007 / 7001377649
 - NILKANTHA / nil12345
 - SWARAJ_EDU / Swaraj@5533
+- SOYALI_EDU / Soyali2026@ (newly added)
 - (See `/app/backend/consultants.py` for full list)
