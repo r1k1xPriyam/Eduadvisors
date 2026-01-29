@@ -49,11 +49,51 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchQueries();
+    fetchConsultantReports();
   }, []);
 
   useEffect(() => {
     filterQueries();
   }, [queries, searchTerm, filterStatus]);
+
+  useEffect(() => {
+    filterReports();
+  }, [consultantReports, reportSearchTerm, selectedConsultant]);
+
+  const fetchConsultantReports = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/consultant-reports`);
+      if (response.data.success) {
+        setConsultantReports(response.data.reports);
+        setReportsByConsultant(response.data.reports_by_consultant);
+      }
+    } catch (error) {
+      console.error('Error fetching consultant reports:', error);
+      toast.error('Failed to load consultant reports');
+    }
+  };
+
+  const filterReports = () => {
+    let filtered = [...consultantReports];
+
+    // Filter by consultant
+    if (selectedConsultant !== 'all') {
+      filtered = filtered.filter(report => report.consultant_name === selectedConsultant);
+    }
+
+    // Search filter
+    if (reportSearchTerm) {
+      filtered = filtered.filter(
+        (report) =>
+          report.student_name.toLowerCase().includes(reportSearchTerm.toLowerCase()) ||
+          report.contact_number.includes(reportSearchTerm) ||
+          report.institution_name.toLowerCase().includes(reportSearchTerm.toLowerCase()) ||
+          report.consultant_name.toLowerCase().includes(reportSearchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredReports(filtered);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('adminAuth');
