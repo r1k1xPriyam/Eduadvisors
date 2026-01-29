@@ -13,9 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-import { Search, Download, Phone, Mail, Calendar, BookOpen, MessageSquare, Filter, LogOut, Users, FileText } from 'lucide-react';
+import { Calendar } from './ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, MessageSquare, Filter, LogOut, Users, FileText, X } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { format } from 'date-fns';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -35,6 +38,8 @@ const AdminDashboard = () => {
   const [selectedQuery, setSelectedQuery] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
   const [selectedConsultant, setSelectedConsultant] = useState('all');
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   // Check authentication on component mount
   useEffect(() => {
