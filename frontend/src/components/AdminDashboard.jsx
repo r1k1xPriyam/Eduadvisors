@@ -141,12 +141,13 @@ const AdminDashboard = () => {
   };
 
   const exportToCSV = () => {
-    const headers = ['Date', 'Name', 'Phone', 'Email', 'Course', 'Message', 'Status'];
+    const headers = ['Date', 'Name', 'Phone', 'Email', 'Institution', 'Course', 'Message', 'Status'];
     const csvData = filteredQueries.map((query) => [
       new Date(query.created_at).toLocaleDateString(),
       query.name,
       query.phone,
       query.email,
+      query.current_institution || '',
       query.course,
       query.message.replace(/,/g, ';'),
       query.status,
@@ -165,6 +166,36 @@ const AdminDashboard = () => {
     a.click();
     window.URL.revokeObjectURL(url);
     toast.success('Queries exported to CSV');
+  };
+
+  const exportConsultantReportsToCSV = () => {
+    const headers = ['Date (IST)', 'Consultant', 'Student Name', 'Contact', 'Institution', 'Exam Preference', 'Career Interest', 'College Interest', 'Interest Scope', 'Remarks'];
+    const csvData = filteredReports.map((report) => [
+      formatDate(report.created_at),
+      report.consultant_name,
+      report.student_name,
+      report.contact_number,
+      report.institution_name,
+      report.competitive_exam_preference,
+      report.career_interest,
+      report.college_interest || '',
+      report.interest_scope,
+      (report.other_remarks || '').replace(/,/g, ';'),
+    ]);
+
+    const csv = [
+      headers.join(','),
+      ...csvData.map((row) => row.map((cell) => `"${cell}"`).join(',')),
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `consultant-reports-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    toast.success('Consultant reports exported to CSV');
   };
 
   const getStatusBadge = (status) => {
