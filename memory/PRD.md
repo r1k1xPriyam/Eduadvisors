@@ -9,6 +9,7 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - **Landing Page**: Multi-section page with Hero, About, Services, Courses, Colleges, Testimonials, FAQ, and Contact sections
 - **Course/College Modals**: Clickable courses and colleges showing detailed information
 - **Contact Form**: Students can submit queries which are saved to the database
+- **New Logo**: Circular logo with graduation cap, "Edu" in yellow, "Advisor" in dark gray, orange accents, tagline "Learn Today Earn Tomorrow"
 
 ### Admin Dashboard (`/admin`)
 - **Secure Login**: ID: `ADMIN`, Password: `Eduadvisors@2026`
@@ -53,22 +54,26 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - Admin dashboard with login
 - Consultant portal with 25 unique logins (+ SOYALI_EDU added)
 - Daily report submission for consultants
-- **NEW: "My Reports" tab for consultants** - Each consultant can view their own reports with:
-  - Stats cards (Total, Today, This Week)
-  - Reports table with Date/Time (IST), Student Name, Contact, Institution, Interest Scope
-  - View button to see full report details in modal
-  - Refresh button to reload reports
+- "My Reports" tab for consultants - Each consultant can view their own reports
 - Admin view of consultant reports (grouped by consultant)
 - Route protection for admin and consultant dashboards
 - IST timestamp formatting
 - CSV export functionality
 - "Made with Emergent" watermark removed
 - Loader text changed to "EDUADVISOR"
+- **NEW: Updated Logo** - New circular logo with graduation cap across all pages (Header, Footer, Admin Login, Consultant Login)
+- **NEW: Postgraduate Course Details** - Added comprehensive details for 19 postgraduate courses including:
+  - M.Tech IT, M.Tech ECE, M.Tech EEE
+  - MD, MS, MDS
+  - MD/MS Ayurveda, M.D Homeopathy
+  - MPT, MLT, M.Optom, MSC Nursing
+  - LLM, MSC Agriculture, M.Tech Agriculture
+  - MSC Biotech, MHIM, MHA
 
 ### 🔄 Pending/Backlog
-- **P3**: Logo Update - Convert user's PDF logo to web format and implement
 - **Future**: JWT-based authentication (currently using localStorage)
 - **Future**: Move consultant credentials from hardcoded file to database
+- **Future**: Add pagination for large datasets
 
 ---
 
