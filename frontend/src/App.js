@@ -13,7 +13,10 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
+import ConsultantLogin from './components/ConsultantLogin';
+import ConsultantDashboard from './components/ConsultantDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedConsultantRoute from './components/ProtectedConsultantRoute';
 import { Toaster } from './components/ui/sonner';
 
 const Home = () => {
