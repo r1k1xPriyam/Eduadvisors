@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from models import StudentQuery, StudentQueryCreate, College, Course
+from models import StudentQuery, StudentQueryCreate, College, Course, ConsultantReport, ConsultantReportCreate
 from typing import List
 import logging
 from datetime import datetime
+from consultants import verify_consultant, get_consultant_name
 
 logger = logging.getLogger(__name__)
 
