@@ -94,6 +94,59 @@ const ConsultantDashboard = () => {
     }
   }, [navigate]);
 
+  // Fetch reports when tab changes to 'reports' or when consultantId is set
+  useEffect(() => {
+    if (consultantId && activeTab === 'reports') {
+      fetchMyReports();
+    }
+  }, [consultantId, activeTab]);
+
+  const fetchMyReports = async () => {
+    if (!consultantId) return;
+    
+    setLoadingReports(true);
+    try {
+      const response = await axios.get(`${API}/consultant/reports/${consultantId}`);
+      if (response.data.success) {
+        setMyReports(response.data.reports);
+      }
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+      toast.error('Failed to load reports');
+    } finally {
+      setLoadingReports(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-IN', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Asia/Kolkata'
+    });
+  };
+
+  const getTodayReportsCount = () => {
+    const today = new Date().toDateString();
+    return myReports.filter(report => {
+      const reportDate = new Date(report.created_at).toDateString();
+      return reportDate === today;
+    }).length;
+  };
+
+  const getThisWeekReportsCount = () => {
+    const now = new Date();
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    return myReports.filter(report => {
+      const reportDate = new Date(report.created_at);
+      return reportDate >= weekAgo;
+    }).length;
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('consultantAuth');
     localStorage.removeItem('consultantName');
