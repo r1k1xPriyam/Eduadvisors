@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import {
   Table,
   TableBody,
@@ -12,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
-import { Search, Download, Phone, Mail, Calendar, BookOpen, MessageSquare, Filter, LogOut } from 'lucide-react';
+import { Search, Download, Phone, Mail, Calendar, BookOpen, MessageSquare, Filter, LogOut, Users, FileText } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -21,12 +22,19 @@ const API = `${BACKEND_URL}/api`;
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('queries');
   const [queries, setQueries] = useState([]);
   const [filteredQueries, setFilteredQueries] = useState([]);
+  const [consultantReports, setConsultantReports] = useState([]);
+  const [filteredReports, setFilteredReports] = useState([]);
+  const [reportsByConsultant, setReportsByConsultant] = useState({});
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [reportSearchTerm, setReportSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedQuery, setSelectedQuery] = useState(null);
+  const [selectedReport, setSelectedReport] = useState(null);
+  const [selectedConsultant, setSelectedConsultant] = useState('all');
 
   // Check authentication on component mount
   useEffect(() => {
