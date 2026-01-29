@@ -23,7 +23,8 @@ CONSULTANTS = {
     "BRISTI_EDU": {"name": "BRISTI PRADHAN", "password": "Bri.sti2026"},
     "PREYASI_EDU": {"name": "PREYASI JANA", "password": "Preya.si@2026"},
     "ARNAB_EDU": {"name": "ARNAB MANDAL", "password": "Ar.nab@2026"},
-    "AYAN_EDU": {"name": "AYAN MANDAL", "password": "Ayan@2026"}
+    "AYAN_EDU": {"name": "AYAN MANDAL", "password": "Ayan@2026"},
+    "SOYALI_EDU": {"name": "SOYALI NANDA", "password": "Soyali2026@"}
 }
 
 def verify_consultant(user_id: str, password: str):
