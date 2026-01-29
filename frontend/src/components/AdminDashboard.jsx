@@ -318,9 +318,8 @@ const AdminDashboard = () => {
           </TabsList>
 
           {/* Student Queries Tab */}
-          <TabsContent value="queries">{/* Existing student queries content will go here */}
-
-        {/* Stats Cards */}
+          <TabsContent value="queries">
+            {/* Stats Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardContent className="p-6">
