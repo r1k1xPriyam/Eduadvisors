@@ -355,7 +355,7 @@ const AdminDashboard = () => {
                     {queries.filter((q) => q.status === 'new').length}
                   </p>
                 </div>
-                <Calendar className="h-10 w-10 text-blue-500" />
+                <MessageSquare className="h-10 w-10 text-blue-500" />
               </div>
             </CardContent>
           </Card>
