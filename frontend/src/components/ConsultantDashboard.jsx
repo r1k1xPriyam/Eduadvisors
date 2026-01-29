@@ -529,18 +529,65 @@ const ConsultantDashboard = () => {
               </Card>
             </div>
 
-            {/* Refresh Button */}
-            <div className="flex justify-end mb-4">
-              <Button
-                onClick={fetchMyReports}
-                variant="outline"
-                disabled={loadingReports}
-                className="border-gray-300"
-              >
-                <RefreshCw className={`h-4 w-4 mr-2 ${loadingReports ? 'animate-spin' : ''}`} />
-                Refresh
-              </Button>
-            </div>
+            {/* Date Filter and Refresh */}
+            <Card className="mb-4">
+              <CardContent className="p-4">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={`min-w-[180px] justify-start text-left font-normal ${!selectedDate && 'text-muted-foreground'}`}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {selectedDate ? format(selectedDate, 'dd MMM yyyy') : 'Filter by Date'}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => {
+                            setSelectedDate(date);
+                            setIsCalendarOpen(false);
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+
+                    {selectedDate && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedDate(null)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <X className="h-4 w-4 mr-1" />
+                        Clear
+                      </Button>
+                    )}
+
+                    {selectedDate && (
+                      <Badge className="bg-blue-100 text-blue-800">
+                        Showing {getFilteredReportsCount()} report(s) for {format(selectedDate, 'dd MMM yyyy')}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <Button
+                    onClick={fetchMyReports}
+                    variant="outline"
+                    disabled={loadingReports}
+                    className="border-gray-300"
+                  >
+                    <RefreshCw className={`h-4 w-4 mr-2 ${loadingReports ? 'animate-spin' : ''}`} />
+                    Refresh
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Reports Table */}
             <Card>
@@ -554,18 +601,33 @@ const ConsultantDashboard = () => {
                     <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                     <p className="ml-3 text-gray-600">Loading reports...</p>
                   </div>
-                ) : myReports.length === 0 ? (
+                ) : filteredReports.length === 0 ? (
                   <div className="text-center py-12">
                     <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500 text-lg">No reports submitted yet</p>
-                    <p className="text-gray-400 text-sm mt-2">Start submitting your daily reports!</p>
-                    <Button
-                      onClick={() => setActiveTab('submit')}
-                      className="mt-4 bg-green-500 hover:bg-green-600"
-                    >
-                      <PlusCircle className="h-4 w-4 mr-2" />
-                      Submit First Report
-                    </Button>
+                    <p className="text-gray-500 text-lg">
+                      {selectedDate ? `No reports found for ${format(selectedDate, 'dd MMM yyyy')}` : 'No reports submitted yet'}
+                    </p>
+                    <p className="text-gray-400 text-sm mt-2">
+                      {selectedDate ? 'Try selecting a different date' : 'Start submitting your daily reports!'}
+                    </p>
+                    {!selectedDate && (
+                      <Button
+                        onClick={() => setActiveTab('submit')}
+                        className="mt-4 bg-green-500 hover:bg-green-600"
+                      >
+                        <PlusCircle className="h-4 w-4 mr-2" />
+                        Submit First Report
+                      </Button>
+                    )}
+                    {selectedDate && (
+                      <Button
+                        onClick={() => setSelectedDate(null)}
+                        variant="outline"
+                        className="mt-4"
+                      >
+                        Clear Date Filter
+                      </Button>
+                    )}
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
@@ -581,11 +643,11 @@ const ConsultantDashboard = () => {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {myReports.map((report, index) => (
+                        {filteredReports.map((report, index) => (
                           <TableRow key={report.id || index} className="hover:bg-gray-50">
                             <TableCell className="text-sm">
                               <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-gray-400" />
+                                <CalendarIcon className="h-4 w-4 text-gray-400" />
                                 {formatDate(report.created_at)}
                               </div>
                             </TableCell>
