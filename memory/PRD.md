@@ -15,6 +15,8 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - **Secure Login**: ID: `ADMIN`, Password: `Eduadvisors@2026`
 - **Student Queries Management**: View, search, filter, and update query status (New → Contacted → Closed)
 - **Consultant Reports**: View all daily reports submitted by consultants, grouped by consultant name
+- **Calendar Date Filter**: Filter reports by specific date with active filter badges
+- **Consultant Filter**: Filter by consultant name
 - **Export to CSV**: Export queries and reports
 - **IST Timestamps**: All times displayed in Indian Standard Time
 
@@ -22,6 +24,7 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - **Unique Logins**: 25 consultants with individual credentials
 - **Daily Report Submission**: Consultants submit student calling reports
 - **My Reports Tab**: Each consultant can view their own submitted reports with date/time (IST)
+- **Calendar Date Filter**: Filter own reports by specific date
 - **Report Statistics**: Total reports, Today's count, This Week's count
 - **Report Detail Modal**: View full details of any submitted report
 - **Protected Routes**: Only authenticated consultants can access
