@@ -63,7 +63,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     filterReports();
-  }, [consultantReports, reportSearchTerm, selectedConsultant]);
+  }, [consultantReports, reportSearchTerm, selectedConsultant, selectedDate]);
 
   const fetchConsultantReports = async () => {
     try {
@@ -84,6 +84,14 @@ const AdminDashboard = () => {
     // Filter by consultant
     if (selectedConsultant !== 'all') {
       filtered = filtered.filter(report => report.consultant_name === selectedConsultant);
+    }
+
+    // Filter by date
+    if (selectedDate) {
+      filtered = filtered.filter(report => {
+        const reportDate = new Date(report.created_at);
+        return reportDate.toDateString() === selectedDate.toDateString();
+      });
     }
 
     // Search filter
