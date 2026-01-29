@@ -63,7 +63,7 @@ const ConsultantLogin = () => {
       <div className="absolute top-8 left-8">
         <div className="flex items-center space-x-3">
           <img
-            src="https://customer-assets.emergentagent.com/job_7c233dd2-f1b6-43b7-976c-4fdf6cdbe91b/artifacts/ubi8mta4_WhatsApp%20Image%202025-12-25%20at%2011.47.59%20AM.jpeg"
+            src="https://static.prod-images.emergentagent.com/jobs/9e72d044-fd83-4308-bd70-6417dfaebaf8/images/725422b1dccb8b76f317695455f20615e13ed5e74c2344282911621b3474b267.png"
             alt="Edu Advisor Logo"
             className="h-12 w-12 object-contain"
           />
