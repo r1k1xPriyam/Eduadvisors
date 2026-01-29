@@ -61,6 +61,10 @@ const ConsultantDashboard = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSubmitTime, setLastSubmitTime] = useState(null);
   const [canSubmit, setCanSubmit] = useState(true);
+  const [activeTab, setActiveTab] = useState('submit');
+  const [myReports, setMyReports] = useState([]);
+  const [loadingReports, setLoadingReports] = useState(false);
+  const [selectedReport, setSelectedReport] = useState(null);
   
   const [formData, setFormData] = useState({
     student_name: '',
