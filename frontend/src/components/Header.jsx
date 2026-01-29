@@ -132,10 +132,26 @@ const Header = () => {
                   <Phone className="h-4 w-4 mr-2" />
                   9332641552
                 </a>
-                <a href="mailto:info.eduadvisor26@gmail.com" className="flex items-center text-sm text-gray-700">
+                <a href="mailto:info.eduadvisor26@gmail.com" className="flex items-center text-sm text-gray-700 mb-3">
                   <Mail className="h-4 w-4 mr-2" />
                   info.eduadvisor26@gmail.com
                 </a>
+                <div className="flex gap-3 pt-3 border-t border-gray-200">
+                  <Link
+                    to="/admin"
+                    className="flex items-center text-sm text-gray-600 hover:text-yellow-500 transition-colors bg-gray-100 px-3 py-2 rounded-md"
+                  >
+                    <Lock className="h-4 w-4 mr-1" />
+                    Admin Login
+                  </Link>
+                  <Link
+                    to="/consultant"
+                    className="flex items-center text-sm text-gray-600 hover:text-yellow-500 transition-colors bg-gray-100 px-3 py-2 rounded-md"
+                  >
+                    <Users className="h-4 w-4 mr-1" />
+                    Consultant Login
+                  </Link>
+                </div>
               </div>
             </nav>
           </div>
