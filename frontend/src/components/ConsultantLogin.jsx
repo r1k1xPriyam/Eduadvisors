@@ -1,0 +1,177 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { Label } from './ui/label';
+import { Lock, User, Eye, EyeOff, UserCheck } from 'lucide-react';
+import { toast } from 'sonner';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+
+const ConsultantLogin = () => {
+  const navigate = useNavigate();
+  const [credentials, setCredentials] = useState({
+    user_id: '',
+    password: ''
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${API}/consultant/login?user_id=${credentials.user_id}&password=${encodeURIComponent(credentials.password)}`
+      );
+      
+      if (response.data.success) {
+        // Store authentication
+        localStorage.setItem('consultantAuth', 'true');
+        localStorage.setItem('consultantId', response.data.consultant_id);
+        localStorage.setItem('consultantName', response.data.consultant_name);
+        localStorage.setItem('consultantLoginTime', new Date().toISOString());
+        
+        toast.success('Login Successful!', {
+          description: `Welcome ${response.data.consultant_name}`,
+        });
+        
+        // Navigate to consultant dashboard
+        navigate('/consultant/dashboard');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('Login Failed', {
+        description: error.response?.data?.detail || 'Invalid User ID or Password',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-blue-50">
+      <div className="absolute top-8 left-8">
+        <div className="flex items-center space-x-3">
+          <img
+            src="https://customer-assets.emergentagent.com/job_7c233dd2-f1b6-43b7-976c-4fdf6cdbe91b/artifacts/ubi8mta4_WhatsApp%20Image%202025-12-25%20at%2011.47.59%20AM.jpeg"
+            alt="Edu Advisor Logo"
+            className="h-12 w-12 object-contain"
+          />
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Edu <span className="text-yellow-500">Advisor</span>
+            </h1>
+            <p className="text-xs text-gray-600">Consultant Portal</p>
+          </div>
+        </div>
+      </div>
+
+      <Card className="w-full max-w-md shadow-2xl border-2 border-gray-200">
+        <CardHeader className="text-center pb-8 pt-8 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-t-lg">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <UserCheck className="h-10 w-10 text-green-500" />
+          </div>
+          <CardTitle className="text-2xl font-bold">Consultant Portal</CardTitle>
+          <p className="text-green-100 text-sm mt-2">Daily Reporting System</p>
+        </CardHeader>
+        <CardContent className="p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="user_id" className="text-gray-900 font-semibold flex items-center gap-2">
+                <User className="h-4 w-4 text-green-500" />
+                User ID
+              </Label>
+              <Input
+                id="user_id"
+                name="user_id"
+                type="text"
+                required
+                value={credentials.user_id}
+                onChange={handleChange}
+                placeholder="Enter your User ID"
+                className="border-gray-300 focus:border-green-500 focus:ring-green-500"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-gray-900 font-semibold flex items-center gap-2">
+                <Lock className="h-4 w-4 text-green-500" />
+                Password
+              </Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={credentials.password}
+                  onChange={handleChange}
+                  placeholder="Enter password"
+                  className="border-gray-300 focus:border-green-500 focus:ring-green-500 pr-10"
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-green-500 text-white hover:bg-green-600 font-semibold text-lg py-6 disabled:opacity-50"
+            >
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Authenticating...
+                </div>
+              ) : (
+                'Login to Dashboard'
+              )}
+            </Button>
+          </form>
+
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-xs text-blue-800 text-center">
+                <Lock className="h-3 w-3 inline mr-1" />
+                For Authorized Consultants Only
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => navigate('/')}
+              className="text-sm text-gray-600 hover:text-green-500 transition-colors"
+            >
+              ← Back to Website
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="absolute bottom-4 text-center w-full">
+        <p className="text-sm text-gray-500">© 2026 Edu Advisor. All rights reserved.</p>
+      </div>
+    </div>
+  );
+};
+
+export default ConsultantLogin;
