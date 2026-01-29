@@ -740,7 +740,7 @@ const AdminDashboard = () => {
                       <option value="all">All Consultants</option>
                       {Object.keys(reportsByConsultant).map((consultant) => (
                         <option key={consultant} value={consultant}>
-                          {consultant} ({reportsByConsultant[consultant]})
+                          {consultant} ({reportsByConsultant[consultant].length})
                         </option>
                       ))}
                     </select>
