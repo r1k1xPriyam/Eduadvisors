@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Phone, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Menu, X, Phone, Mail, Lock, Users } from 'lucide-react';
 import { Button } from './ui/button';
 
 const Header = () => {
