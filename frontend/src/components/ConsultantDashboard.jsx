@@ -15,6 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table';
+import { Calendar } from './ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { 
   LogOut, 
   User, 
@@ -28,12 +30,14 @@ import {
   Clock,
   PlusCircle,
   History,
-  Calendar,
+  Calendar as CalendarIcon,
   Eye,
-  RefreshCw
+  RefreshCw,
+  X
 } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
+import { format } from 'date-fns';
 import {
   Select,
   SelectContent,
