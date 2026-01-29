@@ -778,5 +778,474 @@ export const allCoursesData = [
         why_recommended: "Comprehensive clinical training with hospital exposure."
       }
     ]
+  },
+  // Additional Postgraduate Courses
+  {
+    id: "mtech-it",
+    name: "M.Tech IT",
+    full_name: "Master of Technology in Information Technology",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "M.Tech IT focuses on advanced concepts in information systems, network security, cloud computing, and enterprise architecture.",
+    career_prospects: ["IT Architect", "Senior Systems Analyst", "Cloud Solutions Architect", "IT Security Consultant", "Technical Lead"],
+    why_choose: "Advanced technical expertise leads to leadership roles in IT. Average package: ₹8-15 LPA with excellent growth prospects.",
+    colleges_offering: [
+      {
+        college_name: "VIT",
+        average_placement: "₹12 LPA",
+        top_companies: ["Cisco", "IBM", "Accenture"],
+        specialization: "Cloud & Network Security",
+        why_recommended: "Industry-aligned curriculum with focus on emerging technologies."
+      },
+      {
+        college_name: "BITS Pilani",
+        average_placement: "₹14 LPA",
+        top_companies: ["Amazon Web Services", "Microsoft", "Google Cloud"],
+        specialization: "Enterprise Systems",
+        why_recommended: "Research-focused with strong industry partnerships."
+      }
+    ]
+  },
+  {
+    id: "mtech-ece",
+    name: "M.Tech ECE",
+    full_name: "Master of Technology in Electronics and Communication",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "M.Tech ECE provides advanced knowledge in VLSI design, embedded systems, signal processing, and wireless communications.",
+    career_prospects: ["VLSI Design Engineer", "Embedded Systems Architect", "RF Engineer", "Research Scientist", "Technical Manager"],
+    why_choose: "Specialized skills in high-demand areas like semiconductor design. Average package: ₹10-18 LPA.",
+    colleges_offering: [
+      {
+        college_name: "BITS Pilani",
+        average_placement: "₹16 LPA",
+        top_companies: ["Qualcomm", "Intel", "Samsung"],
+        specialization: "VLSI & Embedded Systems",
+        why_recommended: "Excellent research facilities and industry collaborations."
+      },
+      {
+        college_name: "VIT",
+        average_placement: "₹12 LPA",
+        top_companies: ["Texas Instruments", "Broadcom", "MediaTek"],
+        specialization: "Signal Processing",
+        why_recommended: "State-of-the-art labs with practical training focus."
+      }
+    ]
+  },
+  {
+    id: "mtech-eee",
+    name: "M.Tech EEE",
+    full_name: "Master of Technology in Electrical and Electronics",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "M.Tech EEE covers advanced power systems, renewable energy, control systems, and electrical machines.",
+    career_prospects: ["Power Systems Engineer", "Renewable Energy Specialist", "Control Systems Engineer", "Technical Consultant"],
+    why_choose: "Critical role in power sector modernization and green energy. Average package: ₹8-14 LPA.",
+    colleges_offering: [
+      {
+        college_name: "BITS Pilani",
+        average_placement: "₹13 LPA",
+        top_companies: ["Siemens", "ABB", "Schneider Electric"],
+        specialization: "Power Systems & Renewable Energy",
+        why_recommended: "Strong research in sustainable energy solutions."
+      },
+      {
+        college_name: "Manipal University",
+        average_placement: "₹10 LPA",
+        top_companies: ["L&T", "BHEL", "Tata Power"],
+        specialization: "Industrial Automation",
+        why_recommended: "Industry-oriented curriculum with practical exposure."
+      }
+    ]
+  },
+  {
+    id: "md",
+    name: "MD",
+    full_name: "Doctor of Medicine",
+    type: "postgraduate",
+    duration: "3 Years",
+    description: "MD is the highest postgraduate medical degree focusing on specialized medical practice in areas like internal medicine, pediatrics, psychiatry, and more.",
+    career_prospects: ["Specialist Doctor", "Medical Consultant", "Hospital Administrator", "Medical Professor", "Researcher"],
+    why_choose: "Prestigious medical specialization with excellent earning potential. Average package: ₹15-30 LPA in private practice.",
+    colleges_offering: [
+      {
+        college_name: "Manipal University",
+        average_placement: "₹20 LPA",
+        top_companies: ["Apollo Hospitals", "Fortis", "Max Healthcare"],
+        specialization: "Various Medical Specialties",
+        why_recommended: "Top-tier medical education with excellent clinical exposure."
+      },
+      {
+        college_name: "CMC Vellore",
+        average_placement: "₹18 LPA",
+        top_companies: ["AIIMS", "Government Hospitals", "Private Hospitals"],
+        specialization: "General Medicine & Specialties",
+        why_recommended: "Renowned for quality medical education and patient care."
+      }
+    ]
+  },
+  {
+    id: "ms-medicine",
+    name: "MS",
+    full_name: "Master of Surgery",
+    type: "postgraduate",
+    duration: "3 Years",
+    description: "MS is a postgraduate surgical degree covering specializations like general surgery, orthopedics, ophthalmology, ENT, and obstetrics.",
+    career_prospects: ["Surgeon", "Surgical Consultant", "Hospital Chief of Surgery", "Medical Professor"],
+    why_choose: "Highly respected surgical specialization. Average income: ₹20-50 LPA depending on specialization and experience.",
+    colleges_offering: [
+      {
+        college_name: "Manipal University",
+        average_placement: "₹22 LPA",
+        top_companies: ["Apollo Hospitals", "Fortis", "Narayana Health"],
+        specialization: "General & Specialty Surgery",
+        why_recommended: "Excellent surgical training with modern operation theaters."
+      },
+      {
+        college_name: "CMC Vellore",
+        average_placement: "₹20 LPA",
+        top_companies: ["AIIMS", "Top Corporate Hospitals"],
+        specialization: "Advanced Surgical Techniques",
+        why_recommended: "One of the best surgical training programs in India."
+      }
+    ]
+  },
+  {
+    id: "mds",
+    name: "MDS",
+    full_name: "Master of Dental Surgery",
+    type: "postgraduate",
+    duration: "3 Years",
+    description: "MDS provides advanced dental training in specializations like orthodontics, periodontics, oral surgery, and prosthodontics.",
+    career_prospects: ["Dental Specialist", "Orthodontist", "Oral Surgeon", "Dental Consultant", "Private Practice Owner"],
+    why_choose: "Specialized dental practice with excellent earning potential. Average package: ₹10-25 LPA.",
+    colleges_offering: [
+      {
+        college_name: "Manipal University",
+        average_placement: "₹15 LPA",
+        top_companies: ["Apollo Dental", "Clove Dental", "Private Clinics"],
+        specialization: "Orthodontics & Prosthodontics",
+        why_recommended: "Comprehensive clinical training with modern dental facilities."
+      },
+      {
+        college_name: "SRM University",
+        average_placement: "₹12 LPA",
+        top_companies: ["Dental Chains", "Corporate Hospitals"],
+        specialization: "Oral Surgery & Periodontics",
+        why_recommended: "Good clinical exposure with patient diversity."
+      }
+    ]
+  },
+  {
+    id: "md-ms-ayurveda",
+    name: "MD/MS Ayurveda",
+    full_name: "Doctor of Medicine / Master of Surgery in Ayurveda",
+    type: "postgraduate",
+    duration: "3 Years",
+    description: "Advanced Ayurvedic medical training combining traditional practices with modern medical knowledge in various Ayurvedic specializations.",
+    career_prospects: ["Ayurvedic Specialist", "Panchakarma Expert", "Ayurvedic Consultant", "Wellness Center Director", "Researcher"],
+    why_choose: "Growing demand for alternative medicine globally. Average package: ₹5-12 LPA with private practice potential.",
+    colleges_offering: [
+      {
+        college_name: "Banaras Hindu University",
+        average_placement: "₹8 LPA",
+        top_companies: ["Patanjali", "Dabur", "Ayurvedic Hospitals"],
+        specialization: "Kayachikitsa & Panchakarma",
+        why_recommended: "Premier institution for Ayurvedic studies with rich heritage."
+      },
+      {
+        college_name: "Gujarat Ayurved University",
+        average_placement: "₹6 LPA",
+        top_companies: ["Wellness Centers", "Government Hospitals"],
+        specialization: "Traditional Ayurveda",
+        why_recommended: "Strong foundation in classical Ayurvedic practices."
+      }
+    ]
+  },
+  {
+    id: "md-homeopathy",
+    name: "M.D Homeopathy",
+    full_name: "Doctor of Medicine in Homeopathy",
+    type: "postgraduate",
+    duration: "3 Years",
+    description: "Advanced homeopathic medical training covering specialized areas like materia medica, repertory, and clinical practice.",
+    career_prospects: ["Homeopathic Specialist", "Clinical Consultant", "Research Scientist", "Private Practitioner", "Hospital Consultant"],
+    why_choose: "Growing acceptance of homeopathy worldwide. Average package: ₹4-10 LPA with excellent private practice potential.",
+    colleges_offering: [
+      {
+        college_name: "National Institute of Homeopathy",
+        average_placement: "₹7 LPA",
+        top_companies: ["Government Hospitals", "Homeopathic Clinics", "Research Institutes"],
+        specialization: "Clinical Homeopathy",
+        why_recommended: "Premier government institution for homeopathic education."
+      },
+      {
+        college_name: "Father Muller Homeopathic Medical College",
+        average_placement: "₹6 LPA",
+        top_companies: ["Private Clinics", "Wellness Centers"],
+        specialization: "Advanced Therapeutics",
+        why_recommended: "Excellent clinical training with patient exposure."
+      }
+    ]
+  },
+  {
+    id: "mpt",
+    name: "MPT",
+    full_name: "Master of Physiotherapy",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "MPT provides advanced physiotherapy training in specializations like orthopedics, neurology, sports, and cardiopulmonary rehabilitation.",
+    career_prospects: ["Senior Physiotherapist", "Sports Physiotherapist", "Rehabilitation Specialist", "Clinical Director", "Private Practice Owner"],
+    why_choose: "Growing healthcare sector demands specialized physiotherapists. Average package: ₹5-12 LPA.",
+    colleges_offering: [
+      {
+        college_name: "Manipal University",
+        average_placement: "₹8 LPA",
+        top_companies: ["Apollo Hospitals", "Sports Teams", "Rehabilitation Centers"],
+        specialization: "Sports & Orthopedic Physiotherapy",
+        why_recommended: "Excellent clinical exposure with sports medicine focus."
+      },
+      {
+        college_name: "SRM University",
+        average_placement: "₹6 LPA",
+        top_companies: ["Corporate Hospitals", "Physiotherapy Chains"],
+        specialization: "Neurological Rehabilitation",
+        why_recommended: "Comprehensive training with modern equipment."
+      }
+    ]
+  },
+  {
+    id: "mlt",
+    name: "MLT",
+    full_name: "Master in Medical Laboratory Technology",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "MLT provides advanced training in clinical laboratory sciences including biochemistry, microbiology, pathology, and molecular diagnostics.",
+    career_prospects: ["Senior Lab Technologist", "Lab Manager", "Quality Control Specialist", "Research Scientist", "Diagnostic Consultant"],
+    why_choose: "Essential healthcare support role with growing demand. Average package: ₹4-8 LPA.",
+    colleges_offering: [
+      {
+        college_name: "Manipal University",
+        average_placement: "₹6 LPA",
+        top_companies: ["Dr. Lal PathLabs", "SRL Diagnostics", "Thyrocare"],
+        specialization: "Clinical Biochemistry & Pathology",
+        why_recommended: "State-of-the-art laboratory facilities."
+      },
+      {
+        college_name: "CMC Vellore",
+        average_placement: "₹5.5 LPA",
+        top_companies: ["Hospital Labs", "Diagnostic Chains"],
+        specialization: "Molecular Diagnostics",
+        why_recommended: "Excellent training with hospital integration."
+      }
+    ]
+  },
+  {
+    id: "m-optom",
+    name: "M.Optom",
+    full_name: "Master of Optometry",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "M.Optom provides advanced training in eye care, vision science, low vision rehabilitation, and specialized optometric practice.",
+    career_prospects: ["Senior Optometrist", "Low Vision Specialist", "Contact Lens Specialist", "Clinical Director", "Optical Business Owner"],
+    why_choose: "Growing eye care industry with specialized expertise demand. Average package: ₹5-10 LPA.",
+    colleges_offering: [
+      {
+        college_name: "Manipal University",
+        average_placement: "₹7 LPA",
+        top_companies: ["Sankara Nethralaya", "L.V. Prasad Eye Institute", "Optical Chains"],
+        specialization: "Clinical Optometry & Low Vision",
+        why_recommended: "Comprehensive clinical training with eye hospitals."
+      },
+      {
+        college_name: "BITS Pilani",
+        average_placement: "₹6.5 LPA",
+        top_companies: ["Eye Care Chains", "Corporate Hospitals"],
+        specialization: "Vision Science",
+        why_recommended: "Research-focused with industry connections."
+      }
+    ]
+  },
+  {
+    id: "msc-nursing",
+    name: "MSC Nursing",
+    full_name: "Master of Science in Nursing",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "MSc Nursing provides advanced nursing education with specializations in medical-surgical, pediatric, psychiatric, obstetric, and community health nursing.",
+    career_prospects: ["Nursing Superintendent", "Clinical Nurse Specialist", "Nurse Educator", "Hospital Administrator", "Research Nurse"],
+    why_choose: "Leadership roles in nursing with excellent career growth. Average package: ₹5-10 LPA.",
+    colleges_offering: [
+      {
+        college_name: "CMC Vellore",
+        average_placement: "₹7 LPA",
+        top_companies: ["Apollo Hospitals", "AIIMS", "International Opportunities"],
+        specialization: "Medical-Surgical Nursing",
+        why_recommended: "Premier nursing education with global recognition."
+      },
+      {
+        college_name: "Manipal University",
+        average_placement: "₹6 LPA",
+        top_companies: ["Corporate Hospitals", "Government Institutions"],
+        specialization: "Critical Care & Emergency Nursing",
+        why_recommended: "Excellent clinical exposure with research opportunities."
+      }
+    ]
+  },
+  {
+    id: "llm",
+    name: "LLM",
+    full_name: "Master of Laws",
+    type: "postgraduate",
+    duration: "1-2 Years",
+    description: "LLM provides advanced legal education with specializations in corporate law, constitutional law, international law, and intellectual property rights.",
+    career_prospects: ["Senior Advocate", "Legal Consultant", "Corporate Counsel", "Law Professor", "Judge", "Legal Policy Advisor"],
+    why_choose: "Prestigious legal specialization opening doors to elite positions. Average package: ₹8-20 LPA.",
+    colleges_offering: [
+      {
+        college_name: "National Law Universities",
+        average_placement: "₹15 LPA",
+        top_companies: ["Top Law Firms", "Corporate Legal Departments", "Government"],
+        specialization: "Corporate & Commercial Law",
+        why_recommended: "Premier legal education with excellent network."
+      },
+      {
+        college_name: "Chandigarh University",
+        average_placement: "₹8 LPA",
+        top_companies: ["Law Firms", "Corporate Houses", "Judiciary"],
+        specialization: "Constitutional & Administrative Law",
+        why_recommended: "Good faculty with practical legal training."
+      }
+    ]
+  },
+  {
+    id: "msc-agriculture",
+    name: "MSC Agriculture",
+    full_name: "Master of Science in Agriculture",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "MSc Agriculture provides advanced knowledge in agricultural sciences including agronomy, horticulture, plant pathology, and agricultural economics.",
+    career_prospects: ["Agricultural Scientist", "Senior Agriculture Officer", "Research Scientist", "Agribusiness Manager", "Policy Advisor"],
+    why_choose: "Critical for India's agricultural development. Average package: ₹5-10 LPA with government opportunities.",
+    colleges_offering: [
+      {
+        college_name: "IARI (Pusa)",
+        average_placement: "₹8 LPA",
+        top_companies: ["ICAR", "Government Agriculture Departments", "Agribusiness Companies"],
+        specialization: "Crop Science & Agronomy",
+        why_recommended: "Premier agricultural research institute in India."
+      },
+      {
+        college_name: "LPU",
+        average_placement: "₹5 LPA",
+        top_companies: ["Agricultural Companies", "Research Institutes"],
+        specialization: "Sustainable Agriculture",
+        why_recommended: "Modern agricultural training with industry exposure."
+      }
+    ]
+  },
+  {
+    id: "mtech-agriculture",
+    name: "M.Tech Agriculture",
+    full_name: "Master of Technology in Agricultural Engineering",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "M.Tech Agriculture focuses on advanced agricultural machinery, irrigation systems, food processing technology, and precision farming.",
+    career_prospects: ["Agricultural Engineer", "Food Processing Specialist", "Irrigation Consultant", "Agri-Tech Developer", "Research Engineer"],
+    why_choose: "Technology-driven agriculture is the future. Average package: ₹6-12 LPA.",
+    colleges_offering: [
+      {
+        college_name: "IIT Kharagpur",
+        average_placement: "₹12 LPA",
+        top_companies: ["John Deere", "Mahindra Agri", "Food Processing Companies"],
+        specialization: "Farm Machinery & Precision Agriculture",
+        why_recommended: "Top engineering institute with agricultural focus."
+      },
+      {
+        college_name: "Punjab Agricultural University",
+        average_placement: "₹7 LPA",
+        top_companies: ["Government Bodies", "Agri-Tech Startups"],
+        specialization: "Irrigation & Food Technology",
+        why_recommended: "Strong agricultural engineering legacy."
+      }
+    ]
+  },
+  {
+    id: "msc-biotech",
+    name: "MSC Biotech",
+    full_name: "Master of Science in Biotechnology",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "MSc Biotech provides advanced training in genetic engineering, molecular biology, bioinformatics, and industrial biotechnology.",
+    career_prospects: ["Research Scientist", "Biotech Analyst", "Quality Control Manager", "Product Development Specialist", "Patent Analyst"],
+    why_choose: "Booming biotech industry with pharmaceutical and research opportunities. Average package: ₹5-12 LPA.",
+    colleges_offering: [
+      {
+        college_name: "VIT",
+        average_placement: "₹8 LPA",
+        top_companies: ["Biocon", "Dr. Reddy's", "Serum Institute"],
+        specialization: "Industrial Biotechnology",
+        why_recommended: "Strong industry connections and research facilities."
+      },
+      {
+        college_name: "Manipal University",
+        average_placement: "₹7 LPA",
+        top_companies: ["Pharmaceutical Companies", "Research Institutes"],
+        specialization: "Medical Biotechnology",
+        why_recommended: "Excellent lab facilities and internship opportunities."
+      }
+    ]
+  },
+  {
+    id: "mhim",
+    name: "MHIM",
+    full_name: "Master in Health Information Management",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "MHIM focuses on healthcare data management, medical records, health informatics, and healthcare IT systems.",
+    career_prospects: ["Health Information Manager", "Clinical Data Manager", "Healthcare IT Specialist", "Medical Records Director", "Health Analytics Manager"],
+    why_choose: "Digital healthcare transformation creates high demand. Average package: ₹5-10 LPA.",
+    colleges_offering: [
+      {
+        college_name: "AIIMS",
+        average_placement: "₹8 LPA",
+        top_companies: ["Hospital Chains", "Health Tech Companies", "Government"],
+        specialization: "Health Informatics",
+        why_recommended: "Premier medical institution with tech integration."
+      },
+      {
+        college_name: "Manipal University",
+        average_placement: "₹6 LPA",
+        top_companies: ["Apollo", "Fortis", "Healthcare IT Companies"],
+        specialization: "Healthcare Data Management",
+        why_recommended: "Practical training with hospital network."
+      }
+    ]
+  },
+  {
+    id: "mha",
+    name: "MHA",
+    full_name: "Master of Hospital Administration",
+    type: "postgraduate",
+    duration: "2 Years",
+    description: "MHA provides comprehensive training in hospital management, healthcare operations, quality management, and healthcare policy.",
+    career_prospects: ["Hospital Administrator", "Healthcare Operations Manager", "Quality Manager", "CEO of Healthcare Facility", "Health Policy Analyst"],
+    why_choose: "Growing healthcare sector needs professional administrators. Average package: ₹6-15 LPA.",
+    colleges_offering: [
+      {
+        college_name: "TISS Mumbai",
+        average_placement: "₹12 LPA",
+        top_companies: ["Apollo", "Fortis", "Max Healthcare", "Narayana Health"],
+        specialization: "Healthcare Management",
+        why_recommended: "Premier management institute with healthcare focus."
+      },
+      {
+        college_name: "Manipal University",
+        average_placement: "₹8 LPA",
+        top_companies: ["Corporate Hospitals", "Health Insurance", "Consulting Firms"],
+        specialization: "Hospital Operations & Quality",
+        why_recommended: "Integrated with hospital network for practical exposure."
+      }
+    ]
   }
 ];
