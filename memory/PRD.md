@@ -54,24 +54,20 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - Full-stack application with React + FastAPI + MongoDB
 - Landing page with all sections
 - Student query submission system
-- Admin dashboard with login
+- Admin dashboard with login and calendar date filter
 - Consultant portal with 25 unique logins (+ SOYALI_EDU added)
 - Daily report submission for consultants
-- "My Reports" tab for consultants - Each consultant can view their own reports
-- Admin view of consultant reports (grouped by consultant)
+- "My Reports" tab for consultants with calendar date filter
+- Admin view of consultant reports with date & consultant filters
 - Route protection for admin and consultant dashboards
 - IST timestamp formatting
 - CSV export functionality
 - "Made with Emergent" watermark removed
 - Loader text changed to "EDUADVISOR"
-- **NEW: Updated Logo** - New circular logo with graduation cap across all pages (Header, Footer, Admin Login, Consultant Login)
-- **NEW: Postgraduate Course Details** - Added comprehensive details for 19 postgraduate courses including:
-  - M.Tech IT, M.Tech ECE, M.Tech EEE
-  - MD, MS, MDS
-  - MD/MS Ayurveda, M.D Homeopathy
-  - MPT, MLT, M.Optom, MSC Nursing
-  - LLM, MSC Agriculture, M.Tech Agriculture
-  - MSC Biotech, MHIM, MHA
+- **Updated Logo** - New circular logo with graduation cap across all pages
+- **Postgraduate Course Details** - Added comprehensive details for 19 postgraduate courses
+- **Calendar Date Filters** - Added to both Admin and Consultant dashboards
+- **Fixed UI Issues** - Removed odd calendar components, fixed arrow rendering (→)
 
 ### 🔄 Pending/Backlog
 - **Future**: JWT-based authentication (currently using localStorage)
