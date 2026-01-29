@@ -74,6 +74,20 @@ const Header = () => {
               <Phone className="h-4 w-4 mr-1" />
               9332641552
             </a>
+            <Link
+              to="/admin"
+              className="flex items-center text-sm text-gray-600 hover:text-yellow-500 transition-colors"
+            >
+              <Lock className="h-4 w-4 mr-1" />
+              Admin
+            </Link>
+            <Link
+              to="/consultant"
+              className="flex items-center text-sm text-gray-600 hover:text-yellow-500 transition-colors"
+            >
+              <Users className="h-4 w-4 mr-1" />
+              Consultant
+            </Link>
             <Button
               onClick={() => scrollToSection('contact')}
               className="bg-yellow-500 text-gray-900 hover:bg-yellow-600 font-semibold"
