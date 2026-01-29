@@ -644,6 +644,300 @@ const AdminDashboard = () => {
             </Card>
           </div>
         )}
+          </TabsContent>
+
+          {/* Consultant Reports Tab */}
+          <TabsContent value="reports">
+            {/* Stats Cards for Reports */}
+            <div className="grid md:grid-cols-4 gap-6 mb-8">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Total Reports</p>
+                      <p className="text-3xl font-bold text-gray-900">{consultantReports.length}</p>
+                    </div>
+                    <FileText className="h-10 w-10 text-green-500" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Consultants</p>
+                      <p className="text-3xl font-bold text-green-600">
+                        {Object.keys(reportsByConsultant).length}
+                      </p>
+                    </div>
+                    <Users className="h-10 w-10 text-green-500" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">This Month</p>
+                      <p className="text-3xl font-bold text-blue-600">
+                        {consultantReports.filter(report => {
+                          const reportDate = new Date(report.created_at);
+                          const now = new Date();
+                          return reportDate.getMonth() === now.getMonth() && 
+                                 reportDate.getFullYear() === now.getFullYear();
+                        }).length}
+                      </p>
+                    </div>
+                    <Calendar className="h-10 w-10 text-blue-500" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Today</p>
+                      <p className="text-3xl font-bold text-yellow-600">
+                        {consultantReports.filter(report => {
+                          const reportDate = new Date(report.created_at);
+                          const now = new Date();
+                          return reportDate.toDateString() === now.toDateString();
+                        }).length}
+                      </p>
+                    </div>
+                    <BookOpen className="h-10 w-10 text-yellow-500" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Filters and Actions for Reports */}
+            <Card className="mb-6">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                  <div className="flex-1 w-full md:w-auto">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Input
+                        type="text"
+                        placeholder="Search by student name, contact, institution, or consultant..."
+                        value={reportSearchTerm}
+                        onChange={(e) => setReportSearchTerm(e.target.value)}
+                        className="pl-10 w-full"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 w-full md:w-auto">
+                    <select
+                      value={selectedConsultant}
+                      onChange={(e) => setSelectedConsultant(e.target.value)}
+                      className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="all">All Consultants</option>
+                      {Object.keys(reportsByConsultant).map((consultant) => (
+                        <option key={consultant} value={consultant}>
+                          {consultant} ({reportsByConsultant[consultant]})
+                        </option>
+                      ))}
+                    </select>
+
+                    <Button
+                      onClick={exportConsultantReportsToCSV}
+                      className="bg-green-500 text-white hover:bg-green-600"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Export CSV
+                    </Button>
+
+                    <Button
+                      onClick={fetchConsultantReports}
+                      variant="outline"
+                      className="border-gray-300"
+                    >
+                      Refresh
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Consultant Reports Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Consultant Reports ({filteredReports.length})</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {filteredReports.length === 0 ? (
+                  <div className="text-center py-12">
+                    <FileText className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">No reports found</p>
+                    <p className="text-gray-400 text-sm mt-2">
+                      {reportSearchTerm || selectedConsultant !== 'all'
+                        ? 'Try adjusting your filters'
+                        : 'Consultant reports will appear here'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date (IST)</TableHead>
+                          <TableHead>Consultant</TableHead>
+                          <TableHead>Student Name</TableHead>
+                          <TableHead>Contact</TableHead>
+                          <TableHead>Institution</TableHead>
+                          <TableHead>Exam Preference</TableHead>
+                          <TableHead>Career Interest</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredReports.map((report) => (
+                          <TableRow key={report.id} className="hover:bg-gray-50">
+                            <TableCell className="text-sm text-gray-600">
+                              {formatDate(report.created_at)}
+                            </TableCell>
+                            <TableCell>
+                              <Badge className="bg-green-100 text-green-800">
+                                {report.consultant_name}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="font-medium">{report.student_name}</TableCell>
+                            <TableCell>
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2 text-sm">
+                                  <Phone className="h-3 w-3 text-gray-400" />
+                                  <a href={`tel:${report.contact_number}`} className="text-blue-600 hover:underline">
+                                    {report.contact_number}
+                                  </a>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <p className="text-sm text-gray-700 font-medium">{report.institution_name}</p>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="bg-blue-50">
+                                {report.competitive_exam_preference}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <p className="text-sm text-gray-600 max-w-xs truncate">
+                                {report.career_interest}
+                              </p>
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setSelectedReport(report)}
+                                className="text-xs"
+                              >
+                                View Details
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Report Detail Modal */}
+            {selectedReport && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                  <CardHeader className="border-b">
+                    <div className="flex items-center justify-between">
+                      <CardTitle>Consultant Report Details</CardTitle>
+                      <button
+                        onClick={() => setSelectedReport(null)}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Consultant</label>
+                        <p className="text-gray-900 mt-1 font-medium">{selectedReport.consultant_name}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Report Date</label>
+                        <p className="text-gray-900 mt-1">{formatDate(selectedReport.created_at)}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Student Name</label>
+                        <p className="text-gray-900 mt-1 font-medium">{selectedReport.student_name}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Contact Number</label>
+                        <p className="text-gray-900 mt-1">
+                          <a href={`tel:${selectedReport.contact_number}`} className="text-blue-600 hover:underline">
+                            {selectedReport.contact_number}
+                          </a>
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Institution</label>
+                        <p className="text-gray-900 mt-1">{selectedReport.institution_name}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Competitive Exam Preference</label>
+                        <p className="text-gray-900 mt-1">{selectedReport.competitive_exam_preference}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Career Interest</label>
+                        <p className="text-gray-900 mt-1">{selectedReport.career_interest}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Interest Scope</label>
+                        <p className="text-gray-900 mt-1">{selectedReport.interest_scope}</p>
+                      </div>
+                    </div>
+                    
+                    {selectedReport.college_interest && (
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">College Interest</label>
+                        <p className="text-gray-900 mt-2 bg-gray-50 p-4 rounded-lg">
+                          {selectedReport.college_interest}
+                        </p>
+                      </div>
+                    )}
+                    
+                    {selectedReport.other_remarks && (
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Other Remarks</label>
+                        <p className="text-gray-900 mt-2 bg-gray-50 p-4 rounded-lg">
+                          {selectedReport.other_remarks}
+                        </p>
+                      </div>
+                    )}
+                    
+                    <div className="flex justify-end pt-4 border-t">
+                      <Button
+                        onClick={() => setSelectedReport(null)}
+                        variant="outline"
+                        className="px-6"
+                      >
+                        Close
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
