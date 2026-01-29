@@ -65,6 +65,16 @@ const Footer = () => {
                   Colleges
                 </button>
               </li>
+              <li>
+                <Link to="/admin" className="text-sm hover:text-yellow-500 transition-colors flex items-center gap-1">
+                  <Lock className="h-3 w-3" /> Admin Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/consultant" className="text-sm hover:text-yellow-500 transition-colors flex items-center gap-1">
+                  <Users className="h-3 w-3" /> Consultant Login
+                </Link>
+              </li>
             </ul>
           </div>
 
