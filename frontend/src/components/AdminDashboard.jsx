@@ -286,7 +286,7 @@ const AdminDashboard = () => {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">Manage student queries and inquiries</p>
+            <p className="text-gray-600">Manage student queries and consultant reports</p>
           </div>
           <Button
             onClick={handleLogout}
@@ -297,6 +297,28 @@ const AdminDashboard = () => {
             Logout
           </Button>
         </div>
+
+        {/* Tabs for Queries and Consultant Reports */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 p-1 rounded-lg max-w-md">
+            <TabsTrigger
+              value="queries"
+              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold"
+            >
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Student Queries
+            </TabsTrigger>
+            <TabsTrigger
+              value="reports"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold"
+            >
+              <Users className="h-4 w-4 mr-2" />
+              Consultant Reports
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Student Queries Tab */}
+          <TabsContent value="queries">{/* Existing student queries content will go here */}
 
         {/* Stats Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
