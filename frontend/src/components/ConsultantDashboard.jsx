@@ -5,6 +5,16 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
+import { Badge } from './ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table';
 import { 
   LogOut, 
   User, 
@@ -15,7 +25,12 @@ import {
   School,
   FileText,
   CheckCircle,
-  Clock
+  Clock,
+  PlusCircle,
+  History,
+  Calendar,
+  Eye,
+  RefreshCw
 } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
