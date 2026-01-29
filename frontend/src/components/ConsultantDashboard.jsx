@@ -512,7 +512,7 @@ const ConsultantDashboard = () => {
                       <p className="text-sm text-gray-600">Today</p>
                       <p className="text-3xl font-bold text-green-600">{getTodayReportsCount()}</p>
                     </div>
-                    <Calendar className="h-10 w-10 text-green-500" />
+                    <CalendarIcon className="h-10 w-10 text-green-500" />
                   </div>
                 </CardContent>
               </Card>

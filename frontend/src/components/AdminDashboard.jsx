@@ -703,7 +703,7 @@ const AdminDashboard = () => {
                         }).length}
                       </p>
                     </div>
-                    <Calendar className="h-10 w-10 text-blue-500" />
+                    <CalendarIcon className="h-10 w-10 text-blue-500" />
                   </div>
                 </CardContent>
               </Card>
