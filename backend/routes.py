@@ -195,6 +195,28 @@ async def get_consultant_reports(consultant_id: str):
         logger.error(f"Error fetching consultant reports: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch reports")
 
+# Delete Consultant Report (Admin only)
+@router.delete("/consultant/reports/{report_id}", response_model=dict)
+async def delete_consultant_report(report_id: str):
+    try:
+        result = await db.consultant_reports.delete_one({"id": report_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Report not found")
+        
+        logger.info(f"Consultant report {report_id} deleted successfully")
+        
+        return {
+            "success": True,
+            "message": "Report deleted successfully",
+            "report_id": report_id
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting consultant report: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete report")
+
 # Admin: Get all consultant reports
 @router.get("/admin/consultant-reports", response_model=dict)
 async def get_all_consultant_reports():
