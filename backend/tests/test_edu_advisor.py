@@ -71,8 +71,9 @@ class TestConsultantAuthentication:
         assert response.status_code == 200, f"Login failed: {response.text}"
         data = response.json()
         assert data.get("success") == True
-        assert data.get("name") == CONSULTANT_NAME
-        print(f"✓ Consultant login successful - Name: {data.get('name')}")
+        # API returns consultant_name, not name
+        assert data.get("consultant_name") == CONSULTANT_NAME
+        print(f"✓ Consultant login successful - Name: {data.get('consultant_name')}")
     
     def test_consultant_login_invalid(self):
         """Test consultant login with invalid credentials"""
