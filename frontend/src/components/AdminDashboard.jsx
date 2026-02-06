@@ -1457,21 +1457,24 @@ const AdminDashboard = () => {
                   </CardHeader>
                   <CardContent className="p-6 space-y-4">
                     <div>
-                      <Label>User ID</Label>
+                      <Label htmlFor="edit_user_id">User ID (Editable)</Label>
                       <Input
-                        value={editingConsultant.user_id}
-                        disabled
-                        className="mt-1 bg-gray-100"
+                        id="edit_user_id"
+                        value={editingConsultant.new_user_id || editingConsultant.user_id}
+                        onChange={(e) => setEditingConsultant({ ...editingConsultant, new_user_id: e.target.value.toUpperCase() })}
+                        className="mt-1"
+                        placeholder="Enter new User ID"
                       />
+                      <p className="text-xs text-gray-500 mt-1">Original: {editingConsultant.original_user_id}</p>
                     </div>
                     <div>
-                      <Label htmlFor="edit_name">Full Name</Label>
+                      <Label>Full Name (Cannot be changed)</Label>
                       <Input
-                        id="edit_name"
                         value={editingConsultant.name}
-                        onChange={(e) => setEditingConsultant({ ...editingConsultant, name: e.target.value })}
-                        className="mt-1"
+                        disabled
+                        className="mt-1 bg-gray-100 cursor-not-allowed"
                       />
+                      <p className="text-xs text-amber-600 mt-1">Name cannot be modified after creation</p>
                     </div>
                     <div>
                       <Label htmlFor="edit_password">New Password (leave blank to keep current)</Label>
