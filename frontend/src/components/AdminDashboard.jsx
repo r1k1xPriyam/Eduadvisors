@@ -62,6 +62,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     fetchQueries();
     fetchConsultantReports();
+    fetchConsultants();
   }, []);
 
   useEffect(() => {
@@ -71,6 +72,111 @@ const AdminDashboard = () => {
   useEffect(() => {
     filterReports();
   }, [consultantReports, reportSearchTerm, selectedConsultant, selectedDate]);
+
+  // Fetch Consultants
+  const fetchConsultants = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/consultants`);
+      if (response.data.success) {
+        setConsultants(response.data.consultants);
+      }
+    } catch (error) {
+      console.error('Error fetching consultants:', error);
+    }
+  };
+
+  // Delete Query
+  const handleDeleteQuery = async (queryId) => {
+    if (!window.confirm('Are you sure you want to delete this query? This action cannot be undone.')) {
+      return;
+    }
+    try {
+      const response = await axios.delete(`${API}/queries/${queryId}`);
+      if (response.data.success) {
+        toast.success('Query deleted successfully');
+        fetchQueries();
+        setSelectedQuery(null);
+      }
+    } catch (error) {
+      console.error('Error deleting query:', error);
+      toast.error('Failed to delete query');
+    }
+  };
+
+  // Delete Consultant Report
+  const handleDeleteReport = async (reportId) => {
+    if (!window.confirm('Are you sure you want to delete this report? This will also remove it from the consultant\'s view.')) {
+      return;
+    }
+    try {
+      const response = await axios.delete(`${API}/consultant/reports/${reportId}`);
+      if (response.data.success) {
+        toast.success('Report deleted successfully');
+        fetchConsultantReports();
+        setSelectedReport(null);
+      }
+    } catch (error) {
+      console.error('Error deleting report:', error);
+      toast.error('Failed to delete report');
+    }
+  };
+
+  // Add Consultant
+  const handleAddConsultant = async () => {
+    if (!newConsultant.user_id || !newConsultant.name || !newConsultant.password) {
+      toast.error('Please fill all fields');
+      return;
+    }
+    try {
+      const response = await axios.post(`${API}/admin/consultants?user_id=${encodeURIComponent(newConsultant.user_id)}&name=${encodeURIComponent(newConsultant.name)}&password=${encodeURIComponent(newConsultant.password)}`);
+      if (response.data.success) {
+        toast.success('Consultant added successfully');
+        fetchConsultants();
+        setNewConsultant({ user_id: '', name: '', password: '' });
+        setShowAddConsultant(false);
+      }
+    } catch (error) {
+      console.error('Error adding consultant:', error);
+      toast.error(error.response?.data?.detail || 'Failed to add consultant');
+    }
+  };
+
+  // Update Consultant
+  const handleUpdateConsultant = async () => {
+    if (!editingConsultant) return;
+    try {
+      const params = new URLSearchParams();
+      if (editingConsultant.name) params.append('name', editingConsultant.name);
+      if (editingConsultant.password) params.append('password', editingConsultant.password);
+      
+      const response = await axios.put(`${API}/admin/consultants/${editingConsultant.user_id}?${params.toString()}`);
+      if (response.data.success) {
+        toast.success('Consultant updated successfully');
+        fetchConsultants();
+        setEditingConsultant(null);
+      }
+    } catch (error) {
+      console.error('Error updating consultant:', error);
+      toast.error('Failed to update consultant');
+    }
+  };
+
+  // Delete Consultant
+  const handleDeleteConsultant = async (userId) => {
+    if (!window.confirm(`Are you sure you want to delete consultant ${userId}? This action cannot be undone.`)) {
+      return;
+    }
+    try {
+      const response = await axios.delete(`${API}/admin/consultants/${userId}`);
+      if (response.data.success) {
+        toast.success('Consultant deleted successfully');
+        fetchConsultants();
+      }
+    } catch (error) {
+      console.error('Error deleting consultant:', error);
+      toast.error('Failed to delete consultant');
+    }
+  };
 
   const fetchConsultantReports = async () => {
     try {
