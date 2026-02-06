@@ -528,18 +528,18 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gray-50 py-4 md:py-8">
+      <div className="container mx-auto px-2 md:px-4">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">Manage student queries and consultant reports</p>
+            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1 md:mb-2">Admin Dashboard</h1>
+            <p className="text-sm md:text-base text-gray-600">Manage student queries and consultant reports</p>
           </div>
           <Button
             onClick={handleLogout}
             variant="outline"
-            className="border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+            className="border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 w-full sm:w-auto"
           >
             <LogOut className="h-4 w-4 mr-2" />
             Logout
@@ -548,34 +548,34 @@ const AdminDashboard = () => {
 
         {/* Tabs for Queries, Consultant Reports, and Consultant Management */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="grid w-full grid-cols-4 mb-8 bg-gray-100 p-1 rounded-lg max-w-3xl">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6 md:mb-8 bg-gray-100 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="queries"
-              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold"
+              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
             >
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Student Queries
+              <MessageSquare className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Student </span>Queries
             </TabsTrigger>
             <TabsTrigger
               value="reports"
-              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
             >
-              <FileText className="h-4 w-4 mr-2" />
-              Consultant Reports
+              <FileText className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Consultant </span>Reports
             </TabsTrigger>
             <TabsTrigger
               value="admissions"
-              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold"
+              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
             >
-              <GraduationCap className="h-4 w-4 mr-2" />
+              <GraduationCap className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
               Admissions
             </TabsTrigger>
             <TabsTrigger
               value="consultants"
-              className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold"
+              className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
             >
-              <Settings className="h-4 w-4 mr-2" />
-              Manage Consultants
+              <Settings className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Manage </span>Consultants
             </TabsTrigger>
           </TabsList>
 
