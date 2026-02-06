@@ -309,3 +309,65 @@ async def get_course(course_id: str):
     except Exception as e:
         logger.error(f"Error fetching course: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch course")
+
+# ==================== Consultant Management (Admin) ====================
+
+@router.get("/admin/consultants", response_model=dict)
+async def get_consultants():
+    """Get all consultants for admin management"""
+    try:
+        consultants = get_all_consultants()
+        return {
+            "success": True,
+            "consultants": consultants,
+            "count": len(consultants)
+        }
+    except Exception as e:
+        logger.error(f"Error fetching consultants: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch consultants")
+
+@router.post("/admin/consultants", response_model=dict)
+async def create_consultant(user_id: str, name: str, password: str):
+    """Add a new consultant"""
+    try:
+        result = add_consultant(user_id, name, password)
+        if not result["success"]:
+            raise HTTPException(status_code=400, detail=result["message"])
+        logger.info(f"Consultant {user_id} added successfully")
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error adding consultant: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to add consultant")
+
+@router.put("/admin/consultants/{user_id}", response_model=dict)
+async def modify_consultant(user_id: str, name: str = None, password: str = None):
+    """Update consultant details"""
+    try:
+        result = update_consultant(user_id, name, password)
+        if not result["success"]:
+            raise HTTPException(status_code=404, detail=result["message"])
+        logger.info(f"Consultant {user_id} updated successfully")
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating consultant: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update consultant")
+
+@router.delete("/admin/consultants/{user_id}", response_model=dict)
+async def remove_consultant(user_id: str):
+    """Delete a consultant"""
+    try:
+        result = delete_consultant(user_id)
+        if not result["success"]:
+            raise HTTPException(status_code=404, detail=result["message"])
+        logger.info(f"Consultant {user_id} deleted successfully")
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting consultant: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete consultant")
+
