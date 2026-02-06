@@ -7,7 +7,7 @@ const SuccessGallery = () => {
 
   const successStories = [
     {
-      image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80",
+      image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&q=80",
       name: "Engineering Dreams",
       achievement: "IIT & NIT Admissions",
       college: "Premium Engineering Colleges",
@@ -40,13 +40,6 @@ const SuccessGallery = () => {
       achievement: "Management Studies",
       college: "Top B-Schools",
       description: "MBA and BBA students placed in renowned management institutes."
-    },
-    {
-      image: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&q=80",
-      name: "Study Abroad",
-      achievement: "International Education",
-      college: "Global Universities",
-      description: "Guiding students to achieve their dreams of studying abroad."
     }
   ];
 
