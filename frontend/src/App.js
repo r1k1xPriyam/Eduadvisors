@@ -8,6 +8,7 @@ import Services from './components/Services';
 import Courses from './components/Courses';
 import Colleges from './components/Colleges';
 import Testimonials from './components/Testimonials';
+import SuccessGallery from './components/SuccessGallery';
 import FAQ from './components/FAQ';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -31,6 +32,7 @@ const Home = () => {
         <Courses />
         <Colleges />
         <Testimonials />
+        <SuccessGallery />
         <FAQ />
         <Contact />
       </main>
