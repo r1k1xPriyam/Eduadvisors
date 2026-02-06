@@ -3,7 +3,7 @@ from models import StudentQuery, StudentQueryCreate, College, Course, Consultant
 from typing import List
 import logging
 from datetime import datetime
-from consultants import verify_consultant, get_consultant_name
+from consultants import verify_consultant, get_consultant_name, get_all_consultants, add_consultant, update_consultant, delete_consultant
 
 logger = logging.getLogger(__name__)
 
