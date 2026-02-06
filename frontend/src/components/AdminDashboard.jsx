@@ -582,57 +582,57 @@ const AdminDashboard = () => {
           {/* Student Queries Tab */}
           <TabsContent value="queries">
             {/* Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 md:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Queries</p>
-                  <p className="text-3xl font-bold text-gray-900">{queries.length}</p>
+                  <p className="text-xs md:text-sm text-gray-600">Total Queries</p>
+                  <p className="text-xl md:text-3xl font-bold text-gray-900">{queries.length}</p>
                 </div>
-                <MessageSquare className="h-10 w-10 text-blue-500" />
+                <MessageSquare className="h-6 w-6 md:h-10 md:w-10 text-blue-500" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 md:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">New</p>
-                  <p className="text-3xl font-bold text-blue-600">
+                  <p className="text-xs md:text-sm text-gray-600">New</p>
+                  <p className="text-xl md:text-3xl font-bold text-blue-600">
                     {queries.filter((q) => q.status === 'new').length}
                   </p>
                 </div>
-                <MessageSquare className="h-10 w-10 text-blue-500" />
+                <MessageSquare className="h-6 w-6 md:h-10 md:w-10 text-blue-500" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 md:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Contacted</p>
-                  <p className="text-3xl font-bold text-yellow-600">
+                  <p className="text-xs md:text-sm text-gray-600">Contacted</p>
+                  <p className="text-xl md:text-3xl font-bold text-yellow-600">
                     {queries.filter((q) => q.status === 'contacted').length}
                   </p>
                 </div>
-                <Phone className="h-10 w-10 text-yellow-500" />
+                <Phone className="h-6 w-6 md:h-10 md:w-10 text-yellow-500" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 md:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Closed</p>
-                  <p className="text-3xl font-bold text-green-600">
+                  <p className="text-xs md:text-sm text-gray-600">Closed</p>
+                  <p className="text-xl md:text-3xl font-bold text-green-600">
                     {queries.filter((q) => q.status === 'closed').length}
                   </p>
                 </div>
-                <BookOpen className="h-10 w-10 text-green-500" />
+                <BookOpen className="h-6 w-6 md:h-10 md:w-10 text-green-500" />
               </div>
             </CardContent>
           </Card>
