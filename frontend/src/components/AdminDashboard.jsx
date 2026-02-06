@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { Label } from './ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import {
   Table,
@@ -15,7 +16,7 @@ import {
 } from './ui/table';
 import { Calendar } from './ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, MessageSquare, Filter, LogOut, Users, FileText, X } from 'lucide-react';
+import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, MessageSquare, Filter, LogOut, Users, FileText, X, Trash2, Plus, Edit, UserPlus, Settings } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -40,6 +41,12 @@ const AdminDashboard = () => {
   const [selectedConsultant, setSelectedConsultant] = useState('all');
   const [selectedDate, setSelectedDate] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  
+  // Consultant Management State
+  const [consultants, setConsultants] = useState([]);
+  const [showAddConsultant, setShowAddConsultant] = useState(false);
+  const [editingConsultant, setEditingConsultant] = useState(null);
+  const [newConsultant, setNewConsultant] = useState({ user_id: '', name: '', password: '' });
 
   // Check authentication on component mount
   useEffect(() => {
