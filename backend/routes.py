@@ -342,12 +342,12 @@ async def create_consultant(user_id: str, name: str, password: str):
         raise HTTPException(status_code=500, detail="Failed to add consultant")
 
 @router.put("/admin/consultants/{user_id}", response_model=dict)
-async def modify_consultant(user_id: str, name: str = None, password: str = None):
-    """Update consultant details"""
+async def modify_consultant(user_id: str, new_user_id: str = None, password: str = None):
+    """Update consultant details - Only User ID and Password can be changed"""
     try:
-        result = update_consultant(user_id, name, password)
+        result = update_consultant(user_id, new_user_id, password)
         if not result["success"]:
-            raise HTTPException(status_code=404, detail=result["message"])
+            raise HTTPException(status_code=400, detail=result["message"])
         logger.info(f"Consultant {user_id} updated successfully")
         return result
     except HTTPException:
