@@ -424,9 +424,9 @@ const AdminDashboard = () => {
           </Button>
         </div>
 
-        {/* Tabs for Queries and Consultant Reports */}
+        {/* Tabs for Queries, Consultant Reports, and Consultant Management */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 p-1 rounded-lg max-w-md">
+          <TabsList className="grid w-full grid-cols-3 mb-8 bg-gray-100 p-1 rounded-lg max-w-2xl">
             <TabsTrigger
               value="queries"
               className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold"
@@ -438,8 +438,15 @@ const AdminDashboard = () => {
               value="reports"
               className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold"
             >
-              <Users className="h-4 w-4 mr-2" />
+              <FileText className="h-4 w-4 mr-2" />
               Consultant Reports
+            </TabsTrigger>
+            <TabsTrigger
+              value="consultants"
+              className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Manage Consultants
             </TabsTrigger>
           </TabsList>
 
