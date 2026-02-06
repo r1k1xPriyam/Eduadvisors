@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
-import { X, GraduationCap, Phone, Mail, User, BookOpen, School, MessageSquare } from 'lucide-react';
+import { X, GraduationCap, Phone, Mail, User, BookOpen, School, MessageSquare, CheckCircle, Star } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -77,151 +77,225 @@ const QueryPopup = () => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 animate-fadeIn">
-      <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-yellow-400">
-        <CardHeader className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white relative">
-          <button
-            onClick={handleClose}
-            className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors"
-            aria-label="Close"
-          >
-            <X className="h-6 w-6" />
-          </button>
-          <div className="flex items-center gap-3">
-            <GraduationCap className="h-10 w-10" />
-            <div>
-              <CardTitle className="text-2xl">Get Free Counselling!</CardTitle>
-              <p className="text-yellow-100 text-sm mt-1">Let our experts guide your career path</p>
+      <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-yellow-400">
+        <div className="grid md:grid-cols-2">
+          {/* Left Side - Image & Info */}
+          <div className="hidden md:block relative bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 p-6">
+            <button
+              onClick={handleClose}
+              className="absolute top-4 right-4 md:hidden text-white hover:text-gray-200 transition-colors z-10"
+              aria-label="Close"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            
+            {/* Image */}
+            <div className="relative mb-6 rounded-xl overflow-hidden shadow-lg">
+              <img 
+                src="https://images.unsplash.com/photo-1565688420536-11a4ddfa246f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDZ8MHwxfHNlYXJjaHwyfHxzdHVkZW50JTIwY291bnNlbGxpbmclMjBlZHVjYXRpb24lMjBndWlkYW5jZSUyMGNhcmVlcnxlbnwwfHx8fDE3NzAzODc1NTN8MA&ixlib=rb-4.1.0&q=85"
+                alt="Student Counselling"
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+              <div className="absolute bottom-3 left-3 text-white">
+                <p className="font-bold text-lg">Expert Guidance</p>
+                <p className="text-sm text-yellow-200">For Your Future</p>
+              </div>
+            </div>
+
+            {/* Benefits */}
+            <div className="space-y-4 text-white">
+              <h3 className="text-xl font-bold flex items-center gap-2">
+                <Star className="h-5 w-5 text-yellow-200" />
+                Why Choose Us?
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 bg-white/20 backdrop-blur-sm rounded-lg p-3">
+                  <CheckCircle className="h-5 w-5 text-yellow-200 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold">5000+ Students Guided</p>
+                    <p className="text-sm text-yellow-100">Successfully placed in top colleges</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 bg-white/20 backdrop-blur-sm rounded-lg p-3">
+                  <CheckCircle className="h-5 w-5 text-yellow-200 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold">100% Free Counselling</p>
+                    <p className="text-sm text-yellow-100">No hidden charges, ever!</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 bg-white/20 backdrop-blur-sm rounded-lg p-3">
+                  <CheckCircle className="h-5 w-5 text-yellow-200 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold">Expert Counsellors</p>
+                    <p className="text-sm text-yellow-100">Personalized career guidance</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Testimonial */}
+              <div className="mt-4 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                <p className="text-sm italic">"Edu Advisor helped me get into my dream college. Their guidance was invaluable!"</p>
+                <p className="text-xs mt-2 text-yellow-200">- Rahul S., B.Tech Student</p>
+              </div>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="popup_name" className="flex items-center gap-2 text-gray-700">
-                <User className="h-4 w-4 text-yellow-500" />
-                Full Name *
-              </Label>
-              <Input
-                id="popup_name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                placeholder="Enter your full name"
-                className="mt-1"
-                disabled={isSubmitting}
-              />
-            </div>
 
-            <div>
-              <Label htmlFor="popup_phone" className="flex items-center gap-2 text-gray-700">
-                <Phone className="h-4 w-4 text-yellow-500" />
-                Phone Number *
-              </Label>
-              <Input
-                id="popup_phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                placeholder="Enter your phone number"
-                className="mt-1"
-                disabled={isSubmitting}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="popup_email" className="flex items-center gap-2 text-gray-700">
-                <Mail className="h-4 w-4 text-yellow-500" />
-                Email Address *
-              </Label>
-              <Input
-                id="popup_email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder="Enter your email"
-                className="mt-1"
-                disabled={isSubmitting}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="popup_institution" className="flex items-center gap-2 text-gray-700">
-                <School className="h-4 w-4 text-yellow-500" />
-                Current Institution
-              </Label>
-              <Input
-                id="popup_institution"
-                name="current_institution"
-                value={formData.current_institution}
-                onChange={handleChange}
-                placeholder="Your school/college name"
-                className="mt-1"
-                disabled={isSubmitting}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="popup_course" className="flex items-center gap-2 text-gray-700">
-                <BookOpen className="h-4 w-4 text-yellow-500" />
-                Interested Course *
-              </Label>
-              <Input
-                id="popup_course"
-                name="course"
-                value={formData.course}
-                onChange={handleChange}
-                required
-                placeholder="e.g., B.Tech, MBBS, MBA"
-                className="mt-1"
-                disabled={isSubmitting}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="popup_message" className="flex items-center gap-2 text-gray-700">
-                <MessageSquare className="h-4 w-4 text-yellow-500" />
-                Your Query (Optional)
-              </Label>
-              <Textarea
-                id="popup_message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Tell us about your career goals..."
-                rows={3}
-                className="mt-1 resize-none"
-                disabled={isSubmitting}
-              />
-            </div>
-
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 font-semibold py-6 text-lg"
+          {/* Right Side - Form */}
+          <div className="relative">
+            <button
+              onClick={handleClose}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors z-10"
+              aria-label="Close"
             >
-              {isSubmitting ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
-                  Submitting...
-                </div>
-              ) : (
-                <>
-                  <GraduationCap className="h-5 w-5 mr-2" />
-                  Get Free Counselling Now
-                </>
-              )}
-            </Button>
+              <X className="h-6 w-6" />
+            </button>
 
-            <p className="text-center text-sm text-gray-500 mt-4">
-              Our expert counsellors will call you within 24 hours
-            </p>
-          </form>
-        </CardContent>
+            <CardHeader className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white md:bg-white md:text-gray-900 pt-8">
+              <div className="flex items-center gap-3">
+                <GraduationCap className="h-8 w-8 md:text-yellow-500" />
+                <div>
+                  <CardTitle className="text-xl">Get Free Counselling!</CardTitle>
+                  <p className="text-yellow-100 md:text-gray-500 text-sm mt-1">Fill the form & we'll call you</p>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="p-5">
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <div>
+                  <Label htmlFor="popup_name" className="flex items-center gap-2 text-gray-700 text-sm">
+                    <User className="h-3 w-3 text-yellow-500" />
+                    Full Name *
+                  </Label>
+                  <Input
+                    id="popup_name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Enter your full name"
+                    className="mt-1 h-9"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="popup_phone" className="flex items-center gap-2 text-gray-700 text-sm">
+                      <Phone className="h-3 w-3 text-yellow-500" />
+                      Phone *
+                    </Label>
+                    <Input
+                      id="popup_phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      required
+                      placeholder="Phone number"
+                      className="mt-1 h-9"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="popup_email" className="flex items-center gap-2 text-gray-700 text-sm">
+                      <Mail className="h-3 w-3 text-yellow-500" />
+                      Email *
+                    </Label>
+                    <Input
+                      id="popup_email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      placeholder="Email address"
+                      className="mt-1 h-9"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="popup_institution" className="flex items-center gap-2 text-gray-700 text-sm">
+                    <School className="h-3 w-3 text-yellow-500" />
+                    Current Institution
+                  </Label>
+                  <Input
+                    id="popup_institution"
+                    name="current_institution"
+                    value={formData.current_institution}
+                    onChange={handleChange}
+                    placeholder="Your school/college name"
+                    className="mt-1 h-9"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="popup_course" className="flex items-center gap-2 text-gray-700 text-sm">
+                    <BookOpen className="h-3 w-3 text-yellow-500" />
+                    Interested Course *
+                  </Label>
+                  <Input
+                    id="popup_course"
+                    name="course"
+                    value={formData.course}
+                    onChange={handleChange}
+                    required
+                    placeholder="e.g., B.Tech, MBBS, MBA"
+                    className="mt-1 h-9"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="popup_message" className="flex items-center gap-2 text-gray-700 text-sm">
+                    <MessageSquare className="h-3 w-3 text-yellow-500" />
+                    Your Query (Optional)
+                  </Label>
+                  <Textarea
+                    id="popup_message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Tell us about your career goals..."
+                    rows={2}
+                    className="mt-1 resize-none"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 font-semibold py-5 text-base"
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
+                      Submitting...
+                    </div>
+                  ) : (
+                    <>
+                      <GraduationCap className="h-5 w-5 mr-2" />
+                      Get Free Counselling Now
+                    </>
+                  )}
+                </Button>
+
+                <p className="text-center text-xs text-gray-500">
+                  Our expert counsellors will call you within 24 hours
+                </p>
+              </form>
+            </CardContent>
+          </div>
+        </div>
       </Card>
     </div>
   );
