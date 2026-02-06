@@ -107,6 +107,104 @@ const AdminDashboard = () => {
     }
   };
 
+  // Fetch Admissions
+  const fetchAdmissions = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/admissions`);
+      if (response.data.success) {
+        setAdmissions(response.data.admissions);
+      }
+    } catch (error) {
+      console.error('Error fetching admissions:', error);
+      toast.error('Failed to load admissions');
+    }
+  };
+
+  // Add Admission
+  const handleAddAdmission = async () => {
+    if (!newAdmission.student_name || !newAdmission.course || !newAdmission.college || 
+        !newAdmission.admission_date || !newAdmission.consultant_id || !newAdmission.payout_amount) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+    try {
+      const selectedConsultant = consultants.find(c => c.user_id === newAdmission.consultant_id);
+      const params = new URLSearchParams({
+        student_name: newAdmission.student_name,
+        course: newAdmission.course,
+        college: newAdmission.college,
+        admission_date: newAdmission.admission_date,
+        consultant_id: newAdmission.consultant_id,
+        consultant_name: selectedConsultant?.name || newAdmission.consultant_id,
+        payout_amount: newAdmission.payout_amount,
+        payout_status: newAdmission.payout_status
+      });
+      const response = await axios.post(`${API}/admin/admissions?${params.toString()}`);
+      if (response.data.success) {
+        toast.success('Admission recorded successfully');
+        fetchAdmissions();
+        setNewAdmission({
+          student_name: '',
+          course: '',
+          college: '',
+          admission_date: '',
+          consultant_id: '',
+          consultant_name: '',
+          payout_amount: '',
+          payout_status: 'PAYOUT NOT CREDITED YET'
+        });
+        setShowAddAdmission(false);
+      }
+    } catch (error) {
+      console.error('Error adding admission:', error);
+      toast.error(error.response?.data?.detail || 'Failed to add admission');
+    }
+  };
+
+  // Update Admission
+  const handleUpdateAdmission = async () => {
+    if (!editingAdmission) return;
+    try {
+      const selectedConsultant = consultants.find(c => c.user_id === editingAdmission.consultant_id);
+      const params = new URLSearchParams();
+      params.append('student_name', editingAdmission.student_name);
+      params.append('course', editingAdmission.course);
+      params.append('college', editingAdmission.college);
+      params.append('admission_date', editingAdmission.admission_date);
+      params.append('consultant_id', editingAdmission.consultant_id);
+      params.append('consultant_name', selectedConsultant?.name || editingAdmission.consultant_name);
+      params.append('payout_amount', editingAdmission.payout_amount);
+      params.append('payout_status', editingAdmission.payout_status);
+      
+      const response = await axios.put(`${API}/admin/admissions/${editingAdmission.id}?${params.toString()}`);
+      if (response.data.success) {
+        toast.success('Admission updated successfully');
+        fetchAdmissions();
+        setEditingAdmission(null);
+      }
+    } catch (error) {
+      console.error('Error updating admission:', error);
+      toast.error('Failed to update admission');
+    }
+  };
+
+  // Delete Admission
+  const handleDeleteAdmission = async (admissionId) => {
+    if (!window.confirm('Are you sure you want to delete this admission record? This action cannot be undone.')) {
+      return;
+    }
+    try {
+      const response = await axios.delete(`${API}/admin/admissions/${admissionId}`);
+      if (response.data.success) {
+        toast.success('Admission deleted successfully');
+        fetchAdmissions();
+      }
+    } catch (error) {
+      console.error('Error deleting admission:', error);
+      toast.error('Failed to delete admission');
+    }
+  };
+
   // Delete Query
   const handleDeleteQuery = async (queryId) => {
     if (!window.confirm('Are you sure you want to delete this query? This action cannot be undone.')) {
