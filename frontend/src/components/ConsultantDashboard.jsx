@@ -726,6 +726,174 @@ const ConsultantDashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* My Admissions Tab */}
+          <TabsContent value="admissions">
+            {/* Stats Cards for Admissions */}
+            <div className="grid md:grid-cols-3 gap-6 mb-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Total Admissions</p>
+                      <p className="text-3xl font-bold text-gray-900">{myAdmissions.length}</p>
+                    </div>
+                    <GraduationCap className="h-10 w-10 text-purple-500" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Total Earnings</p>
+                      <p className="text-3xl font-bold text-green-600">
+                        ₹{myAdmissions.reduce((sum, a) => sum + parseFloat(a.payout_amount || 0), 0).toLocaleString()}
+                      </p>
+                    </div>
+                    <DollarSign className="h-10 w-10 text-green-500" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Payout Received</p>
+                      <p className="text-3xl font-bold text-blue-600">
+                        {myAdmissions.filter(a => a.payout_status === "CONSULTANT'S COMMISION GIVEN").length}
+                      </p>
+                    </div>
+                    <CheckCircle className="h-10 w-10 text-blue-500" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Refresh Button */}
+            <Card className="mb-4">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Your Credited Admissions</h3>
+                    <p className="text-sm text-gray-500">Admissions assigned to you by the admin</p>
+                  </div>
+                  <Button
+                    onClick={fetchMyAdmissions}
+                    variant="outline"
+                    disabled={loadingAdmissions}
+                    className="border-gray-300"
+                  >
+                    <RefreshCw className={`h-4 w-4 mr-2 ${loadingAdmissions ? 'animate-spin' : ''}`} />
+                    Refresh
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Admissions Table */}
+            <Card>
+              <CardHeader className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white">
+                <CardTitle className="text-xl">My Admissions ({myAdmissions.length})</CardTitle>
+                <p className="text-purple-100 text-sm">View all admissions credited to you and their payout status</p>
+              </CardHeader>
+              <CardContent className="p-0">
+                {loadingAdmissions ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="ml-3 text-gray-600">Loading admissions...</p>
+                  </div>
+                ) : myAdmissions.length === 0 ? (
+                  <div className="text-center py-12">
+                    <GraduationCap className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">No admissions credited yet</p>
+                    <p className="text-gray-400 text-sm mt-2">When students are admitted through your referral, they will appear here</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-gray-50">
+                          <TableHead className="font-semibold">Student Name</TableHead>
+                          <TableHead className="font-semibold">Course</TableHead>
+                          <TableHead className="font-semibold">College</TableHead>
+                          <TableHead className="font-semibold">Admission Date</TableHead>
+                          <TableHead className="font-semibold">Payout Amount</TableHead>
+                          <TableHead className="font-semibold">Payout Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {myAdmissions.map((admission, index) => (
+                          <TableRow key={admission.id || index} className="hover:bg-gray-50">
+                            <TableCell className="font-medium">{admission.student_name}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="bg-blue-50">
+                                {admission.course}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-sm">{admission.college}</TableCell>
+                            <TableCell className="text-sm">{admission.admission_date}</TableCell>
+                            <TableCell className="font-semibold text-green-600">
+                              ₹{parseFloat(admission.payout_amount).toLocaleString()}
+                            </TableCell>
+                            <TableCell>
+                              <Badge 
+                                className={
+                                  admission.payout_status === 'PAYOUT NOT CREDITED YET' ? 'bg-yellow-100 text-yellow-800' :
+                                  admission.payout_status === 'PAYOUT REFLECTED' ? 'bg-blue-100 text-blue-800' :
+                                  'bg-green-100 text-green-800'
+                                }
+                              >
+                                {admission.payout_status}
+                              </Badge>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Payout Summary */}
+            {myAdmissions.length > 0 && (
+              <Card className="mt-6">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Payout Summary</h3>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="bg-yellow-50 p-4 rounded-lg">
+                      <p className="text-sm text-yellow-700 font-medium">Pending</p>
+                      <p className="text-2xl font-bold text-yellow-800">
+                        ₹{myAdmissions
+                          .filter(a => a.payout_status === 'PAYOUT NOT CREDITED YET')
+                          .reduce((sum, a) => sum + parseFloat(a.payout_amount || 0), 0)
+                          .toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="text-sm text-blue-700 font-medium">Reflected</p>
+                      <p className="text-2xl font-bold text-blue-800">
+                        ₹{myAdmissions
+                          .filter(a => a.payout_status === 'PAYOUT REFLECTED')
+                          .reduce((sum, a) => sum + parseFloat(a.payout_amount || 0), 0)
+                          .toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <p className="text-sm text-green-700 font-medium">Received</p>
+                      <p className="text-2xl font-bold text-green-800">
+                        ₹{myAdmissions
+                          .filter(a => a.payout_status === "CONSULTANT'S COMMISION GIVEN")
+                          .reduce((sum, a) => sum + parseFloat(a.payout_amount || 0), 0)
+                          .toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
         </Tabs>
 
         {/* Report Detail Modal */}
