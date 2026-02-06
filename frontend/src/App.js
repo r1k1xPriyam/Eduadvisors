@@ -17,6 +17,7 @@ import ConsultantLogin from './components/ConsultantLogin';
 import ConsultantDashboard from './components/ConsultantDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedConsultantRoute from './components/ProtectedConsultantRoute';
+import QueryPopup from './components/QueryPopup';
 import { Toaster } from './components/ui/sonner';
 
 const Home = () => {
@@ -34,6 +35,7 @@ const Home = () => {
         <Contact />
       </main>
       <Footer />
+      <QueryPopup />
       <Toaster />
     </div>
   );
