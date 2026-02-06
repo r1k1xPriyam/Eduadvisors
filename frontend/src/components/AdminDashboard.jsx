@@ -84,6 +84,7 @@ const AdminDashboard = () => {
     fetchQueries();
     fetchConsultantReports();
     fetchConsultants();
+    fetchAdmissions();
   }, []);
 
   useEffect(() => {
