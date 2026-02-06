@@ -100,6 +100,28 @@ async def update_query_status(query_id: str, status: str):
         logger.error(f"Error updating query status: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to update query status")
 
+# Delete Student Query (Admin only)
+@router.delete("/queries/{query_id}", response_model=dict)
+async def delete_query(query_id: str):
+    try:
+        result = await db.student_queries.delete_one({"id": query_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Query not found")
+        
+        logger.info(f"Query {query_id} deleted successfully")
+        
+        return {
+            "success": True,
+            "message": "Query deleted successfully",
+            "query_id": query_id
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting query: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete query")
+
 # Consultant Authentication
 @router.post("/consultant/login", response_model=dict)
 async def consultant_login(user_id: str, password: str):
