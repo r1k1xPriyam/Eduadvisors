@@ -294,7 +294,7 @@ const ConsultantDashboard = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 bg-gray-100 p-1 rounded-lg max-w-md">
+          <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-lg max-w-xl">
             <TabsTrigger
               value="submit"
               className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold"
@@ -308,6 +308,13 @@ const ConsultantDashboard = () => {
             >
               <History className="h-4 w-4 mr-2" />
               My Reports
+            </TabsTrigger>
+            <TabsTrigger
+              value="admissions"
+              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold"
+            >
+              <Award className="h-4 w-4 mr-2" />
+              My Admissions
             </TabsTrigger>
           </TabsList>
 
