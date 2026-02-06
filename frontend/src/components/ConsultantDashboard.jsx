@@ -135,6 +135,24 @@ const ConsultantDashboard = () => {
     }
   };
 
+  // Fetch My Admissions
+  const fetchMyAdmissions = async () => {
+    if (!consultantId) return;
+    
+    setLoadingAdmissions(true);
+    try {
+      const response = await axios.get(`${API}/consultant/admissions/${consultantId}`);
+      if (response.data.success) {
+        setMyAdmissions(response.data.admissions);
+      }
+    } catch (error) {
+      console.error('Error fetching admissions:', error);
+      toast.error('Failed to load admissions');
+    } finally {
+      setLoadingAdmissions(false);
+    }
+  };
+
   // Filter reports by selected date
   useEffect(() => {
     if (selectedDate) {
