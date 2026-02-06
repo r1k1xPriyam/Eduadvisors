@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, GraduationCap } from 'lucide-react';
+import { ArrowRight, GraduationCap, Phone } from 'lucide-react';
 import { Button } from './ui/button';
 
 const Hero = () => {
@@ -8,6 +8,10 @@ const Hero = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const openQueryPopup = () => {
+    window.dispatchEvent(new CustomEvent('openQueryPopup'));
   };
 
   return (
@@ -48,20 +52,22 @@ const Hero = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
-                onClick={scrollToContact}
+                onClick={openQueryPopup}
                 size="lg"
-                className="bg-yellow-500 text-gray-900 hover:bg-yellow-600 font-semibold text-lg px-8 py-6 group"
+                className="bg-yellow-500 text-gray-900 hover:bg-yellow-600 font-semibold text-lg px-8 py-6 group animate-pulse hover:animate-none"
+                data-testid="get-counselling-now-btn"
               >
-                Start Your Journey
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <Phone className="mr-2 h-5 w-5" />
+                GET COUNSELLING NOW
               </Button>
               <Button
-                onClick={() => document.getElementById('services').scrollIntoView({ behavior: 'smooth' })}
+                onClick={scrollToContact}
                 size="lg"
                 variant="outline"
                 className="border-2 border-gray-300 text-gray-700 hover:border-yellow-500 hover:text-yellow-500 font-semibold text-lg px-8 py-6"
               >
-                Explore Services
+                Start Your Journey
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
 
