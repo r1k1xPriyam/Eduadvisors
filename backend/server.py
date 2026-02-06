@@ -13,7 +13,6 @@ from database import db, client
 
 # Import routes
 from routes import router as api_routes
-from edu_buddy_routes import router as edu_buddy_routes
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -28,7 +27,6 @@ async def root():
 
 # Include API routes
 api_router.include_router(api_routes)
-api_router.include_router(edu_buddy_routes)
 
 # Include the router in the main app
 app.include_router(api_router)
