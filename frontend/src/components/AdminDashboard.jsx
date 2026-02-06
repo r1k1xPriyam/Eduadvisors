@@ -16,13 +16,19 @@ import {
 } from './ui/table';
 import { Calendar } from './ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, MessageSquare, Filter, LogOut, Users, FileText, X, Trash2, Plus, Edit, UserPlus, Settings } from 'lucide-react';
+import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, MessageSquare, Filter, LogOut, Users, FileText, X, Trash2, Plus, Edit, UserPlus, Settings, GraduationCap, DollarSign, Building, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+const PAYOUT_STATUS_OPTIONS = [
+  "PAYOUT NOT CREDITED YET",
+  "PAYOUT REFLECTED",
+  "CONSULTANT'S COMMISION GIVEN"
+];
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -47,6 +53,21 @@ const AdminDashboard = () => {
   const [showAddConsultant, setShowAddConsultant] = useState(false);
   const [editingConsultant, setEditingConsultant] = useState(null);
   const [newConsultant, setNewConsultant] = useState({ user_id: '', name: '', password: '' });
+
+  // Admissions State
+  const [admissions, setAdmissions] = useState([]);
+  const [showAddAdmission, setShowAddAdmission] = useState(false);
+  const [editingAdmission, setEditingAdmission] = useState(null);
+  const [newAdmission, setNewAdmission] = useState({
+    student_name: '',
+    course: '',
+    college: '',
+    admission_date: '',
+    consultant_id: '',
+    consultant_name: '',
+    payout_amount: '',
+    payout_status: 'PAYOUT NOT CREDITED YET'
+  });
 
   // Check authentication on component mount
   useEffect(() => {
