@@ -447,7 +447,7 @@ const AdminDashboard = () => {
 
         {/* Tabs for Queries, Consultant Reports, and Consultant Management */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="grid w-full grid-cols-3 mb-8 bg-gray-100 p-1 rounded-lg max-w-2xl">
+          <TabsList className="grid w-full grid-cols-4 mb-8 bg-gray-100 p-1 rounded-lg max-w-3xl">
             <TabsTrigger
               value="queries"
               className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold"
@@ -461,6 +461,13 @@ const AdminDashboard = () => {
             >
               <FileText className="h-4 w-4 mr-2" />
               Consultant Reports
+            </TabsTrigger>
+            <TabsTrigger
+              value="admissions"
+              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold"
+            >
+              <GraduationCap className="h-4 w-4 mr-2" />
+              Admissions
             </TabsTrigger>
             <TabsTrigger
               value="consultants"
