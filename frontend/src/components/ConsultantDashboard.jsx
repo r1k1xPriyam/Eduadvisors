@@ -777,9 +777,6 @@ const ConsultantDashboard = () => {
             </Card>
           </div>
         )}
-
-        {/* EDU BUDDY AI Chatbot */}
-        <EduBuddy consultantId={consultantId} consultantName={consultantName} />
       </div>
     </div>
   );
