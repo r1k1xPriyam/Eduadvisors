@@ -61,15 +61,24 @@ def add_consultant(user_id: str, name: str, password: str):
     CONSULTANTS[user_id] = {"name": name, "password": password}
     return {"success": True, "message": "Consultant added successfully"}
 
-def update_consultant(user_id: str, name: str = None, password: str = None):
-    """Update consultant details"""
+def update_consultant(user_id: str, new_user_id: str = None, password: str = None):
+    """Update consultant details - Only User ID and Password can be changed, Name cannot be modified"""
     if user_id not in CONSULTANTS:
         return {"success": False, "message": "Consultant not found"}
-    if name:
-        CONSULTANTS[user_id]["name"] = name
+    
+    # If changing user_id
+    if new_user_id and new_user_id != user_id:
+        if new_user_id in CONSULTANTS:
+            return {"success": False, "message": "New User ID already exists"}
+        # Move to new user_id
+        CONSULTANTS[new_user_id] = CONSULTANTS[user_id].copy()
+        del CONSULTANTS[user_id]
+        user_id = new_user_id
+    
     if password:
         CONSULTANTS[user_id]["password"] = password
-    return {"success": True, "message": "Consultant updated successfully"}
+    
+    return {"success": True, "message": "Consultant updated successfully", "user_id": user_id}
 
 def delete_consultant(user_id: str):
     """Delete a consultant"""
