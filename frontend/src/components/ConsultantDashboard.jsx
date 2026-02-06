@@ -113,6 +113,9 @@ const ConsultantDashboard = () => {
     if (consultantId && activeTab === 'reports') {
       fetchMyReports();
     }
+    if (consultantId && activeTab === 'admissions') {
+      fetchMyAdmissions();
+    }
   }, [consultantId, activeTab]);
 
   const fetchMyReports = async () => {
