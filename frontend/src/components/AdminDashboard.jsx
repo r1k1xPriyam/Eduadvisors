@@ -1293,6 +1293,455 @@ const AdminDashboard = () => {
             )}
           </TabsContent>
 
+          {/* Admissions Tab */}
+          <TabsContent value="admissions">
+            {/* Stats Cards for Admissions */}
+            <div className="grid md:grid-cols-4 gap-6 mb-8">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Total Admissions</p>
+                      <p className="text-3xl font-bold text-gray-900">{admissions.length}</p>
+                    </div>
+                    <GraduationCap className="h-10 w-10 text-purple-500" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Payout Pending</p>
+                      <p className="text-3xl font-bold text-yellow-600">
+                        {admissions.filter(a => a.payout_status === 'PAYOUT NOT CREDITED YET').length}
+                      </p>
+                    </div>
+                    <DollarSign className="h-10 w-10 text-yellow-500" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Payout Reflected</p>
+                      <p className="text-3xl font-bold text-blue-600">
+                        {admissions.filter(a => a.payout_status === 'PAYOUT REFLECTED').length}
+                      </p>
+                    </div>
+                    <CheckCircle className="h-10 w-10 text-blue-500" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Commission Given</p>
+                      <p className="text-3xl font-bold text-green-600">
+                        {admissions.filter(a => a.payout_status === "CONSULTANT'S COMMISION GIVEN").length}
+                      </p>
+                    </div>
+                    <CheckCircle className="h-10 w-10 text-green-500" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Actions */}
+            <Card className="mb-6">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Admission Records</h3>
+                    <p className="text-sm text-gray-500">Track student admissions and consultant payouts</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button
+                      onClick={() => setShowAddAdmission(true)}
+                      className="bg-purple-500 text-white hover:bg-purple-600"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Admission
+                    </Button>
+                    <Button
+                      onClick={fetchAdmissions}
+                      variant="outline"
+                      className="border-gray-300"
+                    >
+                      Refresh
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Admissions Table */}
+            <Card>
+              <CardHeader className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white">
+                <CardTitle className="text-xl">Student Admissions ({admissions.length})</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                {admissions.length === 0 ? (
+                  <div className="text-center py-12">
+                    <GraduationCap className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">No admission records yet</p>
+                    <p className="text-gray-400 text-sm mt-2">Add your first admission record to get started</p>
+                    <Button
+                      onClick={() => setShowAddAdmission(true)}
+                      className="mt-4 bg-purple-500 hover:bg-purple-600"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add First Admission
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-gray-50">
+                          <TableHead className="font-semibold">Student Name</TableHead>
+                          <TableHead className="font-semibold">Course</TableHead>
+                          <TableHead className="font-semibold">College</TableHead>
+                          <TableHead className="font-semibold">Admission Date</TableHead>
+                          <TableHead className="font-semibold">Consultant</TableHead>
+                          <TableHead className="font-semibold">Payout Amount</TableHead>
+                          <TableHead className="font-semibold">Payout Status</TableHead>
+                          <TableHead className="font-semibold">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {admissions.map((admission) => (
+                          <TableRow key={admission.id} className="hover:bg-gray-50">
+                            <TableCell className="font-medium">{admission.student_name}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline" className="bg-blue-50">
+                                {admission.course}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-sm">{admission.college}</TableCell>
+                            <TableCell className="text-sm">{admission.admission_date}</TableCell>
+                            <TableCell>
+                              <Badge className="bg-green-100 text-green-800">
+                                {admission.consultant_name}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="font-semibold text-green-600">
+                              ₹{parseFloat(admission.payout_amount).toLocaleString()}
+                            </TableCell>
+                            <TableCell>
+                              <Badge 
+                                className={
+                                  admission.payout_status === 'PAYOUT NOT CREDITED YET' ? 'bg-yellow-100 text-yellow-800' :
+                                  admission.payout_status === 'PAYOUT REFLECTED' ? 'bg-blue-100 text-blue-800' :
+                                  'bg-green-100 text-green-800'
+                                }
+                              >
+                                {admission.payout_status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => setEditingAdmission(admission)}
+                                  className="text-xs bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100"
+                                >
+                                  <Edit className="h-3 w-3 mr-1" />
+                                  Edit
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleDeleteAdmission(admission.id)}
+                                  className="text-xs bg-red-50 border-red-300 text-red-700 hover:bg-red-100"
+                                >
+                                  <Trash2 className="h-3 w-3 mr-1" />
+                                  Delete
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Add Admission Modal */}
+            {showAddAdmission && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                  <CardHeader className="border-b bg-purple-500 text-white">
+                    <div className="flex items-center justify-between">
+                      <CardTitle>Add New Admission</CardTitle>
+                      <button
+                        onClick={() => {
+                          setShowAddAdmission(false);
+                          setNewAdmission({
+                            student_name: '',
+                            course: '',
+                            college: '',
+                            admission_date: '',
+                            consultant_id: '',
+                            consultant_name: '',
+                            payout_amount: '',
+                            payout_status: 'PAYOUT NOT CREDITED YET'
+                          });
+                        }}
+                        className="text-white hover:text-gray-200"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-4">
+                    <div>
+                      <Label htmlFor="admission_student_name">Student Name *</Label>
+                      <Input
+                        id="admission_student_name"
+                        value={newAdmission.student_name}
+                        onChange={(e) => setNewAdmission({ ...newAdmission, student_name: e.target.value })}
+                        placeholder="Enter student name"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="admission_course">Course *</Label>
+                      <Input
+                        id="admission_course"
+                        value={newAdmission.course}
+                        onChange={(e) => setNewAdmission({ ...newAdmission, course: e.target.value })}
+                        placeholder="e.g., B.Tech, MBBS, MBA"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="admission_college">College *</Label>
+                      <Input
+                        id="admission_college"
+                        value={newAdmission.college}
+                        onChange={(e) => setNewAdmission({ ...newAdmission, college: e.target.value })}
+                        placeholder="Enter college name"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="admission_date">Admission Date *</Label>
+                      <Input
+                        id="admission_date"
+                        type="date"
+                        value={newAdmission.admission_date}
+                        onChange={(e) => setNewAdmission({ ...newAdmission, admission_date: e.target.value })}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="admission_consultant">Consultant *</Label>
+                      <select
+                        id="admission_consultant"
+                        value={newAdmission.consultant_id}
+                        onChange={(e) => {
+                          const selectedConsultant = consultants.find(c => c.user_id === e.target.value);
+                          setNewAdmission({ 
+                            ...newAdmission, 
+                            consultant_id: e.target.value,
+                            consultant_name: selectedConsultant?.name || ''
+                          });
+                        }}
+                        className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      >
+                        <option value="">Select Consultant</option>
+                        {consultants.map((consultant) => (
+                          <option key={consultant.user_id} value={consultant.user_id}>
+                            {consultant.name} ({consultant.user_id})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor="admission_payout">Payout Amount (₹) *</Label>
+                      <Input
+                        id="admission_payout"
+                        type="number"
+                        value={newAdmission.payout_amount}
+                        onChange={(e) => setNewAdmission({ ...newAdmission, payout_amount: e.target.value })}
+                        placeholder="Enter payout amount"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="admission_status">Payout Status *</Label>
+                      <select
+                        id="admission_status"
+                        value={newAdmission.payout_status}
+                        onChange={(e) => setNewAdmission({ ...newAdmission, payout_status: e.target.value })}
+                        className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      >
+                        {PAYOUT_STATUS_OPTIONS.map((status) => (
+                          <option key={status} value={status}>{status}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex gap-3 pt-4">
+                      <Button
+                        onClick={handleAddAdmission}
+                        className="flex-1 bg-purple-500 hover:bg-purple-600"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Admission
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowAddAdmission(false);
+                          setNewAdmission({
+                            student_name: '',
+                            course: '',
+                            college: '',
+                            admission_date: '',
+                            consultant_id: '',
+                            consultant_name: '',
+                            payout_amount: '',
+                            payout_status: 'PAYOUT NOT CREDITED YET'
+                          });
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Edit Admission Modal */}
+            {editingAdmission && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                  <CardHeader className="border-b bg-yellow-500 text-white">
+                    <div className="flex items-center justify-between">
+                      <CardTitle>Edit Admission</CardTitle>
+                      <button
+                        onClick={() => setEditingAdmission(null)}
+                        className="text-white hover:text-gray-200"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-4">
+                    <div>
+                      <Label htmlFor="edit_admission_student_name">Student Name *</Label>
+                      <Input
+                        id="edit_admission_student_name"
+                        value={editingAdmission.student_name}
+                        onChange={(e) => setEditingAdmission({ ...editingAdmission, student_name: e.target.value })}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit_admission_course">Course *</Label>
+                      <Input
+                        id="edit_admission_course"
+                        value={editingAdmission.course}
+                        onChange={(e) => setEditingAdmission({ ...editingAdmission, course: e.target.value })}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit_admission_college">College *</Label>
+                      <Input
+                        id="edit_admission_college"
+                        value={editingAdmission.college}
+                        onChange={(e) => setEditingAdmission({ ...editingAdmission, college: e.target.value })}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit_admission_date">Admission Date *</Label>
+                      <Input
+                        id="edit_admission_date"
+                        type="date"
+                        value={editingAdmission.admission_date}
+                        onChange={(e) => setEditingAdmission({ ...editingAdmission, admission_date: e.target.value })}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit_admission_consultant">Consultant *</Label>
+                      <select
+                        id="edit_admission_consultant"
+                        value={editingAdmission.consultant_id}
+                        onChange={(e) => {
+                          const selectedConsultant = consultants.find(c => c.user_id === e.target.value);
+                          setEditingAdmission({ 
+                            ...editingAdmission, 
+                            consultant_id: e.target.value,
+                            consultant_name: selectedConsultant?.name || ''
+                          });
+                        }}
+                        className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      >
+                        <option value="">Select Consultant</option>
+                        {consultants.map((consultant) => (
+                          <option key={consultant.user_id} value={consultant.user_id}>
+                            {consultant.name} ({consultant.user_id})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor="edit_admission_payout">Payout Amount (₹) *</Label>
+                      <Input
+                        id="edit_admission_payout"
+                        type="number"
+                        value={editingAdmission.payout_amount}
+                        onChange={(e) => setEditingAdmission({ ...editingAdmission, payout_amount: e.target.value })}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit_admission_status">Payout Status *</Label>
+                      <select
+                        id="edit_admission_status"
+                        value={editingAdmission.payout_status}
+                        onChange={(e) => setEditingAdmission({ ...editingAdmission, payout_status: e.target.value })}
+                        className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                      >
+                        {PAYOUT_STATUS_OPTIONS.map((status) => (
+                          <option key={status} value={status}>{status}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex gap-3 pt-4">
+                      <Button
+                        onClick={handleUpdateAdmission}
+                        className="flex-1 bg-yellow-500 hover:bg-yellow-600"
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Update Admission
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => setEditingAdmission(null)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </TabsContent>
+
           {/* Consultant Management Tab */}
           <TabsContent value="consultants">
             <Card>
