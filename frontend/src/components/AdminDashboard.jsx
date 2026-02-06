@@ -261,15 +261,17 @@ const AdminDashboard = () => {
     }
   };
 
-  // Update Consultant
+  // Update Consultant - Only User ID and Password can be changed
   const handleUpdateConsultant = async () => {
     if (!editingConsultant) return;
     try {
       const params = new URLSearchParams();
-      if (editingConsultant.name) params.append('name', editingConsultant.name);
+      if (editingConsultant.new_user_id && editingConsultant.new_user_id !== editingConsultant.original_user_id) {
+        params.append('new_user_id', editingConsultant.new_user_id);
+      }
       if (editingConsultant.password) params.append('password', editingConsultant.password);
       
-      const response = await axios.put(`${API}/admin/consultants/${editingConsultant.user_id}?${params.toString()}`);
+      const response = await axios.put(`${API}/admin/consultants/${editingConsultant.original_user_id}?${params.toString()}`);
       if (response.data.success) {
         toast.success('Consultant updated successfully');
         fetchConsultants();
