@@ -1163,6 +1163,217 @@ const AdminDashboard = () => {
               </div>
             )}
           </TabsContent>
+
+          {/* Consultant Management Tab */}
+          <TabsContent value="consultants">
+            <Card>
+              <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-2xl">Consultant Management</CardTitle>
+                    <p className="text-blue-100 text-sm mt-1">Add, edit, or remove consultant accounts</p>
+                  </div>
+                  <Button
+                    onClick={() => setShowAddConsultant(true)}
+                    className="bg-white text-blue-600 hover:bg-blue-50"
+                  >
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Add Consultant
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                {/* Stats */}
+                <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+                  <p className="text-lg">
+                    <span className="font-bold text-blue-600">{consultants.length}</span> Active Consultants
+                  </p>
+                </div>
+
+                {/* Consultants Table */}
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50">
+                        <TableHead className="font-semibold">User ID</TableHead>
+                        <TableHead className="font-semibold">Name</TableHead>
+                        <TableHead className="font-semibold">Password</TableHead>
+                        <TableHead className="font-semibold">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {consultants.map((consultant, index) => (
+                        <TableRow key={index} className="hover:bg-gray-50">
+                          <TableCell className="font-mono text-sm">{consultant.user_id}</TableCell>
+                          <TableCell className="font-medium">{consultant.name}</TableCell>
+                          <TableCell className="font-mono text-sm text-gray-500">
+                            {consultant.password.substring(0, 3)}***
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setEditingConsultant(consultant)}
+                                className="text-xs bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100"
+                              >
+                                <Edit className="h-3 w-3 mr-1" />
+                                Edit
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDeleteConsultant(consultant.user_id)}
+                                className="text-xs bg-red-50 border-red-300 text-red-700 hover:bg-red-100"
+                              >
+                                <Trash2 className="h-3 w-3 mr-1" />
+                                Remove
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Add Consultant Modal */}
+            {showAddConsultant && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <Card className="max-w-md w-full">
+                  <CardHeader className="border-b bg-blue-500 text-white">
+                    <div className="flex items-center justify-between">
+                      <CardTitle>Add New Consultant</CardTitle>
+                      <button
+                        onClick={() => {
+                          setShowAddConsultant(false);
+                          setNewConsultant({ user_id: '', name: '', password: '' });
+                        }}
+                        className="text-white hover:text-gray-200"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-4">
+                    <div>
+                      <Label htmlFor="new_user_id">User ID *</Label>
+                      <Input
+                        id="new_user_id"
+                        value={newConsultant.user_id}
+                        onChange={(e) => setNewConsultant({ ...newConsultant, user_id: e.target.value.toUpperCase() })}
+                        placeholder="e.g., JOHN_EDU"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="new_name">Full Name *</Label>
+                      <Input
+                        id="new_name"
+                        value={newConsultant.name}
+                        onChange={(e) => setNewConsultant({ ...newConsultant, name: e.target.value })}
+                        placeholder="e.g., John Doe"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="new_password">Password *</Label>
+                      <Input
+                        id="new_password"
+                        value={newConsultant.password}
+                        onChange={(e) => setNewConsultant({ ...newConsultant, password: e.target.value })}
+                        placeholder="Enter password"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div className="flex gap-3 pt-4">
+                      <Button
+                        onClick={handleAddConsultant}
+                        className="flex-1 bg-blue-500 hover:bg-blue-600"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Consultant
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowAddConsultant(false);
+                          setNewConsultant({ user_id: '', name: '', password: '' });
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Edit Consultant Modal */}
+            {editingConsultant && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <Card className="max-w-md w-full">
+                  <CardHeader className="border-b bg-yellow-500 text-white">
+                    <div className="flex items-center justify-between">
+                      <CardTitle>Edit Consultant</CardTitle>
+                      <button
+                        onClick={() => setEditingConsultant(null)}
+                        className="text-white hover:text-gray-200"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-4">
+                    <div>
+                      <Label>User ID</Label>
+                      <Input
+                        value={editingConsultant.user_id}
+                        disabled
+                        className="mt-1 bg-gray-100"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit_name">Full Name</Label>
+                      <Input
+                        id="edit_name"
+                        value={editingConsultant.name}
+                        onChange={(e) => setEditingConsultant({ ...editingConsultant, name: e.target.value })}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="edit_password">New Password (leave blank to keep current)</Label>
+                      <Input
+                        id="edit_password"
+                        value={editingConsultant.password || ''}
+                        onChange={(e) => setEditingConsultant({ ...editingConsultant, password: e.target.value })}
+                        placeholder="Enter new password"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div className="flex gap-3 pt-4">
+                      <Button
+                        onClick={handleUpdateConsultant}
+                        className="flex-1 bg-yellow-500 hover:bg-yellow-600"
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Update Consultant
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => setEditingConsultant(null)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </TabsContent>
         </Tabs>
       </div>
     </div>
