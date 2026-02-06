@@ -1048,14 +1048,24 @@ const AdminDashboard = () => {
                               </p>
                             </TableCell>
                             <TableCell>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setSelectedReport(report)}
-                                className="text-xs"
-                              >
-                                View Details
-                              </Button>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => setSelectedReport(report)}
+                                  className="text-xs"
+                                >
+                                  View
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleDeleteReport(report.id)}
+                                  className="text-xs bg-red-50 border-red-300 text-red-700 hover:bg-red-100"
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
