@@ -371,3 +371,134 @@ async def remove_consultant(user_id: str):
         logger.error(f"Error deleting consultant: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to delete consultant")
 
+
+# ==================== Student Admissions Tracking ====================
+
+@router.post("/admin/admissions", response_model=dict)
+async def create_admission(
+    student_name: str,
+    course: str,
+    college: str,
+    admission_date: str,
+    consultant_id: str,
+    consultant_name: str,
+    payout_amount: float,
+    payout_status: str = "PAYOUT NOT CREDITED YET"
+):
+    """Record a new student admission"""
+    try:
+        from datetime import datetime
+        import uuid
+        
+        admission = {
+            "id": str(uuid.uuid4()),
+            "student_name": student_name,
+            "course": course,
+            "college": college,
+            "admission_date": admission_date,
+            "consultant_id": consultant_id,
+            "consultant_name": consultant_name,
+            "payout_amount": payout_amount,
+            "payout_status": payout_status,
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        }
+        
+        await db.admissions.insert_one(admission)
+        logger.info(f"Admission recorded for student {student_name} by consultant {consultant_name}")
+        
+        return {
+            "success": True,
+            "message": "Admission recorded successfully",
+            "admission_id": admission["id"]
+        }
+    except Exception as e:
+        logger.error(f"Error creating admission: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to record admission")
+
+@router.get("/admin/admissions", response_model=dict)
+async def get_all_admissions():
+    """Get all student admissions for admin"""
+    try:
+        admissions = await db.admissions.find({}, {"_id": 0}).sort("created_at", -1).to_list(10000)
+        return {
+            "success": True,
+            "admissions": admissions,
+            "count": len(admissions)
+        }
+    except Exception as e:
+        logger.error(f"Error fetching admissions: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch admissions")
+
+@router.put("/admin/admissions/{admission_id}", response_model=dict)
+async def update_admission(
+    admission_id: str,
+    student_name: str = None,
+    course: str = None,
+    college: str = None,
+    admission_date: str = None,
+    payout_amount: float = None,
+    payout_status: str = None
+):
+    """Update an admission record"""
+    try:
+        from datetime import datetime
+        
+        update_data = {"updated_at": datetime.utcnow()}
+        if student_name: update_data["student_name"] = student_name
+        if course: update_data["course"] = course
+        if college: update_data["college"] = college
+        if admission_date: update_data["admission_date"] = admission_date
+        if payout_amount is not None: update_data["payout_amount"] = payout_amount
+        if payout_status: update_data["payout_status"] = payout_status
+        
+        result = await db.admissions.update_one(
+            {"id": admission_id},
+            {"$set": update_data}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Admission not found")
+        
+        logger.info(f"Admission {admission_id} updated")
+        return {"success": True, "message": "Admission updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating admission: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update admission")
+
+@router.delete("/admin/admissions/{admission_id}", response_model=dict)
+async def delete_admission(admission_id: str):
+    """Delete an admission record"""
+    try:
+        result = await db.admissions.delete_one({"id": admission_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Admission not found")
+        
+        logger.info(f"Admission {admission_id} deleted")
+        return {"success": True, "message": "Admission deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting admission: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete admission")
+
+@router.get("/consultant/admissions/{consultant_id}", response_model=dict)
+async def get_consultant_admissions(consultant_id: str):
+    """Get admissions for a specific consultant"""
+    try:
+        admissions = await db.admissions.find(
+            {"consultant_id": consultant_id}, 
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(10000)
+        
+        return {
+            "success": True,
+            "admissions": admissions,
+            "count": len(admissions)
+        }
+    except Exception as e:
+        logger.error(f"Error fetching consultant admissions: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch admissions")
