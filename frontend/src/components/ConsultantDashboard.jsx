@@ -33,7 +33,10 @@ import {
   Calendar as CalendarIcon,
   Eye,
   RefreshCw,
-  X
+  X,
+  GraduationCap,
+  DollarSign,
+  Award
 } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
