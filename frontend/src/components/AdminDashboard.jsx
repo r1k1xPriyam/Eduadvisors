@@ -668,6 +668,14 @@ const AdminDashboard = () => {
                                   </Button>
                                 </>
                               )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDeleteQuery(query.id)}
+                                className="text-xs bg-red-50 border-red-300 text-red-700 hover:bg-red-100"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
