@@ -35,6 +35,15 @@ const QueryPopup = () => {
     }
   }, []);
 
+  // Listen for custom event to open popup from anywhere
+  useEffect(() => {
+    const handleOpenPopup = () => {
+      setIsOpen(true);
+    };
+    window.addEventListener('openQueryPopup', handleOpenPopup);
+    return () => window.removeEventListener('openQueryPopup', handleOpenPopup);
+  }, []);
+
   const handleClose = () => {
     setIsOpen(false);
     sessionStorage.setItem('queryPopupClosed', 'true');
