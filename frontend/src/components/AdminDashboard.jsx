@@ -1343,7 +1343,12 @@ const AdminDashboard = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => setEditingConsultant(consultant)}
+                                onClick={() => setEditingConsultant({
+                                  ...consultant,
+                                  original_user_id: consultant.user_id,
+                                  new_user_id: consultant.user_id,
+                                  password: ''
+                                })}
                                 className="text-xs bg-blue-50 border-blue-300 text-blue-700 hover:bg-blue-100"
                               >
                                 <Edit className="h-3 w-3 mr-1" />
