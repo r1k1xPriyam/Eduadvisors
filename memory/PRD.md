@@ -50,7 +50,7 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 
 ## Implementation Status
 
-### ✅ Completed (Jan 29, 2026)
+### ✅ Completed (Feb 6, 2026)
 - Full-stack application with React + FastAPI + MongoDB
 - Landing page with all sections
 - Student query submission system
@@ -64,10 +64,14 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - CSV export functionality
 - "Made with Emergent" watermark removed
 - Loader text changed to "EDUADVISOR"
-- **Updated Logo** - New circular logo with graduation cap across all pages
-- **Postgraduate Course Details** - Added comprehensive details for 19 postgraduate courses
-- **Calendar Date Filters** - Added to both Admin and Consultant dashboards
-- **Fixed UI Issues** - Removed odd calendar components, fixed arrow rendering (→)
+- Updated Logo - New circular logo with graduation cap across all pages
+- Postgraduate Course Details - Added comprehensive details for 19 postgraduate courses
+- Calendar Date Filters - Added to both Admin and Consultant dashboards
+- Fixed UI Issues - Removed odd calendar components, fixed arrow rendering (→)
+- Quick Links - Admin and Consultant login links in Header and Footer
+- **NEW: Delete functionality** - Admin can delete student queries and consultant reports
+- **NEW: Query Popup** - Free counselling popup on website load with close button
+- **NEW: Consultant Management** - Admin can add, edit, remove consultants and manage credentials
 
 ### 🔄 Pending/Backlog
 - **Future**: JWT-based authentication (currently using localStorage)
