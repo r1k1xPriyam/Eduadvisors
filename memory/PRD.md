@@ -71,7 +71,11 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - Quick Links - Admin and Consultant login links in Header and Footer
 - **NEW: Delete functionality** - Admin can delete student queries and consultant reports
 - **NEW: Query Popup** - Free counselling popup on website load with close button
-- **NEW: Consultant Management** - Admin can add, edit, remove consultants and manage credentials
+- **NEW: EDU BUDDY AI Chatbot** - AI counselling assistant for consultants with:
+  - Auto Mode: Popular queries (NEET/JEE cut-offs, course recommendations, college fees)
+  - Manual Mode: Custom questions about entrance exams, courses, colleges
+  - Knowledge base: Cut-offs, fees, course suggestions based on 12th marks
+  - Powered by Gemini 3 Flash AI
 
 ### 🔄 Pending/Backlog
 - **Future**: JWT-based authentication (currently using localStorage)
