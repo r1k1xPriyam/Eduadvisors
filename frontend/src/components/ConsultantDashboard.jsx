@@ -76,6 +76,10 @@ const ConsultantDashboard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   
+  // My Admissions State
+  const [myAdmissions, setMyAdmissions] = useState([]);
+  const [loadingAdmissions, setLoadingAdmissions] = useState(false);
+  
   const [formData, setFormData] = useState({
     student_name: '',
     contact_number: '',
