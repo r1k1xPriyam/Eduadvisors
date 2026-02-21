@@ -1,7 +1,7 @@
 # Edu Advisor - Product Requirements Document
 
 ## Overview
-Edu Advisor is a comprehensive educational consultancy website with a React frontend, FastAPI backend, and MongoDB database.
+Edu Advisor is a comprehensive educational consultancy website with a React frontend, FastAPI backend, and MongoDB database. Fully mobile-responsive design.
 
 ## Core Features
 
@@ -14,32 +14,36 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - **Query Popup**: Student lead capture popup with auto-show and manual trigger via button
 
 ### Admin Dashboard (`/admin`)
-- **Secure Login**: ID: `ADMIN`, Password: `EDUadvisors@souvikCEO2026`
-- **4 Tab Interface**: Student Queries, Consultant Reports, Admissions, Manage Consultants
-- **Student Queries Management**: View, search, filter, delete, and update query status (New → Contacted → Closed)
+- **Secure Login**: ID: `ADMIN`, Password: `Eduadvisors@2026`
+- **Interactive Login Background**: Floating animated icons (Shield, Users, BarChart3, FileCheck)
+- **5 Tab Interface**: Student Queries, Consultant Reports, Call Stats, Admissions, Manage Consultants
+- **Call Stats Overview Bar**: Shows Total Calls, Successful, Failed, Attempted across all consultants
+- **Call Statistics by Consultant**: Table showing each consultant's call breakdown and success rate
+- **Student Queries Management**: View, search, filter, delete, and update query status
 - **Consultant Reports**: View all daily reports, filter by date and consultant, delete reports
-- **Admissions Tracking**: 
-  - Add/Edit/Delete student admission records
-  - Fields: Student Name, Course, College, Admission Date, Consultant, Payout Amount, Payout Status
-  - Payout Status options: PAYOUT NOT CREDITED YET, PAYOUT REFLECTED, CONSULTANT'S COMMISION GIVEN
-  - Stats cards showing admission counts and payout status breakdown
-- **Consultant Management**:
-  - Add new consultants with User ID, Name, Password
-  - Edit consultants: User ID and Password EDITABLE, Full Name READ-ONLY
-  - Delete consultants
-- **Calendar Date Filter**: Filter reports by specific date
-- **Export to CSV**: Export queries and reports
+- **Admissions Tracking**: Full CRUD for tracking student admissions and consultant payouts
+- **Consultant Management**: Add/Edit/Delete with User ID editable, Full Name read-only
+- **Bulk Delete Feature**:
+  - Delete data by type (Reports, Calls, Queries, Admissions, All)
+  - Filter by consultant
+  - Filter by date range
+  - **Password re-confirmation required** for sensitive deletion
+- **Mobile-Responsive**: Full smartphone compatibility with 2-row tab layout on mobile
 
 ### Consultant Portal (`/consultant`)
 - **Unique Logins**: 25 consultants with individual credentials
-- **3 Tab Interface**: Submit Report, My Reports, My Admissions
-- **Daily Report Submission**: Consultants submit student calling reports
+- **Interactive Login Background**: Floating animated icons (Phone, FileText, Award, Target)
+- **4 Tab Interface**: Submit Report, My Reports, My Calls, My Admissions
+- **Call Stats Bar**: Shows consultant's Total Calls, Successful, Failed, Attempted
+- **Quick Log Call Feature**:
+  - One-click call logging without full report details
+  - Optional fields: Student Name, Contact Number, Remarks
+  - Three quick actions: Success, Failed, Attempt
+- **Daily Report Submission**: Full detailed student calling reports
 - **My Reports Tab**: View own submitted reports with date filter
-- **My Admissions Tab**: 
-  - View admissions credited by admin
-  - Stats: Total Admissions, Total Earnings, Payout Received
-  - Payout Summary: Pending, Reflected, Received amounts
-- **Protected Routes**: Only authenticated consultants can access
+- **My Calls Tab**: View call statistics breakdown
+- **My Admissions Tab**: View admissions credited by admin with payout summary
+- **Mobile-Responsive**: Full smartphone compatibility
 
 ## Tech Stack
 - **Frontend**: React, React Router, TailwindCSS, Shadcn UI
@@ -47,6 +51,15 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - **Database**: MongoDB
 
 ## API Endpoints
+
+### Call Logging (NEW)
+- `POST /api/consultant/calls` - Log a call (quick log, minimal data required)
+- `GET /api/consultant/calls/{consultant_id}` - Get consultant's call stats
+- `GET /api/admin/calls` - Get all call stats with per-consultant breakdown
+
+### Bulk Delete (NEW)
+- `POST /api/admin/bulk-delete` - Bulk delete with password verification
+- `POST /api/admin/verify-password` - Verify admin password
 
 ### Student Queries
 - `GET /api/queries` - Fetch all student queries
@@ -71,41 +84,43 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 ### Consultant Management
 - `GET /api/admin/consultants` - Get all consultants
 - `POST /api/admin/consultants` - Add new consultant
-- `PUT /api/admin/consultants/{user_id}` - Update consultant (User ID and Password only, NOT name)
+- `PUT /api/admin/consultants/{user_id}` - Update consultant (User ID and Password only)
 - `DELETE /api/admin/consultants/{user_id}` - Delete consultant
 
 ## Database Schema
 - **student_queries**: `{name, phone, email, course, message, current_institution, status, created_at}`
 - **consultant_reports**: `{consultant_name, consultant_id, student_name, contact_number, institution_name, interest_scope, ...}`
+- **call_logs** (NEW): `{id, consultant_id, consultant_name, call_type, student_name, contact_number, remarks, created_at}`
 - **admissions**: `{id, student_name, course, college, admission_date, consultant_id, consultant_name, payout_amount, payout_status, created_at}`
-- **consultants**: Stored in-memory (consultants.py) - `{user_id: {name, password}}`
 
 ---
 
 ## Implementation Status
 
-### ✅ Completed (Feb 6, 2026)
+### ✅ Completed (Feb 21, 2026)
 - Full-stack application with React + FastAPI + MongoDB
+- **Mobile-Responsive Design** - All pages fully smartphone compatible
+- **Interactive Login Backgrounds** - Floating animated icons on Admin and Consultant login pages
+- **Call Logging System** - Quick log calls (successful/failed/attempted) without full report
+- **Call Stats for Admin** - View all consultants' call statistics with success rates
+- **Call Stats for Consultants** - View own call statistics
+- **Bulk Delete with Password Verification** - Delete data by type, consultant, date range
 - Landing page with all sections including Success Gallery
-- **GET COUNSELLING NOW button** - Opens student query popup from Hero section
-- Student query submission system with popup and form section
-- Admin dashboard with 4-tab interface
-- **Admissions Tracking System** - Full CRUD for tracking student admissions and consultant payouts
-- **Consultant Management** - Add/Edit/Delete with User ID editable, Full Name read-only restriction
-- Consultant portal with 3-tab interface including "My Admissions"
-- Daily report submission for consultants
-- Route protection for admin and consultant dashboards
-- IST timestamp formatting
+- GET COUNSELLING NOW button
+- Student query submission system
+- Admin dashboard with 5-tab interface
+- Admissions Tracking System
+- Consultant Management
+- Consultant portal with 4-tab interface
+- Daily report submission
+- Route protection
+- Calendar Date Filters
 - CSV export functionality
-- Delete functionality for queries, reports, and admissions
-- **Success Gallery** - Interactive carousel with 5 categories (removed Study Abroad)
-- Calendar Date Filters for Admin and Consultant dashboards
 
 ### 🔄 Pending/Backlog
-- **Future**: JWT-based authentication (currently using localStorage)
-- **Future**: Move consultant credentials from in-memory to database
-- **Future**: Add pagination for large datasets
-- **Future**: Email notifications for new queries/admissions
+- **Future**: JWT-based authentication
+- **Future**: Move consultant credentials to database
+- **Future**: Email notifications
 
 ---
 
@@ -114,12 +129,9 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 ### Admin
 - URL: `/admin`
 - User ID: `ADMIN`
-- Password: `EDUadvisors@souvikCEO2026`
+- Password: `Eduadvisors@2026`
 
 ### Consultants (25 total)
 - PRIYAMPATRA / Priyam123!@#
 - AK007 / 7001377649
-- NILKANTHA / nil12345
-- SWARAJ_EDU / Swaraj@5533
-- SOYALI_EDU / Soyali2026@
 - (See `/app/backend/consultants.py` for full list)
