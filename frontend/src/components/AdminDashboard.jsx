@@ -64,6 +64,10 @@ const AdminDashboard = () => {
 
   // Call Stats State
   const [callStats, setCallStats] = useState({ overall_stats: { total_calls: 0, successful_calls: 0, failed_calls: 0 }, consultant_stats: {} });
+  const [showDeleteCallStats, setShowDeleteCallStats] = useState(false);
+  const [deleteCallsConsultantId, setDeleteCallsConsultantId] = useState('');
+  const [deleteCallsPassword, setDeleteCallsPassword] = useState('');
+  const [isDeletingCalls, setIsDeletingCalls] = useState(false);
 
   // Bulk Delete State
   const [showBulkDelete, setShowBulkDelete] = useState(false);
