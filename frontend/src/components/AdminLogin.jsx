@@ -6,9 +6,12 @@ import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Lock, User, Eye, EyeOff, Shield, Users, BarChart3, FileCheck } from 'lucide-react';
 import { toast } from 'sonner';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '../context/ThemeContext';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const { isDark } = useTheme();
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
@@ -52,11 +55,20 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-gray-50 relative overflow-hidden">
+    <div className={`min-h-screen flex items-center justify-center relative overflow-hidden transition-colors duration-300 ${
+      isDark 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+        : 'bg-gradient-to-br from-yellow-50 via-white to-gray-50'
+    }`}>
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4 z-20">
+        <ThemeToggle />
+      </div>
+
       {/* Background Graphics */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Floating Icons */}
-        <div className="absolute top-20 left-10 md:left-20 text-yellow-200 animate-bounce" style={{ animationDelay: '0s', animationDuration: '3s' }}>
+        <div className={`absolute top-20 left-10 md:left-20 animate-bounce ${isDark ? 'text-yellow-500/30' : 'text-yellow-200'}`} style={{ animationDelay: '0s', animationDuration: '3s' }}>
           <Shield className="h-12 w-12 md:h-16 md:w-16" />
         </div>
         <div className="absolute top-40 right-10 md:right-20 text-yellow-200 animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '3.5s' }}>
