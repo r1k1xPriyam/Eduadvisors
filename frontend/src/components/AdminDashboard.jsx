@@ -34,6 +34,7 @@ const PAYOUT_STATUS_OPTIONS = [
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { isDark } = useTheme();
   const [activeTab, setActiveTab] = useState('queries');
   const [queries, setQueries] = useState([]);
   const [filteredQueries, setFilteredQueries] = useState([]);
