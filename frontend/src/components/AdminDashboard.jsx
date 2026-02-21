@@ -1642,6 +1642,7 @@ const AdminDashboard = () => {
                           <TableHead className={`font-semibold text-center ${isDark ? 'text-gray-200' : ''}`}>Failed</TableHead>
                           <TableHead className={`font-semibold text-center ${isDark ? 'text-gray-200' : ''}`}>Attempted</TableHead>
                           <TableHead className={`font-semibold text-center ${isDark ? 'text-gray-200' : ''}`}>Success Rate</TableHead>
+                          <TableHead className={`font-semibold text-center ${isDark ? 'text-gray-200' : ''}`}>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -1675,6 +1676,20 @@ const AdminDashboard = () => {
                                   ? `${Math.round((stats.successful_calls / stats.total_calls) * 100)}%` 
                                   : '0%'}
                               </span>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setDeleteCallsConsultantId(consultantId);
+                                  setShowDeleteCallStats(true);
+                                }}
+                                className={`text-xs px-2 ${isDark ? 'bg-red-900/30 border-red-700 text-red-400 hover:bg-red-900/50' : 'bg-red-50 border-red-300 text-red-700 hover:bg-red-100'}`}
+                              >
+                                <Trash2 className="h-3 w-3 md:mr-1" />
+                                <span className="hidden md:inline">Delete</span>
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
