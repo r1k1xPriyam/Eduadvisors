@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from './context/ThemeContext';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -23,7 +24,7 @@ import { Toaster } from './components/ui/sonner';
 
 const Home = () => {
   return (
-    <div>
+    <div className="dark:bg-gray-900 transition-colors duration-300">
       <Header />
       <main>
         <Hero />
@@ -45,36 +46,38 @@ const Home = () => {
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route 
-            path="/admin/dashboard" 
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* Consultant Routes */}
-          <Route path="/consultant" element={<ConsultantLogin />} />
-          <Route 
-            path="/consultant/dashboard" 
-            element={
-              <ProtectedConsultantRoute>
-                <ConsultantDashboard />
-              </ProtectedConsultantRoute>
-            } 
-          />
-        </Routes>
-      </BrowserRouter>
-      <Toaster />
-    </div>
+    <ThemeProvider>
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLogin />} />
+            <Route 
+              path="/admin/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Consultant Routes */}
+            <Route path="/consultant" element={<ConsultantLogin />} />
+            <Route 
+              path="/consultant/dashboard" 
+              element={
+                <ProtectedConsultantRoute>
+                  <ConsultantDashboard />
+                </ProtectedConsultantRoute>
+              } 
+            />
+          </Routes>
+        </BrowserRouter>
+        <Toaster />
+      </div>
+    </ThemeProvider>
   );
 }
 
