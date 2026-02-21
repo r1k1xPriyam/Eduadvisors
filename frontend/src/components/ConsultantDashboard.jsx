@@ -952,31 +952,31 @@ const ConsultantDashboard = () => {
 
           {/* My Calls Tab */}
           <TabsContent value="calls">
-            <Card>
+            <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
               <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 md:p-6">
                 <CardTitle className="text-lg md:text-xl">My Call History</CardTitle>
                 <p className="text-indigo-100 text-xs md:text-sm">Track all your calls - successful, failed, and attempted</p>
               </CardHeader>
               <CardContent className="p-4 md:p-6">
                 <div className="text-center py-8 md:py-12">
-                  <PhoneCall className="h-12 w-12 md:h-16 md:w-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 text-base md:text-lg">Use "Quick Log Call" to track your calls</p>
-                  <p className="text-gray-400 text-xs md:text-sm mt-2">Your call statistics are displayed in the cards above</p>
+                  <PhoneCall className={`h-12 w-12 md:h-16 md:w-16 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                  <p className={`text-base md:text-lg ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>Use "Quick Log Call" to track your calls</p>
+                  <p className={`text-xs md:text-sm mt-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Your call statistics are displayed in the cards above</p>
                   <div className="mt-6 grid grid-cols-3 gap-4 max-w-md mx-auto">
-                    <div className="bg-green-50 p-3 md:p-4 rounded-lg">
-                      <CheckCircle className="h-6 w-6 md:h-8 md:w-8 text-green-500 mx-auto mb-2" />
-                      <p className="text-lg md:text-2xl font-bold text-green-600">{callStats.successful_calls}</p>
-                      <p className="text-xs text-gray-600">Successful</p>
+                    <div className={`p-3 md:p-4 rounded-lg ${isDark ? 'bg-green-900/30' : 'bg-green-50'}`}>
+                      <CheckCircle className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-green-400' : 'text-green-500'}`} />
+                      <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-green-400' : 'text-green-600'}`}>{callStats.successful_calls}</p>
+                      <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Successful</p>
                     </div>
-                    <div className="bg-red-50 p-3 md:p-4 rounded-lg">
-                      <PhoneOff className="h-6 w-6 md:h-8 md:w-8 text-red-500 mx-auto mb-2" />
-                      <p className="text-lg md:text-2xl font-bold text-red-600">{callStats.failed_calls}</p>
-                      <p className="text-xs text-gray-600">Failed</p>
+                    <div className={`p-3 md:p-4 rounded-lg ${isDark ? 'bg-red-900/30' : 'bg-red-50'}`}>
+                      <PhoneOff className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-red-400' : 'text-red-500'}`} />
+                      <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-red-400' : 'text-red-600'}`}>{callStats.failed_calls}</p>
+                      <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Failed</p>
                     </div>
-                    <div className="bg-yellow-50 p-3 md:p-4 rounded-lg">
-                      <PhoneMissed className="h-6 w-6 md:h-8 md:w-8 text-yellow-500 mx-auto mb-2" />
-                      <p className="text-lg md:text-2xl font-bold text-yellow-600">{callStats.attempted_calls}</p>
-                      <p className="text-xs text-gray-600">Attempted</p>
+                    <div className={`p-3 md:p-4 rounded-lg ${isDark ? 'bg-yellow-900/30' : 'bg-yellow-50'}`}>
+                      <PhoneMissed className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-yellow-400' : 'text-yellow-500'}`} />
+                      <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>{callStats.attempted_calls}</p>
+                      <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Attempted</p>
                     </div>
                   </div>
                   <Button
@@ -995,58 +995,58 @@ const ConsultantDashboard = () => {
           <TabsContent value="admissions">
             {/* Stats Cards for Admissions */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-4 md:mb-6">
-              <Card>
+              <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
                 <CardContent className="p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs md:text-sm text-gray-600">Total Admissions</p>
-                      <p className="text-2xl md:text-3xl font-bold text-gray-900">{myAdmissions.length}</p>
+                      <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Admissions</p>
+                      <p className={`text-2xl md:text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{myAdmissions.length}</p>
                     </div>
                     <GraduationCap className="h-8 w-8 md:h-10 md:w-10 text-purple-500" />
                   </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardContent className="p-6">
+              <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardContent className="p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">Total Earnings</p>
-                      <p className="text-3xl font-bold text-green-600">
+                      <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Earnings</p>
+                      <p className="text-2xl md:text-3xl font-bold text-green-500">
                         ₹{myAdmissions.reduce((sum, a) => sum + parseFloat(a.payout_amount || 0), 0).toLocaleString()}
                       </p>
                     </div>
-                    <DollarSign className="h-10 w-10 text-green-500" />
+                    <DollarSign className="h-8 w-8 md:h-10 md:w-10 text-green-500" />
                   </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardContent className="p-6">
+              <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardContent className="p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">Payout Received</p>
-                      <p className="text-3xl font-bold text-blue-600">
+                      <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Payout Received</p>
+                      <p className="text-2xl md:text-3xl font-bold text-blue-500">
                         {myAdmissions.filter(a => a.payout_status === "CONSULTANT'S COMMISION GIVEN").length}
                       </p>
                     </div>
-                    <CheckCircle className="h-10 w-10 text-blue-500" />
+                    <CheckCircle className="h-8 w-8 md:h-10 md:w-10 text-blue-500" />
                   </div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Refresh Button */}
-            <Card className="mb-4">
+            <Card className={`mb-4 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Your Credited Admissions</h3>
-                    <p className="text-sm text-gray-500">Admissions assigned to you by the admin</p>
+                    <h3 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Your Credited Admissions</h3>
+                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Admissions assigned to you by the admin</p>
                   </div>
                   <Button
                     onClick={fetchMyAdmissions}
                     variant="outline"
                     disabled={loadingAdmissions}
-                    className="border-gray-300"
+                    className={isDark ? 'border-gray-600' : 'border-gray-300'}
                   >
                     <RefreshCw className={`h-4 w-4 mr-2 ${loadingAdmissions ? 'animate-spin' : ''}`} />
                     Refresh
@@ -1056,7 +1056,7 @@ const ConsultantDashboard = () => {
             </Card>
 
             {/* Admissions Table */}
-            <Card>
+            <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
               <CardHeader className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white">
                 <CardTitle className="text-xl">My Admissions ({myAdmissions.length})</CardTitle>
                 <p className="text-purple-100 text-sm">View all admissions credited to you and their payout status</p>
@@ -1065,39 +1065,39 @@ const ConsultantDashboard = () => {
                 {loadingAdmissions ? (
                   <div className="flex items-center justify-center py-12">
                     <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="ml-3 text-gray-600">Loading admissions...</p>
+                    <p className={`ml-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading admissions...</p>
                   </div>
                 ) : myAdmissions.length === 0 ? (
                   <div className="text-center py-12">
-                    <GraduationCap className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500 text-lg">No admissions credited yet</p>
-                    <p className="text-gray-400 text-sm mt-2">When students are admitted through your referral, they will appear here</p>
+                    <GraduationCap className={`h-16 w-16 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                    <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>No admissions credited yet</p>
+                    <p className={`text-sm mt-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>When students are admitted through your referral, they will appear here</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow className="bg-gray-50">
-                          <TableHead className="font-semibold">Student Name</TableHead>
-                          <TableHead className="font-semibold">Course</TableHead>
-                          <TableHead className="font-semibold">College</TableHead>
-                          <TableHead className="font-semibold">Admission Date</TableHead>
-                          <TableHead className="font-semibold">Payout Amount</TableHead>
-                          <TableHead className="font-semibold">Payout Status</TableHead>
+                        <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student Name</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Course</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>College</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Admission Date</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Payout Amount</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Payout Status</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {myAdmissions.map((admission, index) => (
-                          <TableRow key={admission.id || index} className="hover:bg-gray-50">
-                            <TableCell className="font-medium">{admission.student_name}</TableCell>
+                          <TableRow key={admission.id || index} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                            <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{admission.student_name}</TableCell>
                             <TableCell>
-                              <Badge variant="outline" className="bg-blue-50">
+                              <Badge variant="outline" className={isDark ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-50'}>
                                 {admission.course}
                               </Badge>
                             </TableCell>
-                            <TableCell className="text-sm">{admission.college}</TableCell>
-                            <TableCell className="text-sm">{admission.admission_date}</TableCell>
-                            <TableCell className="font-semibold text-green-600">
+                            <TableCell className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>{admission.college}</TableCell>
+                            <TableCell className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>{admission.admission_date}</TableCell>
+                            <TableCell className="font-semibold text-green-500">
                               ₹{parseFloat(admission.payout_amount).toLocaleString()}
                             </TableCell>
                             <TableCell>
@@ -1122,31 +1122,31 @@ const ConsultantDashboard = () => {
 
             {/* Payout Summary */}
             {myAdmissions.length > 0 && (
-              <Card className="mt-6">
+              <Card className={`mt-6 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Payout Summary</h3>
+                  <h3 className={`text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Payout Summary</h3>
                   <div className="grid md:grid-cols-3 gap-4">
-                    <div className="bg-yellow-50 p-4 rounded-lg">
-                      <p className="text-sm text-yellow-700 font-medium">Pending</p>
-                      <p className="text-2xl font-bold text-yellow-800">
+                    <div className={`p-4 rounded-lg ${isDark ? 'bg-yellow-900/30' : 'bg-yellow-50'}`}>
+                      <p className={`text-sm font-medium ${isDark ? 'text-yellow-400' : 'text-yellow-700'}`}>Pending</p>
+                      <p className={`text-2xl font-bold ${isDark ? 'text-yellow-300' : 'text-yellow-800'}`}>
                         ₹{myAdmissions
                           .filter(a => a.payout_status === 'PAYOUT NOT CREDITED YET')
                           .reduce((sum, a) => sum + parseFloat(a.payout_amount || 0), 0)
                           .toLocaleString()}
                       </p>
                     </div>
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <p className="text-sm text-blue-700 font-medium">Reflected</p>
-                      <p className="text-2xl font-bold text-blue-800">
+                    <div className={`p-4 rounded-lg ${isDark ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
+                      <p className={`text-sm font-medium ${isDark ? 'text-blue-400' : 'text-blue-700'}`}>Reflected</p>
+                      <p className={`text-2xl font-bold ${isDark ? 'text-blue-300' : 'text-blue-800'}`}>
                         ₹{myAdmissions
                           .filter(a => a.payout_status === 'PAYOUT REFLECTED')
                           .reduce((sum, a) => sum + parseFloat(a.payout_amount || 0), 0)
                           .toLocaleString()}
                       </p>
                     </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <p className="text-sm text-green-700 font-medium">Received</p>
-                      <p className="text-2xl font-bold text-green-800">
+                    <div className={`p-4 rounded-lg ${isDark ? 'bg-green-900/30' : 'bg-green-50'}`}>
+                      <p className={`text-sm font-medium ${isDark ? 'text-green-400' : 'text-green-700'}`}>Received</p>
+                      <p className={`text-2xl font-bold ${isDark ? 'text-green-300' : 'text-green-800'}`}>
                         ₹{myAdmissions
                           .filter(a => a.payout_status === "CONSULTANT'S COMMISION GIVEN")
                           .reduce((sum, a) => sum + parseFloat(a.payout_amount || 0), 0)
