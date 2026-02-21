@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Trophy, GraduationCap, Building2, Users, Star, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const SuccessGallery = () => {
+  const { isDark } = useTheme();
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -61,13 +63,13 @@ const SuccessGallery = () => {
   const visibleStories = successStories.slice(currentSlide * 3, currentSlide * 3 + 3);
 
   return (
-    <section id="success-gallery" className="py-20 bg-gradient-to-br from-yellow-50 via-white to-gray-50">
+    <section id="success-gallery" className={`py-20 ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-yellow-50 via-white to-gray-50'}`}>
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h3 className="text-yellow-500 font-semibold text-sm uppercase tracking-wide mb-2">Success Gallery</h3>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Dreams Turned Into Reality</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Dreams Turned Into Reality</h2>
+          <p className={`text-lg max-w-2xl mx-auto ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Witness the joy of our students who achieved their educational dreams with our expert guidance
           </p>
         </div>
@@ -77,17 +79,17 @@ const SuccessGallery = () => {
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-yellow-50 transition-colors hidden md:block"
+            className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 shadow-lg rounded-full p-3 transition-colors hidden md:block ${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-yellow-50'}`}
             aria-label="Previous"
           >
-            <ChevronLeft className="h-6 w-6 text-gray-700" />
+            <ChevronLeft className={`h-6 w-6 ${isDark ? 'text-gray-300' : 'text-gray-700'}`} />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-yellow-50 transition-colors hidden md:block"
+            className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 shadow-lg rounded-full p-3 transition-colors hidden md:block ${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-yellow-50'}`}
             aria-label="Next"
           >
-            <ChevronRight className="h-6 w-6 text-gray-700" />
+            <ChevronRight className={`h-6 w-6 ${isDark ? 'text-gray-300' : 'text-gray-700'}`} />
           </button>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -136,7 +138,7 @@ const SuccessGallery = () => {
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`w-3 h-3 rounded-full transition-colors ${
-                  currentSlide === index ? 'bg-yellow-500' : 'bg-gray-300 hover:bg-gray-400'
+                  currentSlide === index ? 'bg-yellow-500' : isDark ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
@@ -145,17 +147,17 @@ const SuccessGallery = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className={`rounded-2xl shadow-xl p-8 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
                 <div key={index} className="text-center group cursor-default">
-                  <div className="inline-flex items-center justify-center w-14 h-14 bg-yellow-100 rounded-full mb-4 group-hover:bg-yellow-200 group-hover:scale-110 transition-all duration-300">
+                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-full mb-4 group-hover:scale-110 transition-all duration-300 ${isDark ? 'bg-yellow-900/50 group-hover:bg-yellow-900/70' : 'bg-yellow-100 group-hover:bg-yellow-200'}`}>
                     <Icon className="h-7 w-7 text-yellow-600" />
                   </div>
-                  <p className="text-3xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors">{stat.value}</p>
-                  <p className="text-sm text-gray-600">{stat.label}</p>
+                  <p className={`text-3xl font-bold group-hover:text-yellow-600 transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}>{stat.value}</p>
+                  <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{stat.label}</p>
                 </div>
               );
             })}
@@ -190,7 +192,7 @@ const SuccessGallery = () => {
           onClick={() => setSelectedImage(null)}
         >
           <div 
-            className="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl transform animate-in zoom-in-95"
+            className={`rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl transform animate-in zoom-in-95 ${isDark ? 'bg-gray-800' : 'bg-white'}`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative">
@@ -214,8 +216,8 @@ const SuccessGallery = () => {
               </div>
             </div>
             <div className="p-6">
-              <p className="text-gray-600 mb-4">{selectedImage.description}</p>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{selectedImage.description}</p>
+              <div className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 <Building2 className="h-4 w-4" />
                 <span>{selectedImage.college}</span>
               </div>
