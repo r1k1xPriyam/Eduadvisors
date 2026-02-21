@@ -502,3 +502,203 @@ async def get_consultant_admissions(consultant_id: str):
     except Exception as e:
         logger.error(f"Error fetching consultant admissions: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch admissions")
+
+
+# ============ CALL LOGGING ENDPOINTS ============
+
+@router.post("/consultant/calls", response_model=dict)
+async def log_call(
+    consultant_id: str,
+    call_type: str = "attempted",  # attempted, successful, failed
+    student_name: str = None,
+    contact_number: str = None,
+    remarks: str = None
+):
+    """Log a call (can be quick log without full details)"""
+    try:
+        consultant_name = get_consultant_name(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+        
+        call_log = {
+            "id": f"call_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{consultant_id}",
+            "consultant_id": consultant_id,
+            "consultant_name": consultant_name,
+            "call_type": call_type,
+            "student_name": student_name or "N/A",
+            "contact_number": contact_number or "N/A",
+            "remarks": remarks or "",
+            "created_at": datetime.utcnow().isoformat()
+        }
+        
+        await db.call_logs.insert_one(call_log)
+        
+        logger.info(f"Call logged by {consultant_name}: {call_type}")
+        return {"success": True, "message": "Call logged successfully", "call_id": call_log["id"]}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error logging call: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to log call")
+
+@router.get("/consultant/calls/{consultant_id}", response_model=dict)
+async def get_consultant_calls(consultant_id: str):
+    """Get call stats for a specific consultant"""
+    try:
+        consultant_name = get_consultant_name(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+        
+        calls = await db.call_logs.find(
+            {"consultant_id": consultant_id}, 
+            {"_id": 0}
+        ).sort("created_at", -1).to_list(10000)
+        
+        # Calculate stats
+        total_calls = len(calls)
+        successful_calls = len([c for c in calls if c.get("call_type") == "successful"])
+        failed_calls = len([c for c in calls if c.get("call_type") == "failed"])
+        attempted_calls = len([c for c in calls if c.get("call_type") == "attempted"])
+        
+        return {
+            "success": True,
+            "consultant_name": consultant_name,
+            "calls": calls,
+            "stats": {
+                "total_calls": total_calls,
+                "successful_calls": successful_calls,
+                "failed_calls": failed_calls,
+                "attempted_calls": attempted_calls
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching consultant calls: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch calls")
+
+@router.get("/admin/calls", response_model=dict)
+async def get_all_calls():
+    """Get all call stats for admin view"""
+    try:
+        calls = await db.call_logs.find({}, {"_id": 0}).sort("created_at", -1).to_list(10000)
+        
+        # Group by consultant
+        consultant_stats = {}
+        for call in calls:
+            cid = call.get("consultant_id")
+            if cid not in consultant_stats:
+                consultant_stats[cid] = {
+                    "consultant_name": call.get("consultant_name"),
+                    "total_calls": 0,
+                    "successful_calls": 0,
+                    "failed_calls": 0,
+                    "attempted_calls": 0
+                }
+            consultant_stats[cid]["total_calls"] += 1
+            call_type = call.get("call_type", "attempted")
+            if call_type == "successful":
+                consultant_stats[cid]["successful_calls"] += 1
+            elif call_type == "failed":
+                consultant_stats[cid]["failed_calls"] += 1
+            else:
+                consultant_stats[cid]["attempted_calls"] += 1
+        
+        total_calls = len(calls)
+        total_successful = len([c for c in calls if c.get("call_type") == "successful"])
+        total_failed = len([c for c in calls if c.get("call_type") == "failed"])
+        
+        return {
+            "success": True,
+            "calls": calls,
+            "consultant_stats": consultant_stats,
+            "overall_stats": {
+                "total_calls": total_calls,
+                "successful_calls": total_successful,
+                "failed_calls": total_failed,
+                "attempted_calls": total_calls - total_successful - total_failed
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error fetching all calls: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch calls")
+
+# ============ BULK DELETE ENDPOINTS (Admin) ============
+
+ADMIN_PASSWORD = "Eduadvisors@2026"
+
+@router.post("/admin/bulk-delete", response_model=dict)
+async def bulk_delete_data(
+    password: str,
+    delete_type: str,  # reports, calls, queries, admissions, all
+    consultant_id: str = None,
+    start_date: str = None,
+    end_date: str = None
+):
+    """Bulk delete data with password verification"""
+    try:
+        # Verify admin password
+        if password != ADMIN_PASSWORD:
+            raise HTTPException(status_code=401, detail="Invalid admin password")
+        
+        deleted_counts = {
+            "reports": 0,
+            "calls": 0,
+            "queries": 0,
+            "admissions": 0
+        }
+        
+        # Build filter
+        date_filter = {}
+        if start_date:
+            date_filter["$gte"] = start_date
+        if end_date:
+            date_filter["$lte"] = end_date + "T23:59:59"
+        
+        # Delete based on type
+        collections_to_delete = []
+        if delete_type == "reports" or delete_type == "all":
+            collections_to_delete.append(("consultant_reports", "reports"))
+        if delete_type == "calls" or delete_type == "all":
+            collections_to_delete.append(("call_logs", "calls"))
+        if delete_type == "queries" or delete_type == "all":
+            collections_to_delete.append(("student_queries", "queries"))
+        if delete_type == "admissions" or delete_type == "all":
+            collections_to_delete.append(("admissions", "admissions"))
+        
+        for collection_name, key in collections_to_delete:
+            collection = getattr(db, collection_name)
+            query = {}
+            
+            if consultant_id and collection_name in ["consultant_reports", "call_logs", "admissions"]:
+                query["consultant_id"] = consultant_id
+            
+            if date_filter and collection_name != "student_queries":
+                query["created_at"] = date_filter
+            elif date_filter and collection_name == "student_queries":
+                query["timestamp"] = date_filter
+            
+            result = await collection.delete_many(query)
+            deleted_counts[key] = result.deleted_count
+        
+        total_deleted = sum(deleted_counts.values())
+        logger.info(f"Bulk delete performed: {deleted_counts}")
+        
+        return {
+            "success": True,
+            "message": f"Successfully deleted {total_deleted} records",
+            "deleted_counts": deleted_counts
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in bulk delete: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to perform bulk delete")
+
+@router.post("/admin/verify-password", response_model=dict)
+async def verify_admin_password(password: str):
+    """Verify admin password for sensitive operations"""
+    if password == ADMIN_PASSWORD:
+        return {"success": True, "message": "Password verified"}
+    raise HTTPException(status_code=401, detail="Invalid password")
+
