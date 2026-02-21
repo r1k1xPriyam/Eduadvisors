@@ -407,65 +407,64 @@ const ConsultantDashboard = () => {
         {/* Quick Call Modal */}
         {showQuickCall && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <Card className="w-full max-w-md">
-              <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+            <Card className={`w-full max-w-md ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+              <CardHeader className="bg-gradient-to-r from-red-500 to-orange-500 text-white">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">Quick Log Call</CardTitle>
+                  <div>
+                    <CardTitle className="text-lg">Quick Log Call</CardTitle>
+                    <p className="text-sm text-red-100">Log failed or attempted calls only</p>
+                  </div>
                   <button onClick={() => setShowQuickCall(false)} className="text-white hover:text-gray-200">
                     <X className="h-5 w-5" />
                   </button>
                 </div>
               </CardHeader>
               <CardContent className="p-4 space-y-4">
+                <div className={`p-3 rounded-lg text-sm ${isDark ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
+                  <p><strong>Note:</strong> Successful calls are automatically logged when you submit a detailed Student Calling Report.</p>
+                </div>
                 <div>
-                  <Label className="text-sm">Student Name (Optional)</Label>
+                  <Label className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>Student Name (Optional)</Label>
                   <Input
                     value={quickCallData.student_name}
                     onChange={(e) => setQuickCallData({...quickCallData, student_name: e.target.value})}
                     placeholder="Enter name or leave blank"
-                    className="mt-1"
+                    className={`mt-1 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
                   />
                 </div>
                 <div>
-                  <Label className="text-sm">Contact Number (Optional)</Label>
+                  <Label className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>Contact Number (Optional)</Label>
                   <Input
                     value={quickCallData.contact_number}
                     onChange={(e) => setQuickCallData({...quickCallData, contact_number: e.target.value})}
                     placeholder="Enter number or leave blank"
-                    className="mt-1"
+                    className={`mt-1 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
                   />
                 </div>
                 <div>
-                  <Label className="text-sm">Remarks (Optional)</Label>
+                  <Label className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>Remarks (Optional)</Label>
                   <Textarea
                     value={quickCallData.remarks}
                     onChange={(e) => setQuickCallData({...quickCallData, remarks: e.target.value})}
-                    placeholder="Brief note..."
-                    className="mt-1"
+                    placeholder="Brief note about the call..."
+                    className={`mt-1 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
                     rows={2}
                   />
                 </div>
-                <div className="grid grid-cols-3 gap-2 pt-2">
-                  <Button
-                    onClick={() => handleQuickCall('successful')}
-                    className="bg-green-500 hover:bg-green-600 text-white"
-                  >
-                    <CheckCircle className="h-4 w-4 mr-1" />
-                    Success
-                  </Button>
+                <div className="grid grid-cols-2 gap-3 pt-2">
                   <Button
                     onClick={() => handleQuickCall('failed')}
                     className="bg-red-500 hover:bg-red-600 text-white"
                   >
-                    <PhoneOff className="h-4 w-4 mr-1" />
-                    Failed
+                    <PhoneOff className="h-4 w-4 mr-2" />
+                    Failed Call
                   </Button>
                   <Button
                     onClick={() => handleQuickCall('attempted')}
                     className="bg-yellow-500 hover:bg-yellow-600 text-white"
                   >
-                    <PhoneMissed className="h-4 w-4 mr-1" />
-                    Attempt
+                    <PhoneMissed className="h-4 w-4 mr-2" />
+                    Attempted
                   </Button>
                 </div>
               </CardContent>
