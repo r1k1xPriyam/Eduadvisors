@@ -68,6 +68,7 @@ const INTEREST_SCOPE_OPTIONS = [
 
 const ConsultantDashboard = () => {
   const navigate = useNavigate();
+  const { isDark } = useTheme();
   const [consultantName, setConsultantName] = useState('');
   const [consultantId, setConsultantId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
