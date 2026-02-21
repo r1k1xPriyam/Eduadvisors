@@ -684,7 +684,7 @@ const ConsultantDashboard = () => {
 
                   {/* Interest Scope */}
                   <div>
-                    <Label htmlFor="interest_scope" className="text-gray-900 font-semibold flex items-center gap-2 mb-2">
+                    <Label htmlFor="interest_scope" className={`font-semibold flex items-center gap-2 mb-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <FileText className="h-4 w-4 text-green-500" />
                       Interest Scope *
                     </Label>
@@ -694,12 +694,12 @@ const ConsultantDashboard = () => {
                       disabled={isSubmitting}
                       required
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className={`w-full ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}>
                         <SelectValue placeholder="Select interest level" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
                         {INTEREST_SCOPE_OPTIONS.map((option) => (
-                          <SelectItem key={option} value={option}>
+                          <SelectItem key={option} value={option} className={isDark ? 'text-white hover:bg-gray-700' : ''}>
                             {option}
                           </SelectItem>
                         ))}
@@ -709,7 +709,7 @@ const ConsultantDashboard = () => {
 
                   {/* Other Remarks (Optional) */}
                   <div>
-                    <Label htmlFor="other_remarks" className="text-gray-900 font-semibold flex items-center gap-2">
+                    <Label htmlFor="other_remarks" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <FileText className="h-4 w-4 text-gray-500" />
                       Other Remarks (Optional)
                     </Label>
@@ -720,7 +720,7 @@ const ConsultantDashboard = () => {
                       onChange={handleChange}
                       placeholder="Any additional notes or observations..."
                       rows={4}
-                      className="mt-2 resize-none"
+                      className={`mt-2 resize-none ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                       disabled={isSubmitting}
                     />
                   </div>
