@@ -1529,32 +1529,101 @@ const AdminDashboard = () => {
             )}
           </TabsContent>
 
+          {/* Call Stats Tab */}
+          <TabsContent value="calls">
+            <Card className="mb-6">
+              <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 md:p-6">
+                <CardTitle className="text-lg md:text-xl">Call Statistics by Consultant</CardTitle>
+                <p className="text-indigo-100 text-xs md:text-sm">Overview of all consultant calling activities</p>
+              </CardHeader>
+              <CardContent className="p-4 md:p-6">
+                {Object.keys(callStats.consultant_stats || {}).length === 0 ? (
+                  <div className="text-center py-8">
+                    <PhoneCall className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">No call data recorded yet</p>
+                    <p className="text-gray-400 text-sm mt-2">Call logs will appear here when consultants log their calls</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-gray-50">
+                          <TableHead className="font-semibold">Consultant</TableHead>
+                          <TableHead className="font-semibold text-center">Total Calls</TableHead>
+                          <TableHead className="font-semibold text-center">Successful</TableHead>
+                          <TableHead className="font-semibold text-center">Failed</TableHead>
+                          <TableHead className="font-semibold text-center">Attempted</TableHead>
+                          <TableHead className="font-semibold text-center">Success Rate</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {Object.entries(callStats.consultant_stats || {}).map(([consultantId, stats]) => (
+                          <TableRow key={consultantId} className="hover:bg-gray-50">
+                            <TableCell>
+                              <div>
+                                <p className="font-medium">{stats.consultant_name}</p>
+                                <p className="text-xs text-gray-500">{consultantId}</p>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <Badge className="bg-indigo-100 text-indigo-800">{stats.total_calls}</Badge>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <Badge className="bg-green-100 text-green-800">{stats.successful_calls}</Badge>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <Badge className="bg-red-100 text-red-800">{stats.failed_calls}</Badge>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <Badge className="bg-yellow-100 text-yellow-800">{stats.attempted_calls}</Badge>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <span className={`font-semibold ${
+                                stats.total_calls > 0 && (stats.successful_calls / stats.total_calls) >= 0.5 
+                                  ? 'text-green-600' 
+                                  : 'text-orange-600'
+                              }`}>
+                                {stats.total_calls > 0 
+                                  ? `${Math.round((stats.successful_calls / stats.total_calls) * 100)}%` 
+                                  : '0%'}
+                              </span>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Admissions Tab */}
           <TabsContent value="admissions">
             {/* Stats Cards for Admissions */}
-            <div className="grid md:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
               <Card>
-                <CardContent className="p-6">
+                <CardContent className="p-3 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">Total Admissions</p>
-                      <p className="text-3xl font-bold text-gray-900">{admissions.length}</p>
+                      <p className="text-xs md:text-sm text-gray-600">Total Admissions</p>
+                      <p className="text-xl md:text-3xl font-bold text-gray-900">{admissions.length}</p>
                     </div>
-                    <GraduationCap className="h-10 w-10 text-purple-500" />
+                    <GraduationCap className="h-6 w-6 md:h-10 md:w-10 text-purple-500" />
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardContent className="p-6">
+                <CardContent className="p-3 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">Payout Pending</p>
-                      <p className="text-3xl font-bold text-yellow-600">
+                      <p className="text-xs md:text-sm text-gray-600">Payout Pending</p>
+                      <p className="text-xl md:text-3xl font-bold text-yellow-600">
                         {admissions.filter(a => a.payout_status === 'PAYOUT NOT CREDITED YET').length}
                       </p>
                     </div>
-                    <DollarSign className="h-10 w-10 text-yellow-500" />
+                    <DollarSign className="h-6 w-6 md:h-10 md:w-10 text-yellow-500" />
                   </div>
                 </CardContent>
               </Card>
