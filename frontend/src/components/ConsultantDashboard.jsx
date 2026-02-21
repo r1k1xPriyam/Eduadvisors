@@ -326,12 +326,12 @@ const ConsultantDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4 max-w-5xl">
+    <div className="min-h-screen bg-gray-50 py-4 md:py-8">
+      <div className="container mx-auto px-2 md:px-4 max-w-5xl">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+        <div className="mb-4 md:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 md:p-6 rounded-lg shadow-lg border-l-4 border-green-500">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Daily Report Dashboard</h1>
+            <h1 className="text-xl md:text-3xl font-bold text-gray-900">Daily Report Dashboard</h1>
             <p className="text-sm md:text-base text-gray-600 mt-1">Welcome, <span className="font-semibold text-green-600">{consultantName}</span></p>
           </div>
           <Button
