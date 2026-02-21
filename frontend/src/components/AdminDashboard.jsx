@@ -1711,42 +1711,31 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
             </div>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-600">Commission Given</p>
-                      <p className="text-3xl font-bold text-green-600">
-                        {admissions.filter(a => a.payout_status === "CONSULTANT'S COMMISION GIVEN").length}
-                      </p>
-                    </div>
-                    <CheckCircle className="h-10 w-10 text-green-500" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
 
             {/* Actions */}
-            <Card className="mb-6">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
+            <Card className={`mb-6 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+              <CardContent className="p-4 md:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Admission Records</h3>
-                    <p className="text-sm text-gray-500">Track student admissions and consultant payouts</p>
+                    <h3 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Admission Records</h3>
+                    <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Track student admissions and consultant payouts</p>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex gap-2 sm:gap-3">
                     <Button
                       onClick={() => setShowAddAdmission(true)}
                       className="bg-purple-500 text-white hover:bg-purple-600"
+                      size="sm"
                     >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Admission
+                      <Plus className="h-4 w-4 md:mr-2" />
+                      <span className="hidden md:inline">Add Admission</span>
                     </Button>
                     <Button
                       onClick={fetchAdmissions}
                       variant="outline"
-                      className="border-gray-300"
+                      size="sm"
+                      className={isDark ? 'border-gray-600' : 'border-gray-300'}
                     >
-                      Refresh
+                      <RefreshCw className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -1754,16 +1743,16 @@ const AdminDashboard = () => {
             </Card>
 
             {/* Admissions Table */}
-            <Card>
+            <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
               <CardHeader className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white">
                 <CardTitle className="text-xl">Student Admissions ({admissions.length})</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 {admissions.length === 0 ? (
                   <div className="text-center py-12">
-                    <GraduationCap className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500 text-lg">No admission records yet</p>
-                    <p className="text-gray-400 text-sm mt-2">Add your first admission record to get started</p>
+                    <GraduationCap className={`h-16 w-16 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                    <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>No admission records yet</p>
+                    <p className={`text-sm mt-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Add your first admission record to get started</p>
                     <Button
                       onClick={() => setShowAddAdmission(true)}
                       className="mt-4 bg-purple-500 hover:bg-purple-600"
@@ -1776,28 +1765,28 @@ const AdminDashboard = () => {
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow className="bg-gray-50">
-                          <TableHead className="font-semibold">Student Name</TableHead>
-                          <TableHead className="font-semibold">Course</TableHead>
-                          <TableHead className="font-semibold">College</TableHead>
-                          <TableHead className="font-semibold">Admission Date</TableHead>
-                          <TableHead className="font-semibold">Consultant</TableHead>
-                          <TableHead className="font-semibold">Payout Amount</TableHead>
-                          <TableHead className="font-semibold">Payout Status</TableHead>
-                          <TableHead className="font-semibold">Actions</TableHead>
+                        <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student Name</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Course</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>College</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Admission Date</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Consultant</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Payout Amount</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Payout Status</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {admissions.map((admission) => (
-                          <TableRow key={admission.id} className="hover:bg-gray-50">
-                            <TableCell className="font-medium">{admission.student_name}</TableCell>
+                          <TableRow key={admission.id} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                            <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{admission.student_name}</TableCell>
                             <TableCell>
-                              <Badge variant="outline" className="bg-blue-50">
+                              <Badge variant="outline" className={isDark ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-50'}>
                                 {admission.course}
                               </Badge>
                             </TableCell>
-                            <TableCell className="text-sm">{admission.college}</TableCell>
-                            <TableCell className="text-sm">{admission.admission_date}</TableCell>
+                            <TableCell className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>{admission.college}</TableCell>
+                            <TableCell className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>{admission.admission_date}</TableCell>
                             <TableCell>
                               <Badge className="bg-green-100 text-green-800">
                                 {admission.consultant_name}
