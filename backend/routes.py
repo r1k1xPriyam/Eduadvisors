@@ -637,6 +637,9 @@ async def get_all_calls():
         logger.error(f"Error fetching all calls: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch calls")
 
+# ============ ADMIN PASSWORD ============
+ADMIN_PASSWORD = "EDUadvisors@souvikCEO2026"
+
 # Delete call stats for a specific consultant (Admin only)
 @router.delete("/admin/calls/{consultant_id}", response_model=dict)
 async def delete_consultant_calls(consultant_id: str, password: str):
@@ -663,8 +666,6 @@ async def delete_consultant_calls(consultant_id: str, password: str):
         raise HTTPException(status_code=500, detail="Failed to delete calls")
 
 # ============ BULK DELETE ENDPOINTS (Admin) ============
-
-ADMIN_PASSWORD = "EDUadvisors@souvikCEO2026"
 
 @router.post("/admin/bulk-delete", response_model=dict)
 async def bulk_delete_data(
