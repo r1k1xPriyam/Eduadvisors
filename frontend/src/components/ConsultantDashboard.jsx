@@ -332,21 +332,24 @@ const ConsultantDashboard = () => {
     <div className={`min-h-screen py-4 md:py-8 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="container mx-auto px-2 md:px-4 max-w-5xl">
         {/* Header */}
-        <div className={`mb-4 md:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 md:p-6 rounded-lg shadow-lg border-l-4 border-green-500 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
-          <div>
-            <h1 className={`text-xl md:text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Daily Report Dashboard</h1>
-            <p className={`text-sm md:text-base mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Welcome, <span className="font-semibold text-green-500">{consultantName}</span></p>
-          </div>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className={`border-2 ${isDark ? 'border-red-500 text-red-400 hover:bg-red-900/30' : 'border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400'} w-full sm:w-auto`}
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
+        <div className={`mb-4 md:mb-6 p-4 md:p-6 rounded-lg shadow-lg border-l-4 border-green-500 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className={`text-lg md:text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Daily Report Dashboard</h1>
+              <p className={`text-xs md:text-base mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Welcome, <span className="font-semibold text-green-500">{consultantName}</span></p>
+            </div>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className={`border-2 ${isDark ? 'border-red-500 text-red-400 hover:bg-red-900/30' : 'border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400'}`}
+              >
+                <LogOut className="h-4 w-4 md:mr-2" />
+                <span className="hidden md:inline">Logout</span>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -472,34 +475,69 @@ const ConsultantDashboard = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-gray-100 p-1 rounded-lg gap-1">
+          {/* Mobile Tab Navigation - Horizontal Scroll */}
+          <div className="md:hidden overflow-x-auto pb-2 -mx-2 px-2">
+            <TabsList className="inline-flex w-max min-w-full bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
+              <TabsTrigger
+                value="submit"
+                className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <PlusCircle className="h-3 w-3 mr-1" />
+                Report
+              </TabsTrigger>
+              <TabsTrigger
+                value="reports"
+                className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <History className="h-3 w-3 mr-1" />
+                Reports
+              </TabsTrigger>
+              <TabsTrigger
+                value="calls"
+                className="data-[state=active]:bg-indigo-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <PhoneCall className="h-3 w-3 mr-1" />
+                Calls
+              </TabsTrigger>
+              <TabsTrigger
+                value="admissions"
+                className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <Award className="h-3 w-3 mr-1" />
+                Admissions
+              </TabsTrigger>
+            </TabsList>
+          </div>
+          
+          {/* Desktop Tab Navigation */}
+          <TabsList className="hidden md:grid w-full grid-cols-4 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="submit"
-              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
             >
-              <PlusCircle className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span className="hidden sm:inline">Submit </span>Report
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Submit Report
             </TabsTrigger>
             <TabsTrigger
               value="reports"
-              className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+              className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
             >
-              <History className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span className="hidden sm:inline">My </span>Reports
+              <History className="h-4 w-4 mr-2" />
+              My Reports
             </TabsTrigger>
             <TabsTrigger
               value="calls"
-              className="data-[state=active]:bg-indigo-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+              className="data-[state=active]:bg-indigo-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
             >
-              <PhoneCall className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span className="hidden sm:inline">My </span>Calls
+              <PhoneCall className="h-4 w-4 mr-2" />
+              My Calls
             </TabsTrigger>
             <TabsTrigger
               value="admissions"
-              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
             >
-              <Award className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span className="hidden sm:inline">My </span>Admissions
+              <Award className="h-4 w-4 mr-2" />
+              My Admissions
             </TabsTrigger>
           </TabsList>
 
