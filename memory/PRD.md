@@ -14,7 +14,7 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - **Query Popup**: Student lead capture popup with auto-show and manual trigger via button
 
 ### Admin Dashboard (`/admin`)
-- **Secure Login**: ID: `ADMIN`, Password: `Eduadvisors@2026`
+- **Secure Login**: ID: `ADMIN`, Password: `EDUadvisors@souvikCEO2026`
 - **4 Tab Interface**: Student Queries, Consultant Reports, Admissions, Manage Consultants
 - **Student Queries Management**: View, search, filter, delete, and update query status (New → Contacted → Closed)
 - **Consultant Reports**: View all daily reports, filter by date and consultant, delete reports
@@ -114,7 +114,7 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 ### Admin
 - URL: `/admin`
 - User ID: `ADMIN`
-- Password: `Eduadvisors@2026`
+- Password: `EDUadvisors@souvikCEO2026`
 
 ### Consultants (25 total)
 - PRIYAMPATRA / Priyam123!@#

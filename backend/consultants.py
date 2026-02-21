@@ -8,7 +8,6 @@ DEFAULT_CONSULTANTS = {
     "SUPRITIDEY123": {"name": "SUPRITI DEY", "password": "#bani5678"},
     "SUSMITA98832": {"name": "SUSMITA MANNA", "password": "Mannamanna7797"},
     "SHUVAM360": {"name": "SHUVAM DIKSHIT", "password": "Donshuvam"},
-    "MANTRI_JI": {"name": "SANDIPAN MANTRI", "password": "Sree@2004"},
     "DEEP_EDU": {"name": "DEEP PRAMANIK", "password": "Deep@9332320439"},
     "ARPITA234": {"name": "ARPITA PAL", "password": "Namita18"},
     "SAYANTIKADEY@909": {"name": "SAYANTIKA DEY", "password": "Sayantikadey@999"},
@@ -24,6 +23,7 @@ DEFAULT_CONSULTANTS = {
     "PREYASI_EDU": {"name": "PREYASI JANA", "password": "Preya.si@2026"},
     "ARNAB_EDU": {"name": "ARNAB MANDAL", "password": "Ar.nab@2026"},
     "AYAN_EDU": {"name": "AYAN MANDAL", "password": "Ayan@2026"},
+    "DEBMALLYA_EDU": {"name": "DEBMALLYA CHAKRABORTY", "password": "Deb.mallya"},
     "SOYALI_EDU": {"name": "SOYALI NANDA", "password": "Soyali2026@"}
 }
 

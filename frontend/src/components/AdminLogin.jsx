@@ -17,7 +17,7 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
 
   const ADMIN_USERNAME = 'ADMIN';
-  const ADMIN_PASSWORD = 'Eduadvisors@2026';
+  const ADMIN_PASSWORD = 'EDUadvisors@souvikCEO2026';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
