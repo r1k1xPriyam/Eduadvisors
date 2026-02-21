@@ -596,19 +596,20 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-4 md:py-8">
+    <div className={`min-h-screen py-4 md:py-8 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="container mx-auto px-2 md:px-4">
         {/* Header */}
         <div className="mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1 md:mb-2">Admin Dashboard</h1>
-            <p className="text-sm md:text-base text-gray-600">Manage student queries and consultant reports</p>
+            <h1 className={`text-2xl md:text-4xl font-bold mb-1 md:mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>Admin Dashboard</h1>
+            <p className={`text-sm md:text-base ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Manage student queries and consultant reports</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 items-center">
+            <ThemeToggle />
             <Button
               onClick={() => setShowBulkDelete(true)}
               variant="outline"
-              className="border-2 border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400"
+              className={`border-2 ${isDark ? 'border-orange-500 text-orange-400 hover:bg-orange-900/30' : 'border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400'}`}
             >
               <Trash2 className="h-4 w-4 mr-2" />
               Bulk Delete
@@ -616,7 +617,7 @@ const AdminDashboard = () => {
             <Button
               onClick={handleLogout}
               variant="outline"
-              className="border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+              className={`border-2 ${isDark ? 'border-red-500 text-red-400 hover:bg-red-900/30' : 'border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400'}`}
             >
               <LogOut className="h-4 w-4 mr-2" />
               Logout
