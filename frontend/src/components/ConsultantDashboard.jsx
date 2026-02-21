@@ -36,7 +36,10 @@ import {
   X,
   GraduationCap,
   DollarSign,
-  Award
+  Award,
+  PhoneCall,
+  PhoneOff,
+  PhoneMissed
 } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
@@ -78,6 +81,11 @@ const ConsultantDashboard = () => {
   
   // My Admissions State
   const [myAdmissions, setMyAdmissions] = useState([]);
+  
+  // Call Logging State
+  const [callStats, setCallStats] = useState({ total_calls: 0, successful_calls: 0, failed_calls: 0, attempted_calls: 0 });
+  const [showQuickCall, setShowQuickCall] = useState(false);
+  const [quickCallData, setQuickCallData] = useState({ call_type: 'attempted', student_name: '', contact_number: '', remarks: '' });
   const [loadingAdmissions, setLoadingAdmissions] = useState(false);
   
   const [formData, setFormData] = useState({
