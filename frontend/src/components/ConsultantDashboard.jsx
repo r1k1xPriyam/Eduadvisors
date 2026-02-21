@@ -583,14 +583,14 @@ const ConsultantDashboard = () => {
                       value={formData.student_name}
                       onChange={handleChange}
                       placeholder="Enter student's full name"
-                      className="mt-2"
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                       disabled={isSubmitting}
                     />
                   </div>
 
                   {/* Contact Number */}
                   <div>
-                    <Label htmlFor="contact_number" className="text-gray-900 font-semibold flex items-center gap-2">
+                    <Label htmlFor="contact_number" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <Phone className="h-4 w-4 text-green-500" />
                       Contact Number *
                     </Label>
@@ -602,14 +602,14 @@ const ConsultantDashboard = () => {
                       value={formData.contact_number}
                       onChange={handleChange}
                       placeholder="Enter contact number"
-                      className="mt-2"
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                       disabled={isSubmitting}
                     />
                   </div>
 
                   {/* Institution Name */}
                   <div>
-                    <Label htmlFor="institution_name" className="text-gray-900 font-semibold flex items-center gap-2">
+                    <Label htmlFor="institution_name" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <Building className="h-4 w-4 text-green-500" />
                       Institution Name *
                     </Label>
@@ -621,14 +621,14 @@ const ConsultantDashboard = () => {
                       value={formData.institution_name}
                       onChange={handleChange}
                       placeholder="Enter institution/school/college name"
-                      className="mt-2"
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                       disabled={isSubmitting}
                     />
                   </div>
 
                   {/* Competitive Exam Preference */}
                   <div>
-                    <Label htmlFor="competitive_exam_preference" className="text-gray-900 font-semibold flex items-center gap-2">
+                    <Label htmlFor="competitive_exam_preference" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <BookOpen className="h-4 w-4 text-green-500" />
                       Competitive Exam Preference *
                     </Label>
@@ -640,14 +640,14 @@ const ConsultantDashboard = () => {
                       value={formData.competitive_exam_preference}
                       onChange={handleChange}
                       placeholder="e.g., JEE, NEET, WBJEE, JENPAS"
-                      className="mt-2"
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                       disabled={isSubmitting}
                     />
                   </div>
 
                   {/* Career Interest */}
                   <div>
-                    <Label htmlFor="career_interest" className="text-gray-900 font-semibold flex items-center gap-2">
+                    <Label htmlFor="career_interest" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <Briefcase className="h-4 w-4 text-green-500" />
                       Career Interest *
                     </Label>
@@ -659,14 +659,14 @@ const ConsultantDashboard = () => {
                       value={formData.career_interest}
                       onChange={handleChange}
                       placeholder="e.g., Engineering, Medical, Management"
-                      className="mt-2"
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                       disabled={isSubmitting}
                     />
                   </div>
 
                   {/* College Interest (Optional) */}
                   <div>
-                    <Label htmlFor="college_interest" className="text-gray-900 font-semibold flex items-center gap-2">
+                    <Label htmlFor="college_interest" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <School className="h-4 w-4 text-gray-500" />
                       Any College Interest (Optional)
                     </Label>
@@ -677,7 +677,7 @@ const ConsultantDashboard = () => {
                       value={formData.college_interest}
                       onChange={handleChange}
                       placeholder="Enter specific college preferences if any"
-                      className="mt-2"
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                       disabled={isSubmitting}
                     />
                   </div>
