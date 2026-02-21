@@ -16,7 +16,7 @@ import {
 } from './ui/table';
 import { Calendar } from './ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, MessageSquare, Filter, LogOut, Users, FileText, X, Trash2, Plus, Edit, UserPlus, Settings, GraduationCap, DollarSign, Building, CheckCircle } from 'lucide-react';
+import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, MessageSquare, Filter, LogOut, Users, FileText, X, Trash2, Plus, Edit, UserPlus, Settings, GraduationCap, DollarSign, Building, CheckCircle, PhoneCall, PhoneOff, PhoneMissed, AlertTriangle, Lock } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
@@ -58,6 +58,18 @@ const AdminDashboard = () => {
   const [admissions, setAdmissions] = useState([]);
   const [showAddAdmission, setShowAddAdmission] = useState(false);
   const [editingAdmission, setEditingAdmission] = useState(null);
+
+  // Call Stats State
+  const [callStats, setCallStats] = useState({ overall_stats: { total_calls: 0, successful_calls: 0, failed_calls: 0 }, consultant_stats: {} });
+
+  // Bulk Delete State
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
+  const [bulkDeletePassword, setBulkDeletePassword] = useState('');
+  const [bulkDeleteType, setBulkDeleteType] = useState('reports');
+  const [bulkDeleteConsultant, setBulkDeleteConsultant] = useState('');
+  const [bulkDeleteStartDate, setBulkDeleteStartDate] = useState('');
+  const [bulkDeleteEndDate, setBulkDeleteEndDate] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
   const [newAdmission, setNewAdmission] = useState({
     student_name: '',
     course: '',
