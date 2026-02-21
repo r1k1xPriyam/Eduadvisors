@@ -969,7 +969,7 @@ const AdminDashboard = () => {
                   placeholder="Search by name, email, phone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 w-full"
+                  className={`pl-10 w-full ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                 />
               </div>
               
@@ -978,7 +978,7 @@ const AdminDashboard = () => {
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="flex-1 min-w-[120px] px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  className={`flex-1 min-w-[120px] px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300 bg-white'}`}
                 >
                   <option value="all">All Status</option>
                   <option value="new">New</option>
@@ -999,7 +999,7 @@ const AdminDashboard = () => {
                   onClick={fetchQueries}
                   variant="outline"
                   size="sm"
-                  className="border-gray-300"
+                  className={isDark ? 'border-gray-600' : 'border-gray-300'}
                 >
                   <RefreshCw className="h-4 w-4 md:mr-2" />
                   <span className="hidden md:inline">Refresh</span>
@@ -1010,16 +1010,16 @@ const AdminDashboard = () => {
         </Card>
 
         {/* Queries Table */}
-        <Card>
+        <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader>
-            <CardTitle>Student Queries ({filteredQueries.length})</CardTitle>
+            <CardTitle className={isDark ? 'text-white' : ''}>Student Queries ({filteredQueries.length})</CardTitle>
           </CardHeader>
           <CardContent>
             {filteredQueries.length === 0 ? (
               <div className="text-center py-12">
-                <MessageSquare className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg">No queries found</p>
-                <p className="text-gray-400 text-sm mt-2">
+                <MessageSquare className={`h-16 w-16 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>No queries found</p>
+                <p className={`text-sm mt-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
                   {searchTerm || filterStatus !== 'all'
                     ? 'Try adjusting your filters'
                     : 'Student queries will appear here'}
