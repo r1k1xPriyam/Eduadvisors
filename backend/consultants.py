@@ -17,13 +17,12 @@ DEFAULT_CONSULTANTS = {
     "MOU.BU01": {"name": "MOUTUSI SAMANTA", "password": "721439"},
     "SHRABANI_EDU": {"name": "SHRABANI SINGH", "password": "Shra.bani2026"},
     "PUJA_EDU": {"name": "PUJA BHUNIA", "password": "Pu.ja2026"},
-    "SUPRITI_EDU": {"name": "SUPRITI DAS", "password": "Su.priti@2026"},
     "SUBHADIP_EDU": {"name": "SUBHADIP MAITY", "password": "Subha.dip@2026"},
     "BRISTI_EDU": {"name": "BRISTI PRADHAN", "password": "Bri.sti2026"},
     "PREYASI_EDU": {"name": "PREYASI JANA", "password": "Preya.si@2026"},
     "ARNAB_EDU": {"name": "ARNAB MANDAL", "password": "Ar.nab@2026"},
     "AYAN_EDU": {"name": "AYAN MANDAL", "password": "Ayan@2026"},
-    "DEBMALLYA_EDU": {"name": "DEBMALLYA CHAKRABORTY", "password": "Deb.mallya"},
+    "DEBMALYA_EDU": {"name": "DEBMALYA CHAKRABORTY", "password": "Deb.malya"},
     "SOYALI_EDU": {"name": "SOYALI NANDA", "password": "Soyali2026@"}
 }
 
