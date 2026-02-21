@@ -1275,88 +1275,88 @@ const AdminDashboard = () => {
 
             {/* Filters and Actions for Reports */}
             <Card className="mb-6">
-              <CardContent className="p-6">
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                    <div className="flex-1 w-full md:w-auto">
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <Input
-                          type="text"
-                          placeholder="Search by student name, contact, institution, or consultant..."
-                          value={reportSearchTerm}
-                          onChange={(e) => setReportSearchTerm(e.target.value)}
-                          className="pl-10 w-full"
-                        />
-                      </div>
-                    </div>
+              <CardContent className="p-4 md:p-6">
+                <div className="space-y-3">
+                  {/* Search Input */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="Search by student, contact, or consultant..."
+                      value={reportSearchTerm}
+                      onChange={(e) => setReportSearchTerm(e.target.value)}
+                      className="pl-10 w-full"
+                    />
+                  </div>
 
-                    <div className="flex flex-wrap gap-3 w-full md:w-auto">
-                      {/* Date Filter */}
-                      <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className={`min-w-[180px] justify-start text-left font-normal ${!selectedDate && 'text-muted-foreground'}`}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {selectedDate ? format(selectedDate, 'dd MMM yyyy') : 'Select Date'}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={(date) => {
-                              setSelectedDate(date);
-                              setIsCalendarOpen(false);
-                            }}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-
-                      {selectedDate && (
+                  {/* Filter and Action Buttons */}
+                  <div className="flex flex-wrap gap-2">
+                    {/* Date Filter */}
+                    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                      <PopoverTrigger asChild>
                         <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setSelectedDate(null)}
-                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                          title="Clear date filter"
+                          variant="outline"
+                          size="sm"
+                          className={`min-w-[130px] justify-start text-left font-normal ${!selectedDate && 'text-muted-foreground'}`}
                         >
-                          <X className="h-4 w-4" />
+                          <CalendarIcon className="mr-1 h-4 w-4" />
+                          {selectedDate ? format(selectedDate, 'dd MMM') : 'Date'}
                         </Button>
-                      )}
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => {
+                            setSelectedDate(date);
+                            setIsCalendarOpen(false);
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
 
-                      <select
-                        value={selectedConsultant}
-                        onChange={(e) => setSelectedConsultant(e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      >
-                        <option value="all">All Consultants</option>
-                        {Object.keys(reportsByConsultant).map((consultant) => (
-                          <option key={consultant} value={consultant}>
-                            {consultant} ({reportsByConsultant[consultant].length})
-                          </option>
-                        ))}
-                      </select>
-
+                    {selectedDate && (
                       <Button
-                        onClick={exportConsultantReportsToCSV}
-                        className="bg-green-500 text-white hover:bg-green-600"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedDate(null)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50 px-2"
                       >
-                        <Download className="h-4 w-4 mr-2" />
-                        Export CSV
+                        <X className="h-4 w-4" />
                       </Button>
+                    )}
 
-                      <Button
-                        onClick={fetchConsultantReports}
-                        variant="outline"
-                        className="border-gray-300"
-                      >
-                        Refresh
-                      </Button>
-                    </div>
+                    <select
+                      value={selectedConsultant}
+                      onChange={(e) => setSelectedConsultant(e.target.value)}
+                      className="flex-1 min-w-[120px] px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                      <option value="all">All Consultants</option>
+                      {Object.keys(reportsByConsultant).map((consultant) => (
+                        <option key={consultant} value={consultant}>
+                          {consultant} ({reportsByConsultant[consultant].length})
+                        </option>
+                      ))}
+                    </select>
+
+                    <Button
+                      onClick={exportConsultantReportsToCSV}
+                      size="sm"
+                      className="bg-green-500 text-white hover:bg-green-600"
+                    >
+                      <Download className="h-4 w-4 md:mr-2" />
+                      <span className="hidden md:inline">Export</span>
+                    </Button>
+
+                    <Button
+                      onClick={fetchConsultantReports}
+                      variant="outline"
+                      size="sm"
+                      className="border-gray-300"
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                    </Button>
                   </div>
 
                   {/* Active Filters Display */}
