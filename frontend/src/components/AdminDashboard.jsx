@@ -601,19 +601,183 @@ const AdminDashboard = () => {
             <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-1 md:mb-2">Admin Dashboard</h1>
             <p className="text-sm md:text-base text-gray-600">Manage student queries and consultant reports</p>
           </div>
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 w-full sm:w-auto"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button
+              onClick={() => setShowBulkDelete(true)}
+              variant="outline"
+              className="border-2 border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Bulk Delete
+            </Button>
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              className="border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
+
+        {/* Call Stats Overview Bar */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-6">
+          <Card className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white">
+            <CardContent className="p-3 md:p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm opacity-80">Total Calls</p>
+                <p className="text-lg md:text-2xl font-bold">{callStats.overall_stats?.total_calls || 0}</p>
+              </div>
+              <PhoneCall className="h-5 w-5 md:h-7 md:w-7 opacity-80" />
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+            <CardContent className="p-3 md:p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm opacity-80">Successful</p>
+                <p className="text-lg md:text-2xl font-bold">{callStats.overall_stats?.successful_calls || 0}</p>
+              </div>
+              <CheckCircle className="h-5 w-5 md:h-7 md:w-7 opacity-80" />
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+            <CardContent className="p-3 md:p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm opacity-80">Failed</p>
+                <p className="text-lg md:text-2xl font-bold">{callStats.overall_stats?.failed_calls || 0}</p>
+              </div>
+              <PhoneOff className="h-5 w-5 md:h-7 md:w-7 opacity-80" />
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white">
+            <CardContent className="p-3 md:p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm opacity-80">Attempted</p>
+                <p className="text-lg md:text-2xl font-bold">{callStats.overall_stats?.attempted_calls || 0}</p>
+              </div>
+              <PhoneMissed className="h-5 w-5 md:h-7 md:w-7 opacity-80" />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Bulk Delete Modal */}
+        {showBulkDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className="max-w-md w-full">
+              <CardHeader className="border-b bg-red-500 text-white">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5" />
+                    <CardTitle>Bulk Delete Data</CardTitle>
+                  </div>
+                  <button onClick={() => setShowBulkDelete(false)} className="text-white hover:text-gray-200">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg">
+                  <p className="text-sm text-yellow-800 flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
+                    This action is irreversible! Data will be permanently deleted.
+                  </p>
+                </div>
+                
+                <div>
+                  <Label>What to Delete *</Label>
+                  <select
+                    value={bulkDeleteType}
+                    onChange={(e) => setBulkDeleteType(e.target.value)}
+                    className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="reports">Consultant Reports</option>
+                    <option value="calls">Call Logs</option>
+                    <option value="queries">Student Queries</option>
+                    <option value="admissions">Admissions</option>
+                    <option value="all">⚠️ ALL DATA</option>
+                  </select>
+                </div>
+
+                <div>
+                  <Label>Filter by Consultant (Optional)</Label>
+                  <select
+                    value={bulkDeleteConsultant}
+                    onChange={(e) => setBulkDeleteConsultant(e.target.value)}
+                    className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="">All Consultants</option>
+                    {consultants.map((c) => (
+                      <option key={c.user_id} value={c.user_id}>{c.name} ({c.user_id})</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label>Start Date (Optional)</Label>
+                    <Input
+                      type="date"
+                      value={bulkDeleteStartDate}
+                      onChange={(e) => setBulkDeleteStartDate(e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label>End Date (Optional)</Label>
+                    <Input
+                      type="date"
+                      value={bulkDeleteEndDate}
+                      onChange={(e) => setBulkDeleteEndDate(e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t">
+                  <Label className="flex items-center gap-2">
+                    <Lock className="h-4 w-4 text-red-500" />
+                    Admin Password (Required) *
+                  </Label>
+                  <Input
+                    type="password"
+                    value={bulkDeletePassword}
+                    onChange={(e) => setBulkDeletePassword(e.target.value)}
+                    placeholder="Enter admin password to confirm"
+                    className="mt-1"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    onClick={handleBulkDelete}
+                    disabled={isDeleting}
+                    className="flex-1 bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    {isDeleting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete Data
+                      </>
+                    )}
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowBulkDelete(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Tabs for Queries, Consultant Reports, and Consultant Management */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6 md:mb-8 bg-gray-100 p-1 rounded-lg gap-1">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 mb-6 md:mb-8 bg-gray-100 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="queries"
               className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
@@ -627,6 +791,13 @@ const AdminDashboard = () => {
             >
               <FileText className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
               <span className="hidden sm:inline">Consultant </span>Reports
+            </TabsTrigger>
+            <TabsTrigger
+              value="calls"
+              className="data-[state=active]:bg-indigo-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+            >
+              <PhoneCall className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Call </span>Stats
             </TabsTrigger>
             <TabsTrigger
               value="admissions"
