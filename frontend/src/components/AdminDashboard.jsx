@@ -20,6 +20,8 @@ import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, Mess
 import axios from 'axios';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '../context/ThemeContext';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
