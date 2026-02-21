@@ -2371,6 +2371,83 @@ const AdminDashboard = () => {
             )}
           </TabsContent>
         </Tabs>
+
+        {/* Delete Call Stats Modal */}
+        {showDeleteCallStats && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className={`w-full max-w-md ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+              <CardHeader className="bg-gradient-to-r from-red-500 to-orange-500 text-white">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <AlertTriangle className="h-5 w-5" />
+                      Delete Call Statistics
+                    </CardTitle>
+                    <p className="text-sm text-red-100">This action cannot be undone</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setShowDeleteCallStats(false);
+                      setDeleteCallsPassword('');
+                    }} 
+                    className="text-white hover:text-gray-200"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <div className={`p-4 rounded-lg ${isDark ? 'bg-red-900/30 border border-red-700' : 'bg-red-50 border border-red-200'}`}>
+                  <p className={`text-sm ${isDark ? 'text-red-300' : 'text-red-700'}`}>
+                    You are about to delete <strong>all call statistics</strong> for consultant: <strong>{deleteCallsConsultantId}</strong>
+                  </p>
+                </div>
+                <div>
+                  <Label className={isDark ? 'text-gray-300' : ''}>Admin Password *</Label>
+                  <div className="relative mt-2">
+                    <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
+                    <Input
+                      type="password"
+                      value={deleteCallsPassword}
+                      onChange={(e) => setDeleteCallsPassword(e.target.value)}
+                      placeholder="Enter admin password to confirm"
+                      className={`pl-10 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    onClick={handleDeleteConsultantCalls}
+                    disabled={isDeletingCalls || !deleteCallsPassword}
+                    className="flex-1 bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    {isDeletingCalls ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete All Calls
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowDeleteCallStats(false);
+                      setDeleteCallsPassword('');
+                    }}
+                    className={isDark ? 'border-gray-600' : 'border-gray-300'}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
