@@ -156,7 +156,20 @@ async def create_consultant_report(report_data: ConsultantReportCreate, consulta
         # Insert into database
         result = await db.consultant_reports.insert_one(report_obj.dict())
         
-        logger.info(f"Consultant report created by {consultant_name}: {report_obj.id}")
+        # Auto-log as a successful call when a detailed report is submitted
+        call_log = {
+            "id": str(uuid.uuid4()),
+            "consultant_id": consultant_id,
+            "consultant_name": consultant_name,
+            "student_name": report_data.student_name,
+            "contact_number": report_data.contact_number,
+            "call_type": "successful",
+            "remarks": f"Detailed report submitted - {report_data.career_interest or 'General counselling'}",
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.call_logs.insert_one(call_log)
+        
+        logger.info(f"Consultant report created by {consultant_name}: {report_obj.id} (auto-logged as successful call)")
         
         return {
             "success": True,
