@@ -88,7 +88,7 @@ const QueryPopup = () => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 animate-fadeIn">
-      <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-yellow-400">
+      <Card className={`max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-yellow-400 ${isDark ? 'bg-gray-800' : ''}`}>
         <div className="grid md:grid-cols-2">
           {/* Left Side - Image & Info */}
           <div className="hidden md:block relative bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 p-6">
@@ -159,18 +159,18 @@ const QueryPopup = () => {
           <div className="relative">
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors z-10"
+              className={`absolute top-4 right-4 transition-colors z-10 ${isDark ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'}`}
               aria-label="Close"
             >
               <X className="h-6 w-6" />
             </button>
 
-            <CardHeader className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white md:bg-white md:text-gray-900 pt-8">
+            <CardHeader className={`pt-8 ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
               <div className="flex items-center gap-3">
-                <GraduationCap className="h-8 w-8 md:text-yellow-500" />
+                <GraduationCap className="h-8 w-8 text-yellow-500" />
                 <div>
                   <CardTitle className="text-xl">Get Free Counselling!</CardTitle>
-                  <p className="text-yellow-100 md:text-gray-500 text-sm mt-1">Fill the form & we'll call you</p>
+                  <p className={`text-sm mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Fill the form & we'll call you</p>
                 </div>
               </div>
             </CardHeader>
@@ -178,7 +178,7 @@ const QueryPopup = () => {
             <CardContent className="p-5">
               <form onSubmit={handleSubmit} className="space-y-3">
                 <div>
-                  <Label htmlFor="popup_name" className="flex items-center gap-2 text-gray-700 text-sm">
+                  <Label htmlFor="popup_name" className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                     <User className="h-3 w-3 text-yellow-500" />
                     Full Name *
                   </Label>
@@ -189,14 +189,14 @@ const QueryPopup = () => {
                     onChange={handleChange}
                     required
                     placeholder="Enter your full name"
-                    className="mt-1 h-9"
+                    className={`mt-1 h-9 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                     disabled={isSubmitting}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label htmlFor="popup_phone" className="flex items-center gap-2 text-gray-700 text-sm">
+                    <Label htmlFor="popup_phone" className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                       <Phone className="h-3 w-3 text-yellow-500" />
                       Phone *
                     </Label>
@@ -208,13 +208,13 @@ const QueryPopup = () => {
                       onChange={handleChange}
                       required
                       placeholder="Phone number"
-                      className="mt-1 h-9"
+                      className={`mt-1 h-9 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                       disabled={isSubmitting}
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="popup_email" className="flex items-center gap-2 text-gray-700 text-sm">
+                    <Label htmlFor="popup_email" className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                       <Mail className="h-3 w-3 text-yellow-500" />
                       Email *
                     </Label>
@@ -226,14 +226,14 @@ const QueryPopup = () => {
                       onChange={handleChange}
                       required
                       placeholder="Email address"
-                      className="mt-1 h-9"
+                      className={`mt-1 h-9 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                       disabled={isSubmitting}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="popup_institution" className="flex items-center gap-2 text-gray-700 text-sm">
+                  <Label htmlFor="popup_institution" className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                     <School className="h-3 w-3 text-yellow-500" />
                     Current Institution
                   </Label>
@@ -243,13 +243,13 @@ const QueryPopup = () => {
                     value={formData.current_institution}
                     onChange={handleChange}
                     placeholder="Your school/college name"
-                    className="mt-1 h-9"
+                    className={`mt-1 h-9 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                     disabled={isSubmitting}
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="popup_course" className="flex items-center gap-2 text-gray-700 text-sm">
+                  <Label htmlFor="popup_course" className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                     <BookOpen className="h-3 w-3 text-yellow-500" />
                     Interested Course *
                   </Label>
@@ -260,13 +260,13 @@ const QueryPopup = () => {
                     onChange={handleChange}
                     required
                     placeholder="e.g., B.Tech, MBBS, MBA"
-                    className="mt-1 h-9"
+                    className={`mt-1 h-9 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                     disabled={isSubmitting}
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="popup_message" className="flex items-center gap-2 text-gray-700 text-sm">
+                  <Label htmlFor="popup_message" className={`flex items-center gap-2 text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                     <MessageSquare className="h-3 w-3 text-yellow-500" />
                     Your Query (Optional)
                   </Label>
@@ -277,7 +277,7 @@ const QueryPopup = () => {
                     onChange={handleChange}
                     placeholder="Tell us about your career goals..."
                     rows={2}
-                    className="mt-1 resize-none"
+                    className={`mt-1 resize-none ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
                     disabled={isSubmitting}
                   />
                 </div>
@@ -300,7 +300,7 @@ const QueryPopup = () => {
                   )}
                 </Button>
 
-                <p className="text-center text-xs text-gray-500">
+                <p className={`text-center text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Our expert counsellors will call you within 24 hours
                 </p>
               </form>
