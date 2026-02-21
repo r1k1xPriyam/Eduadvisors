@@ -1,7 +1,10 @@
 import React from 'react';
 import { Award, Target, Users, TrendingUp } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const About = () => {
+  const { isDark } = useTheme();
+  
   const features = [
     {
       icon: Award,
@@ -26,7 +29,7 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 bg-white">
+    <section id="about" className={`py-20 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Image */}
@@ -48,11 +51,11 @@ const About = () => {
           <div className="space-y-6 order-1 lg:order-2">
             <div>
               <h3 className="text-yellow-500 font-semibold text-sm uppercase tracking-wide mb-2">About Us</h3>
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Shaping Careers Since 2019</h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <h2 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Shaping Careers Since 2019</h2>
+              <p className={`text-lg leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                 At Edu Advisor, we have been shaping careers since 2019 by offering expert counselling and guidance. Our goal is to help students choose the best courses and colleges to achieve their dreams.
               </p>
-              <p className="text-lg text-gray-600 leading-relaxed mt-4">
+              <p className={`text-lg leading-relaxed mt-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                 With a focus on transparency and personalized support, we're committed to turning your vision into success. Contact us to schedule a consultation and start your journey towards educational excellence!
               </p>
             </div>
@@ -63,16 +66,16 @@ const About = () => {
                 return (
                   <div
                     key={index}
-                    className="flex items-start space-x-4 p-4 rounded-lg hover:bg-gray-50 transition-colors"
+                    className={`flex items-start space-x-4 p-4 rounded-lg transition-colors ${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-50'}`}
                   >
                     <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isDark ? 'bg-yellow-900/50' : 'bg-yellow-100'}`}>
                         <Icon className="h-6 w-6 text-yellow-500" />
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">{feature.title}</h4>
-                      <p className="text-sm text-gray-600">{feature.description}</p>
+                      <h4 className={`font-semibold mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>{feature.title}</h4>
+                      <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{feature.description}</p>
                     </div>
                   </div>
                 );
