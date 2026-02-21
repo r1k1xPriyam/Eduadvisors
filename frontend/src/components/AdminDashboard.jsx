@@ -1055,12 +1055,12 @@ const AdminDashboard = () => {
                           </TableCell>
                           <TableCell>{getStatusBadge(query.status)}</TableCell>
                           <TableCell>
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-1">
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setSelectedQuery(query)}
-                                className="text-xs"
+                                className="text-xs px-2"
                               >
                                 View
                               </Button>
@@ -1071,18 +1071,20 @@ const AdminDashboard = () => {
                                       variant="outline"
                                       size="sm"
                                       onClick={() => handleMarkContacted(query.id)}
-                                      className="text-xs bg-yellow-50 border-yellow-300 text-yellow-700 hover:bg-yellow-100"
+                                      className="text-xs px-2 bg-yellow-50 border-yellow-300 text-yellow-700 hover:bg-yellow-100"
                                     >
-                                      Mark Contacted
+                                      <Phone className="h-3 w-3 md:mr-1" />
+                                      <span className="hidden md:inline">Contacted</span>
                                     </Button>
                                   )}
                                   <Button
                                     variant="outline"
                                     size="sm"
                                     onClick={() => handleCloseQuery(query.id)}
-                                    className="text-xs bg-green-50 border-green-300 text-green-700 hover:bg-green-100"
+                                    className="text-xs px-2 bg-green-50 border-green-300 text-green-700 hover:bg-green-100"
                                   >
-                                    Close
+                                    <CheckCircle className="h-3 w-3 md:mr-1" />
+                                    <span className="hidden md:inline">Close</span>
                                   </Button>
                                 </>
                               )}
@@ -1090,7 +1092,7 @@ const AdminDashboard = () => {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleDeleteQuery(query.id)}
-                                className="text-xs bg-red-50 border-red-300 text-red-700 hover:bg-red-100"
+                                className="text-xs px-2 bg-red-50 border-red-300 text-red-700 hover:bg-red-100"
                               >
                                 <Trash2 className="h-3 w-3" />
                               </Button>
