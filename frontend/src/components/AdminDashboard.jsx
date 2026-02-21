@@ -97,6 +97,7 @@ const AdminDashboard = () => {
     fetchConsultantReports();
     fetchConsultants();
     fetchAdmissions();
+    fetchCallStats();
   }, []);
 
   useEffect(() => {
@@ -106,6 +107,58 @@ const AdminDashboard = () => {
   useEffect(() => {
     filterReports();
   }, [consultantReports, reportSearchTerm, selectedConsultant, selectedDate]);
+
+  // Fetch Call Stats
+  const fetchCallStats = async () => {
+    try {
+      const response = await axios.get(`${API}/admin/calls`);
+      if (response.data.success) {
+        setCallStats(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching call stats:', error);
+    }
+  };
+
+  // Bulk Delete Handler
+  const handleBulkDelete = async () => {
+    if (!bulkDeletePassword) {
+      toast.error('Please enter admin password');
+      return;
+    }
+    
+    if (!window.confirm(`Are you ABSOLUTELY SURE you want to delete ${bulkDeleteType === 'all' ? 'ALL DATA' : bulkDeleteType}? This action CANNOT be undone!`)) {
+      return;
+    }
+    
+    setIsDeleting(true);
+    try {
+      const params = new URLSearchParams({
+        password: bulkDeletePassword,
+        delete_type: bulkDeleteType
+      });
+      if (bulkDeleteConsultant) params.append('consultant_id', bulkDeleteConsultant);
+      if (bulkDeleteStartDate) params.append('start_date', bulkDeleteStartDate);
+      if (bulkDeleteEndDate) params.append('end_date', bulkDeleteEndDate);
+      
+      const response = await axios.post(`${API}/admin/bulk-delete?${params.toString()}`);
+      if (response.data.success) {
+        toast.success(response.data.message);
+        // Refresh all data
+        fetchQueries();
+        fetchConsultantReports();
+        fetchAdmissions();
+        fetchCallStats();
+        setShowBulkDelete(false);
+        setBulkDeletePassword('');
+      }
+    } catch (error) {
+      console.error('Bulk delete error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to delete data. Check password.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Fetch Consultants
   const fetchConsultants = async () => {
