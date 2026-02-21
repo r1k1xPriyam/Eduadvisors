@@ -1586,7 +1586,7 @@ const AdminDashboard = () => {
 
           {/* Call Stats Tab */}
           <TabsContent value="calls">
-            <Card className="mb-6">
+            <Card className={`mb-6 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
               <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 md:p-6">
                 <CardTitle className="text-lg md:text-xl">Call Statistics by Consultant</CardTitle>
                 <p className="text-indigo-100 text-xs md:text-sm">Overview of all consultant calling activities</p>
@@ -1594,49 +1594,49 @@ const AdminDashboard = () => {
               <CardContent className="p-4 md:p-6">
                 {Object.keys(callStats.consultant_stats || {}).length === 0 ? (
                   <div className="text-center py-8">
-                    <PhoneCall className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">No call data recorded yet</p>
-                    <p className="text-gray-400 text-sm mt-2">Call logs will appear here when consultants log their calls</p>
+                    <PhoneCall className={`h-16 w-16 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                    <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No call data recorded yet</p>
+                    <p className={`text-sm mt-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Call logs will appear here when consultants log their calls</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow className="bg-gray-50">
-                          <TableHead className="font-semibold">Consultant</TableHead>
-                          <TableHead className="font-semibold text-center">Total Calls</TableHead>
-                          <TableHead className="font-semibold text-center">Successful</TableHead>
-                          <TableHead className="font-semibold text-center">Failed</TableHead>
-                          <TableHead className="font-semibold text-center">Attempted</TableHead>
-                          <TableHead className="font-semibold text-center">Success Rate</TableHead>
+                        <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Consultant</TableHead>
+                          <TableHead className={`font-semibold text-center ${isDark ? 'text-gray-200' : ''}`}>Total Calls</TableHead>
+                          <TableHead className={`font-semibold text-center ${isDark ? 'text-gray-200' : ''}`}>Successful</TableHead>
+                          <TableHead className={`font-semibold text-center ${isDark ? 'text-gray-200' : ''}`}>Failed</TableHead>
+                          <TableHead className={`font-semibold text-center ${isDark ? 'text-gray-200' : ''}`}>Attempted</TableHead>
+                          <TableHead className={`font-semibold text-center ${isDark ? 'text-gray-200' : ''}`}>Success Rate</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {Object.entries(callStats.consultant_stats || {}).map(([consultantId, stats]) => (
-                          <TableRow key={consultantId} className="hover:bg-gray-50">
+                          <TableRow key={consultantId} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
                             <TableCell>
                               <div>
-                                <p className="font-medium">{stats.consultant_name}</p>
-                                <p className="text-xs text-gray-500">{consultantId}</p>
+                                <p className={`font-medium ${isDark ? 'text-white' : ''}`}>{stats.consultant_name}</p>
+                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{consultantId}</p>
                               </div>
                             </TableCell>
                             <TableCell className="text-center">
-                              <Badge className="bg-indigo-100 text-indigo-800">{stats.total_calls}</Badge>
+                              <Badge className={isDark ? 'bg-indigo-900/50 text-indigo-300' : 'bg-indigo-100 text-indigo-800'}>{stats.total_calls}</Badge>
                             </TableCell>
                             <TableCell className="text-center">
-                              <Badge className="bg-green-100 text-green-800">{stats.successful_calls}</Badge>
+                              <Badge className={isDark ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-800'}>{stats.successful_calls}</Badge>
                             </TableCell>
                             <TableCell className="text-center">
-                              <Badge className="bg-red-100 text-red-800">{stats.failed_calls}</Badge>
+                              <Badge className={isDark ? 'bg-red-900/50 text-red-300' : 'bg-red-100 text-red-800'}>{stats.failed_calls}</Badge>
                             </TableCell>
                             <TableCell className="text-center">
-                              <Badge className="bg-yellow-100 text-yellow-800">{stats.attempted_calls}</Badge>
+                              <Badge className={isDark ? 'bg-yellow-900/50 text-yellow-300' : 'bg-yellow-100 text-yellow-800'}>{stats.attempted_calls}</Badge>
                             </TableCell>
                             <TableCell className="text-center">
                               <span className={`font-semibold ${
                                 stats.total_calls > 0 && (stats.successful_calls / stats.total_calls) >= 0.5 
-                                  ? 'text-green-600' 
-                                  : 'text-orange-600'
+                                  ? 'text-green-500' 
+                                  : 'text-orange-500'
                               }`}>
                                 {stats.total_calls > 0 
                                   ? `${Math.round((stats.successful_calls / stats.total_calls) * 100)}%` 
@@ -1657,24 +1657,24 @@ const AdminDashboard = () => {
           <TabsContent value="admissions">
             {/* Stats Cards for Admissions */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
-              <Card>
+              <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
                 <CardContent className="p-3 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs md:text-sm text-gray-600">Total Admissions</p>
-                      <p className="text-xl md:text-3xl font-bold text-gray-900">{admissions.length}</p>
+                      <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Admissions</p>
+                      <p className={`text-xl md:text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{admissions.length}</p>
                     </div>
                     <GraduationCap className="h-6 w-6 md:h-10 md:w-10 text-purple-500" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
                 <CardContent className="p-3 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs md:text-sm text-gray-600">Payout Pending</p>
-                      <p className="text-xl md:text-3xl font-bold text-yellow-600">
+                      <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Payout Pending</p>
+                      <p className="text-xl md:text-3xl font-bold text-yellow-500">
                         {admissions.filter(a => a.payout_status === 'PAYOUT NOT CREDITED YET').length}
                       </p>
                     </div>
@@ -1683,21 +1683,34 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardContent className="p-6">
+              <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardContent className="p-3 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">Payout Reflected</p>
-                      <p className="text-3xl font-bold text-blue-600">
+                      <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Payout Reflected</p>
+                      <p className="text-xl md:text-3xl font-bold text-blue-500">
                         {admissions.filter(a => a.payout_status === 'PAYOUT REFLECTED').length}
                       </p>
                     </div>
-                    <CheckCircle className="h-10 w-10 text-blue-500" />
+                    <CheckCircle className="h-6 w-6 md:h-10 md:w-10 text-blue-500" />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardContent className="p-3 md:p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Commission Given</p>
+                      <p className="text-xl md:text-3xl font-bold text-green-500">
+                        {admissions.filter(a => a.payout_status === "CONSULTANT'S COMMISION GIVEN").length}
+                      </p>
+                    </div>
+                    <CheckCircle className="h-6 w-6 md:h-10 md:w-10 text-green-500" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
