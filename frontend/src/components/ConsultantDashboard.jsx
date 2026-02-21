@@ -329,22 +329,25 @@ const ConsultantDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-4 md:py-8">
+    <div className={`min-h-screen py-4 md:py-8 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="container mx-auto px-2 md:px-4 max-w-5xl">
         {/* Header */}
-        <div className="mb-4 md:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-4 md:p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+        <div className={`mb-4 md:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 md:p-6 rounded-lg shadow-lg border-l-4 border-green-500 ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
           <div>
-            <h1 className="text-xl md:text-3xl font-bold text-gray-900">Daily Report Dashboard</h1>
-            <p className="text-sm md:text-base text-gray-600 mt-1">Welcome, <span className="font-semibold text-green-600">{consultantName}</span></p>
+            <h1 className={`text-xl md:text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Daily Report Dashboard</h1>
+            <p className={`text-sm md:text-base mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Welcome, <span className="font-semibold text-green-500">{consultantName}</span></p>
           </div>
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 w-full sm:w-auto"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              className={`border-2 ${isDark ? 'border-red-500 text-red-400 hover:bg-red-900/30' : 'border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400'} w-full sm:w-auto`}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
 
         {/* Quick Call Stats Bar */}
