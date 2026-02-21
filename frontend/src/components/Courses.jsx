@@ -4,8 +4,10 @@ import { Card, CardContent } from './ui/card';
 import { BookMarked, Award, MousePointer } from 'lucide-react';
 import { coursesData, undergraduateCourses, postgraduateCourses } from '../mockData';
 import CourseModal from './CourseModal';
+import { useTheme } from '../context/ThemeContext';
 
 const Courses = () => {
+  const { isDark } = useTheme();
   const [activeTab, setActiveTab] = useState('undergraduate');
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,18 +33,18 @@ const Courses = () => {
   };
 
   return (
-    <section id="courses" className="py-20 bg-white">
+    <section id="courses" className={`py-20 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h3 className="text-yellow-500 font-semibold text-sm uppercase tracking-wide mb-2">Courses We Cover</h3>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Wide Range of Programs</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Wide Range of Programs</h2>
+          <p className={`text-lg max-w-2xl mx-auto ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Click on any course to see college recommendations, placements, and career prospects
           </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-5xl mx-auto">
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 p-1 rounded-lg">
+          <TabsList className={`grid w-full grid-cols-2 mb-8 p-1 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
             <TabsTrigger
               value="undergraduate"
               className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold"
@@ -60,13 +62,13 @@ const Courses = () => {
           </TabsList>
 
           <TabsContent value="undergraduate" className="space-y-4">
-            <Card className="border-2 border-gray-200">
+            <Card className={`border-2 ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200'}`}>
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
+                <h3 className={`text-2xl font-bold mb-2 flex items-center ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   <BookMarked className="h-6 w-6 text-yellow-500 mr-3" />
                   Undergraduate Courses
                 </h3>
-                <p className="text-sm text-gray-600 mb-6 flex items-center gap-2">
+                <p className={`text-sm mb-6 flex items-center gap-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   <MousePointer className="h-4 w-4 text-yellow-500" />
                   Click on any course to view details
                 </p>
@@ -77,11 +79,13 @@ const Courses = () => {
                       <div
                         key={index}
                         onClick={() => hasDetails && handleCourseClick(course)}
-                        className={`bg-gray-50 hover:bg-yellow-50 border border-gray-200 hover:border-yellow-300 rounded-lg p-3 text-center transition-all duration-200 ${
-                          hasDetails ? 'cursor-pointer hover:shadow-md' : ''
-                        }`}
+                        className={`border rounded-lg p-3 text-center transition-all duration-200 ${
+                          isDark 
+                            ? 'bg-gray-700 hover:bg-yellow-900/30 border-gray-600 hover:border-yellow-500' 
+                            : 'bg-gray-50 hover:bg-yellow-50 border-gray-200 hover:border-yellow-300'
+                        } ${hasDetails ? 'cursor-pointer hover:shadow-md' : ''}`}
                       >
-                        <p className="text-sm font-medium text-gray-700">
+                        <p className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
                           {course}
                           {hasDetails && <span className="ml-1 text-yellow-500">→</span>}
                         </p>
@@ -94,13 +98,13 @@ const Courses = () => {
           </TabsContent>
 
           <TabsContent value="postgraduate" className="space-y-4">
-            <Card className="border-2 border-gray-200">
+            <Card className={`border-2 ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200'}`}>
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
+                <h3 className={`text-2xl font-bold mb-2 flex items-center ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   <Award className="h-6 w-6 text-yellow-500 mr-3" />
                   Postgraduate Courses
                 </h3>
-                <p className="text-sm text-gray-600 mb-6 flex items-center gap-2">
+                <p className={`text-sm mb-6 flex items-center gap-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                   <MousePointer className="h-4 w-4 text-yellow-500" />
                   Click on any course to view details
                 </p>
@@ -111,11 +115,13 @@ const Courses = () => {
                       <div
                         key={index}
                         onClick={() => hasDetails && handleCourseClick(course)}
-                        className={`bg-gray-50 hover:bg-yellow-50 border border-gray-200 hover:border-yellow-300 rounded-lg p-3 transition-all duration-200 ${
-                          hasDetails ? 'cursor-pointer hover:shadow-md' : ''
-                        }`}
+                        className={`border rounded-lg p-3 transition-all duration-200 ${
+                          isDark 
+                            ? 'bg-gray-700 hover:bg-yellow-900/30 border-gray-600 hover:border-yellow-500' 
+                            : 'bg-gray-50 hover:bg-yellow-50 border-gray-200 hover:border-yellow-300'
+                        } ${hasDetails ? 'cursor-pointer hover:shadow-md' : ''}`}
                       >
-                        <p className="text-sm font-medium text-gray-700">
+                        <p className={`text-sm font-medium ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
                           {course}
                           {hasDetails && <span className="ml-1 text-yellow-500">→</span>}
                         </p>
