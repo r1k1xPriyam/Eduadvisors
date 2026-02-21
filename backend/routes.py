@@ -625,7 +625,7 @@ async def get_all_calls():
 
 # ============ BULK DELETE ENDPOINTS (Admin) ============
 
-ADMIN_PASSWORD = "Eduadvisors@2026"
+ADMIN_PASSWORD = "EDUadvisors@souvikCEO2026"
 
 @router.post("/admin/bulk-delete", response_model=dict)
 async def bulk_delete_data(
