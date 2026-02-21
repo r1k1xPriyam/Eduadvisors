@@ -7,11 +7,13 @@ import { Label } from './ui/label';
 import { X, GraduationCap, Phone, Mail, User, BookOpen, School, MessageSquare, CheckCircle, Star } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useTheme } from '../context/ThemeContext';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const QueryPopup = () => {
+  const { isDark } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
