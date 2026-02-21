@@ -124,7 +124,51 @@ const ConsultantDashboard = () => {
     if (consultantId && activeTab === 'admissions') {
       fetchMyAdmissions();
     }
+    if (consultantId && activeTab === 'calls') {
+      fetchCallStats();
+    }
   }, [consultantId, activeTab]);
+
+  // Fetch call stats on load
+  useEffect(() => {
+    if (consultantId) {
+      fetchCallStats();
+    }
+  }, [consultantId]);
+
+  const fetchCallStats = async () => {
+    if (!consultantId) return;
+    try {
+      const response = await axios.get(`${API}/consultant/calls/${consultantId}`);
+      if (response.data.success) {
+        setCallStats(response.data.stats);
+      }
+    } catch (error) {
+      console.error('Error fetching call stats:', error);
+    }
+  };
+
+  const handleQuickCall = async (callType) => {
+    try {
+      const params = new URLSearchParams({
+        consultant_id: consultantId,
+        call_type: callType,
+        student_name: quickCallData.student_name || 'N/A',
+        contact_number: quickCallData.contact_number || 'N/A',
+        remarks: quickCallData.remarks || ''
+      });
+      const response = await axios.post(`${API}/consultant/calls?${params.toString()}`);
+      if (response.data.success) {
+        toast.success(`${callType.charAt(0).toUpperCase() + callType.slice(1)} call logged!`);
+        fetchCallStats();
+        setShowQuickCall(false);
+        setQuickCallData({ call_type: 'attempted', student_name: '', contact_number: '', remarks: '' });
+      }
+    } catch (error) {
+      console.error('Error logging call:', error);
+      toast.error('Failed to log call');
+    }
+  };
 
   const fetchMyReports = async () => {
     if (!consultantId) return;
