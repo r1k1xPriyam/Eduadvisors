@@ -902,24 +902,24 @@ const AdminDashboard = () => {
           <TabsContent value="queries">
             {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
-          <Card>
+          <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
             <CardContent className="p-3 md:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs md:text-sm text-gray-600">Total Queries</p>
-                  <p className="text-xl md:text-3xl font-bold text-gray-900">{queries.length}</p>
+                  <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Queries</p>
+                  <p className={`text-xl md:text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{queries.length}</p>
                 </div>
                 <MessageSquare className="h-6 w-6 md:h-10 md:w-10 text-blue-500" />
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
             <CardContent className="p-3 md:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs md:text-sm text-gray-600">New</p>
-                  <p className="text-xl md:text-3xl font-bold text-blue-600">
+                  <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>New</p>
+                  <p className="text-xl md:text-3xl font-bold text-blue-500">
                     {queries.filter((q) => q.status === 'new').length}
                   </p>
                 </div>
@@ -928,12 +928,12 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
             <CardContent className="p-3 md:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs md:text-sm text-gray-600">Contacted</p>
-                  <p className="text-xl md:text-3xl font-bold text-yellow-600">
+                  <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Contacted</p>
+                  <p className="text-xl md:text-3xl font-bold text-yellow-500">
                     {queries.filter((q) => q.status === 'contacted').length}
                   </p>
                 </div>
@@ -942,12 +942,12 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
             <CardContent className="p-3 md:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs md:text-sm text-gray-600">Closed</p>
-                  <p className="text-xl md:text-3xl font-bold text-green-600">
+                  <p className={`text-xs md:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Closed</p>
+                  <p className="text-xl md:text-3xl font-bold text-green-500">
                     {queries.filter((q) => q.status === 'closed').length}
                   </p>
                 </div>
@@ -958,12 +958,12 @@ const AdminDashboard = () => {
         </div>
 
         {/* Filters and Actions */}
-        <Card className="mb-6">
+        <Card className={`mb-6 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
           <CardContent className="p-4 md:p-6">
             <div className="space-y-3">
               {/* Search Input */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
                 <Input
                   type="text"
                   placeholder="Search by name, email, phone..."
