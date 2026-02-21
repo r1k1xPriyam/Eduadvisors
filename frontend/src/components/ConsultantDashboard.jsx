@@ -906,18 +906,59 @@ const ConsultantDashboard = () => {
             </Card>
           </TabsContent>
 
+          {/* My Calls Tab */}
+          <TabsContent value="calls">
+            <Card>
+              <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 md:p-6">
+                <CardTitle className="text-lg md:text-xl">My Call History</CardTitle>
+                <p className="text-indigo-100 text-xs md:text-sm">Track all your calls - successful, failed, and attempted</p>
+              </CardHeader>
+              <CardContent className="p-4 md:p-6">
+                <div className="text-center py-8 md:py-12">
+                  <PhoneCall className="h-12 w-12 md:h-16 md:w-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500 text-base md:text-lg">Use "Quick Log Call" to track your calls</p>
+                  <p className="text-gray-400 text-xs md:text-sm mt-2">Your call statistics are displayed in the cards above</p>
+                  <div className="mt-6 grid grid-cols-3 gap-4 max-w-md mx-auto">
+                    <div className="bg-green-50 p-3 md:p-4 rounded-lg">
+                      <CheckCircle className="h-6 w-6 md:h-8 md:w-8 text-green-500 mx-auto mb-2" />
+                      <p className="text-lg md:text-2xl font-bold text-green-600">{callStats.successful_calls}</p>
+                      <p className="text-xs text-gray-600">Successful</p>
+                    </div>
+                    <div className="bg-red-50 p-3 md:p-4 rounded-lg">
+                      <PhoneOff className="h-6 w-6 md:h-8 md:w-8 text-red-500 mx-auto mb-2" />
+                      <p className="text-lg md:text-2xl font-bold text-red-600">{callStats.failed_calls}</p>
+                      <p className="text-xs text-gray-600">Failed</p>
+                    </div>
+                    <div className="bg-yellow-50 p-3 md:p-4 rounded-lg">
+                      <PhoneMissed className="h-6 w-6 md:h-8 md:w-8 text-yellow-500 mx-auto mb-2" />
+                      <p className="text-lg md:text-2xl font-bold text-yellow-600">{callStats.attempted_calls}</p>
+                      <p className="text-xs text-gray-600">Attempted</p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => setShowQuickCall(true)}
+                    className="mt-6 bg-gradient-to-r from-indigo-500 to-purple-600"
+                  >
+                    <PhoneCall className="h-4 w-4 mr-2" />
+                    Log a Call
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* My Admissions Tab */}
           <TabsContent value="admissions">
             {/* Stats Cards for Admissions */}
-            <div className="grid md:grid-cols-3 gap-6 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-4 md:mb-6">
               <Card>
-                <CardContent className="p-6">
+                <CardContent className="p-4 md:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600">Total Admissions</p>
-                      <p className="text-3xl font-bold text-gray-900">{myAdmissions.length}</p>
+                      <p className="text-xs md:text-sm text-gray-600">Total Admissions</p>
+                      <p className="text-2xl md:text-3xl font-bold text-gray-900">{myAdmissions.length}</p>
                     </div>
-                    <GraduationCap className="h-10 w-10 text-purple-500" />
+                    <GraduationCap className="h-8 w-8 md:h-10 md:w-10 text-purple-500" />
                   </div>
                 </CardContent>
               </Card>
