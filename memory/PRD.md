@@ -1,7 +1,7 @@
 # Edu Advisor - Product Requirements Document
 
 ## Overview
-Edu Advisor is a comprehensive educational consultancy website with a React frontend, FastAPI backend, and MongoDB database. Fully mobile-responsive design.
+Edu Advisor is a comprehensive educational consultancy website with a React frontend, FastAPI backend, and MongoDB database. Fully mobile-responsive design with light/dark theme support.
 
 ## Core Features
 
@@ -12,13 +12,16 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - **Course/College Modals**: Clickable courses and colleges showing detailed information
 - **Contact Form**: Students can submit queries which are saved to the database
 - **Query Popup**: Student lead capture popup with auto-show and manual trigger via button
+- **Light/Dark Theme**: Full dark mode support across all pages
 
 ### Admin Dashboard (`/admin`)
-- **Secure Login**: ID: `ADMIN`, Password: `Eduadvisors@2026`
+- **Secure Login**: ID: `ADMIN`, Password: `EDUadvisors@souvikCEO2026`
 - **Interactive Login Background**: Floating animated icons (Shield, Users, BarChart3, FileCheck)
+- **Light/Dark Theme Toggle**: Full dark mode support
 - **5 Tab Interface**: Student Queries, Consultant Reports, Call Stats, Admissions, Manage Consultants
 - **Call Stats Overview Bar**: Shows Total Calls, Successful, Failed, Attempted across all consultants
-- **Call Statistics by Consultant**: Table showing each consultant's call breakdown and success rate
+- **Call Statistics by Consultant**: Table showing each consultant's call breakdown, success rate, and DELETE action
+- **Delete Call Stats per Consultant**: Admin can delete all call statistics for a specific consultant with password confirmation
 - **Student Queries Management**: View, search, filter, delete, and update query status
 - **Consultant Reports**: View all daily reports, filter by date and consultant, delete reports
 - **Admissions Tracking**: Full CRUD for tracking student admissions and consultant payouts
@@ -28,25 +31,28 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
   - Filter by consultant
   - Filter by date range
   - **Password re-confirmation required** for sensitive deletion
-- **Mobile-Responsive**: Full smartphone compatibility with 2-row tab layout on mobile
+- **Mobile-Responsive**: Full smartphone compatibility with horizontally scrollable tabs
 
 ### Consultant Portal (`/consultant`)
 - **Unique Logins**: 25 consultants with individual credentials
 - **Interactive Login Background**: Floating animated icons (Phone, FileText, Award, Target)
+- **Light/Dark Theme Toggle**: Full dark mode support
 - **4 Tab Interface**: Submit Report, My Reports, My Calls, My Admissions
 - **Call Stats Bar**: Shows consultant's Total Calls, Successful, Failed, Attempted
+- **Auto-Logging of Successful Calls**: When a consultant submits a detailed Student Calling Report, it automatically logs as a successful call
 - **Quick Log Call Feature**:
-  - One-click call logging without full report details
+  - Quick call logging for FAILED or ATTEMPTED calls only
   - Optional fields: Student Name, Contact Number, Remarks
-  - Three quick actions: Success, Failed, Attempt
-- **Daily Report Submission**: Full detailed student calling reports
+  - Two quick actions: Failed, Attempted (Success is auto-logged via report submission)
+  - Note displayed explaining successful calls are automatically logged when submitting detailed reports
+- **Daily Report Submission**: Full detailed student calling reports (auto-logs as successful call)
 - **My Reports Tab**: View own submitted reports with date filter
 - **My Calls Tab**: View call statistics breakdown
 - **My Admissions Tab**: View admissions credited by admin with payout summary
-- **Mobile-Responsive**: Full smartphone compatibility
+- **Mobile-Responsive**: Full smartphone compatibility with horizontally scrollable tabs
 
 ## Tech Stack
-- **Frontend**: React, React Router, TailwindCSS, Shadcn UI
+- **Frontend**: React, React Router, TailwindCSS, Shadcn UI, React Context (Theme)
 - **Backend**: FastAPI, Motor (async MongoDB driver)
 - **Database**: MongoDB
 
