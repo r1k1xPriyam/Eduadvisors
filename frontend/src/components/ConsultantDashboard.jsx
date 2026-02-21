@@ -332,41 +332,168 @@ const ConsultantDashboard = () => {
         <div className="mb-8 flex items-center justify-between bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Daily Report Dashboard</h1>
-            <p className="text-gray-600 mt-1">Welcome, <span className="font-semibold text-green-600">{consultantName}</span></p>
+            <p className="text-sm md:text-base text-gray-600 mt-1">Welcome, <span className="font-semibold text-green-600">{consultantName}</span></p>
           </div>
           <Button
             onClick={handleLogout}
             variant="outline"
-            className="border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+            className="border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 w-full sm:w-auto"
           >
             <LogOut className="h-4 w-4 mr-2" />
             Logout
           </Button>
         </div>
 
+        {/* Quick Call Stats Bar */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-6">
+          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+            <CardContent className="p-3 md:p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm opacity-80">Total Calls</p>
+                <p className="text-xl md:text-2xl font-bold">{callStats.total_calls}</p>
+              </div>
+              <PhoneCall className="h-6 w-6 md:h-8 md:w-8 opacity-80" />
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+            <CardContent className="p-3 md:p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm opacity-80">Successful</p>
+                <p className="text-xl md:text-2xl font-bold">{callStats.successful_calls}</p>
+              </div>
+              <CheckCircle className="h-6 w-6 md:h-8 md:w-8 opacity-80" />
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+            <CardContent className="p-3 md:p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm opacity-80">Failed</p>
+                <p className="text-xl md:text-2xl font-bold">{callStats.failed_calls}</p>
+              </div>
+              <PhoneOff className="h-6 w-6 md:h-8 md:w-8 opacity-80" />
+            </CardContent>
+          </Card>
+          <Card className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white">
+            <CardContent className="p-3 md:p-4 flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm opacity-80">Attempted</p>
+                <p className="text-xl md:text-2xl font-bold">{callStats.attempted_calls}</p>
+              </div>
+              <PhoneMissed className="h-6 w-6 md:h-8 md:w-8 opacity-80" />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Log Call Button */}
+        <div className="mb-4 md:mb-6">
+          <Button
+            onClick={() => setShowQuickCall(true)}
+            className="w-full md:w-auto bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+          >
+            <PhoneCall className="h-4 w-4 mr-2" />
+            Quick Log Call
+          </Button>
+        </div>
+
+        {/* Quick Call Modal */}
+        {showQuickCall && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md">
+              <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg">Quick Log Call</CardTitle>
+                  <button onClick={() => setShowQuickCall(false)} className="text-white hover:text-gray-200">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 space-y-4">
+                <div>
+                  <Label className="text-sm">Student Name (Optional)</Label>
+                  <Input
+                    value={quickCallData.student_name}
+                    onChange={(e) => setQuickCallData({...quickCallData, student_name: e.target.value})}
+                    placeholder="Enter name or leave blank"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-sm">Contact Number (Optional)</Label>
+                  <Input
+                    value={quickCallData.contact_number}
+                    onChange={(e) => setQuickCallData({...quickCallData, contact_number: e.target.value})}
+                    placeholder="Enter number or leave blank"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-sm">Remarks (Optional)</Label>
+                  <Textarea
+                    value={quickCallData.remarks}
+                    onChange={(e) => setQuickCallData({...quickCallData, remarks: e.target.value})}
+                    placeholder="Brief note..."
+                    className="mt-1"
+                    rows={2}
+                  />
+                </div>
+                <div className="grid grid-cols-3 gap-2 pt-2">
+                  <Button
+                    onClick={() => handleQuickCall('successful')}
+                    className="bg-green-500 hover:bg-green-600 text-white"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    Success
+                  </Button>
+                  <Button
+                    onClick={() => handleQuickCall('failed')}
+                    className="bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    <PhoneOff className="h-4 w-4 mr-1" />
+                    Failed
+                  </Button>
+                  <Button
+                    onClick={() => handleQuickCall('attempted')}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                  >
+                    <PhoneMissed className="h-4 w-4 mr-1" />
+                    Attempt
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-lg max-w-xl">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 md:space-y-6">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-gray-100 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="submit"
-              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
             >
-              <PlusCircle className="h-4 w-4 mr-2" />
-              Submit Report
+              <PlusCircle className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Submit </span>Report
             </TabsTrigger>
             <TabsTrigger
               value="reports"
-              className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold"
+              className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
             >
-              <History className="h-4 w-4 mr-2" />
-              My Reports
+              <History className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">My </span>Reports
+            </TabsTrigger>
+            <TabsTrigger
+              value="calls"
+              className="data-[state=active]:bg-indigo-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+            >
+              <PhoneCall className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">My </span>Calls
             </TabsTrigger>
             <TabsTrigger
               value="admissions"
-              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold"
+              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
             >
-              <Award className="h-4 w-4 mr-2" />
-              My Admissions
+              <Award className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">My </span>Admissions
             </TabsTrigger>
           </TabsList>
 
@@ -374,18 +501,18 @@ const ConsultantDashboard = () => {
           <TabsContent value="submit">
             {/* Last Submission Info */}
             {lastSubmitTime && (
-              <div className="mb-6 bg-green-50 border border-green-200 p-4 rounded-lg flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                <p className="text-green-800">
+              <div className="mb-4 md:mb-6 bg-green-50 border border-green-200 p-3 md:p-4 rounded-lg flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-600" />
+                <p className="text-sm md:text-base text-green-800">
                   Last report submitted at {lastSubmitTime.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' })}
                 </p>
               </div>
             )}
 
             {!canSubmit && (
-              <div className="mb-6 bg-yellow-50 border border-yellow-200 p-4 rounded-lg flex items-center gap-2">
-                <Clock className="h-5 w-5 text-yellow-600 animate-pulse" />
-                <p className="text-yellow-800">
+              <div className="mb-4 md:mb-6 bg-yellow-50 border border-yellow-200 p-3 md:p-4 rounded-lg flex items-center gap-2">
+                <Clock className="h-4 w-4 md:h-5 md:w-5 text-yellow-600 animate-pulse" />
+                <p className="text-sm md:text-base text-yellow-800">
                   Please wait 5 seconds before submitting another report...
                 </p>
               </div>
@@ -393,11 +520,11 @@ const ConsultantDashboard = () => {
 
             {/* Report Form */}
             <Card className="shadow-xl border-2 border-gray-200">
-              <CardHeader className="bg-gradient-to-r from-green-500 to-blue-600 text-white">
-                <CardTitle className="text-2xl">Student Calling Report</CardTitle>
-                <p className="text-green-100 text-sm">Fill in the details for each student call</p>
+              <CardHeader className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 md:p-6">
+                <CardTitle className="text-lg md:text-2xl">Student Calling Report</CardTitle>
+                <p className="text-green-100 text-xs md:text-sm">Fill in the details for each student call</p>
               </CardHeader>
-              <CardContent className="p-8">
+              <CardContent className="p-4 md:p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Student Name */}
                   <div>
