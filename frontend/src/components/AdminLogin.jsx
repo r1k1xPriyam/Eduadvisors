@@ -129,13 +129,13 @@ const AdminLogin = () => {
                 value={credentials.username}
                 onChange={handleChange}
                 placeholder="Enter admin ID"
-                className="border-gray-300 focus:border-yellow-500 focus:ring-yellow-500"
+                className={`focus:border-yellow-500 focus:ring-yellow-500 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
                 disabled={loading}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-900 font-semibold flex items-center gap-2 text-sm md:text-base">
+              <Label htmlFor="password" className={`font-semibold flex items-center gap-2 text-sm md:text-base ${isDark ? 'text-white' : 'text-gray-900'}`}>
                 <Lock className="h-4 w-4 text-yellow-500" />
                 Password
               </Label>
@@ -148,13 +148,13 @@ const AdminLogin = () => {
                   value={credentials.password}
                   onChange={handleChange}
                   placeholder="Enter password"
-                  className="border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 pr-10"
+                  className={`focus:border-yellow-500 focus:ring-yellow-500 pr-10 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
                   disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isDark ? 'text-gray-400 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -177,9 +177,9 @@ const AdminLogin = () => {
             </Button>
           </form>
 
-          <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-gray-200">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4">
-              <p className="text-xs text-blue-800 text-center">
+          <div className={`mt-4 md:mt-6 pt-4 md:pt-6 border-t ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+            <div className={`rounded-lg p-3 md:p-4 ${isDark ? 'bg-blue-900/30 border border-blue-800' : 'bg-blue-50 border border-blue-200'}`}>
+              <p className={`text-xs text-center ${isDark ? 'text-blue-300' : 'text-blue-800'}`}>
                 <Lock className="h-3 w-3 inline mr-1" />
                 Authorized Personnel Only
               </p>
@@ -189,7 +189,7 @@ const AdminLogin = () => {
           <div className="mt-4 text-center">
             <button
               onClick={() => navigate('/')}
-              className="text-sm text-gray-600 hover:text-yellow-500 transition-colors"
+              className={`text-sm transition-colors ${isDark ? 'text-gray-400 hover:text-yellow-500' : 'text-gray-600 hover:text-yellow-500'}`}
             >
               ← Back to Website
             </button>
