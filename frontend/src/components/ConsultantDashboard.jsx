@@ -43,6 +43,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '../context/ThemeContext';
 import { format } from 'date-fns';
 import {
   Select,
