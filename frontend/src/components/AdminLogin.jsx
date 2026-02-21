@@ -198,7 +198,7 @@ const AdminLogin = () => {
       </Card>
 
       <div className="absolute bottom-4 text-center w-full z-10">
-        <p className="text-xs md:text-sm text-gray-500">© 2026 Edu Advisor. All rights reserved.</p>
+        <p className={`text-xs md:text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>© 2026 Edu Advisor. All rights reserved.</p>
       </div>
     </div>
   );
