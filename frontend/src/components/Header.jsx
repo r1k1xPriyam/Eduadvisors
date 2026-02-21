@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Phone, Mail, Lock, Users } from 'lucide-react';
 import { Button } from './ui/button';
+import ThemeToggle from './ThemeToggle';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,7 +27,9 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-lg py-3' : 'bg-white/95 backdrop-blur-sm py-4'
+        isScrolled 
+          ? 'bg-white dark:bg-gray-900 shadow-lg py-3' 
+          : 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm py-4'
       }`}
     >
       <div className="container mx-auto px-4">
@@ -39,51 +42,52 @@ const Header = () => {
               className="h-12 w-12 object-contain"
             />
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                 Edu <span className="text-yellow-500">Advisor</span>
               </h1>
-              <p className="text-xs text-gray-600 hidden sm:block">Learn Today Earn Tomorrow</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 hidden sm:block">Learn Today Earn Tomorrow</p>
             </div>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            <button onClick={() => scrollToSection('home')} className="text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+            <button onClick={() => scrollToSection('home')} className="text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
               Home
             </button>
-            <button onClick={() => scrollToSection('about')} className="text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+            <button onClick={() => scrollToSection('about')} className="text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
               About
             </button>
-            <button onClick={() => scrollToSection('services')} className="text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+            <button onClick={() => scrollToSection('services')} className="text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
               Services
             </button>
-            <button onClick={() => scrollToSection('courses')} className="text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+            <button onClick={() => scrollToSection('courses')} className="text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
               Courses
             </button>
-            <button onClick={() => scrollToSection('colleges')} className="text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+            <button onClick={() => scrollToSection('colleges')} className="text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
               Colleges
             </button>
-            <button onClick={() => scrollToSection('contact')} className="text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+            <button onClick={() => scrollToSection('contact')} className="text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
               Contact
             </button>
           </nav>
 
           {/* Contact Info & CTA */}
           <div className="hidden lg:flex items-center space-x-4">
-            <a href="tel:9332641552" className="flex items-center text-sm text-gray-700 hover:text-yellow-500 transition-colors">
+            <ThemeToggle />
+            <a href="tel:9332641552" className="flex items-center text-sm text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors">
               <Phone className="h-4 w-4 mr-1" />
               9332641552
             </a>
             <Link
               to="/admin"
-              className="flex items-center text-sm text-gray-600 hover:text-yellow-500 transition-colors"
+              className="flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-yellow-500 transition-colors"
             >
               <Lock className="h-4 w-4 mr-1" />
               Admin
             </Link>
             <Link
               to="/consultant"
-              className="flex items-center text-sm text-gray-600 hover:text-yellow-500 transition-colors"
+              className="flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-yellow-500 transition-colors"
             >
               <Users className="h-4 w-4 mr-1" />
               Consultant
@@ -97,56 +101,59 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden text-gray-700 hover:text-yellow-500 transition-colors"
-          >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="flex items-center gap-2 lg:hidden">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors"
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
+          <div className="lg:hidden mt-4 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
             <nav className="flex flex-col space-y-3">
-              <button onClick={() => scrollToSection('home')} className="text-left text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+              <button onClick={() => scrollToSection('home')} className="text-left text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
                 Home
               </button>
-              <button onClick={() => scrollToSection('about')} className="text-left text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+              <button onClick={() => scrollToSection('about')} className="text-left text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
                 About
               </button>
-              <button onClick={() => scrollToSection('services')} className="text-left text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+              <button onClick={() => scrollToSection('services')} className="text-left text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
                 Services
               </button>
-              <button onClick={() => scrollToSection('courses')} className="text-left text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+              <button onClick={() => scrollToSection('courses')} className="text-left text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
                 Courses
               </button>
-              <button onClick={() => scrollToSection('colleges')} className="text-left text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+              <button onClick={() => scrollToSection('colleges')} className="text-left text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
                 Colleges
               </button>
-              <button onClick={() => scrollToSection('contact')} className="text-left text-gray-700 hover:text-yellow-500 transition-colors font-medium">
+              <button onClick={() => scrollToSection('contact')} className="text-left text-gray-700 dark:text-gray-300 hover:text-yellow-500 transition-colors font-medium">
                 Contact
               </button>
-              <div className="pt-3 border-t border-gray-200">
-                <a href="tel:9332641552" className="flex items-center text-sm text-gray-700 mb-2">
+              <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                <a href="tel:9332641552" className="flex items-center text-sm text-gray-700 dark:text-gray-300 mb-2">
                   <Phone className="h-4 w-4 mr-2" />
                   9332641552
                 </a>
-                <a href="mailto:info.eduadvisor26@gmail.com" className="flex items-center text-sm text-gray-700 mb-3">
+                <a href="mailto:info.eduadvisor26@gmail.com" className="flex items-center text-sm text-gray-700 dark:text-gray-300 mb-3">
                   <Mail className="h-4 w-4 mr-2" />
                   info.eduadvisor26@gmail.com
                 </a>
-                <div className="flex gap-3 pt-3 border-t border-gray-200">
+                <div className="flex gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                   <Link
                     to="/admin"
-                    className="flex items-center text-sm text-gray-600 hover:text-yellow-500 transition-colors bg-gray-100 px-3 py-2 rounded-md"
+                    className="flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-yellow-500 transition-colors bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-md"
                   >
                     <Lock className="h-4 w-4 mr-1" />
                     Admin Login
                   </Link>
                   <Link
                     to="/consultant"
-                    className="flex items-center text-sm text-gray-600 hover:text-yellow-500 transition-colors bg-gray-100 px-3 py-2 rounded-md"
+                    className="flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-yellow-500 transition-colors bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-md"
                   >
                     <Users className="h-4 w-4 mr-1" />
                     Consultant Login
