@@ -599,30 +599,34 @@ const AdminDashboard = () => {
     <div className={`min-h-screen py-4 md:py-8 transition-colors duration-300 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="container mx-auto px-2 md:px-4">
         {/* Header */}
-        <div className="mb-6 md:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className={`text-2xl md:text-4xl font-bold mb-1 md:mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>Admin Dashboard</h1>
-            <p className={`text-sm md:text-base ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Manage student queries and consultant reports</p>
+        <div className="mb-6 md:mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h1 className={`text-xl md:text-4xl font-bold mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>Admin Dashboard</h1>
+              <p className={`text-xs md:text-base ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Manage student queries and consultant reports</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className={`border-2 ${isDark ? 'border-red-500 text-red-400 hover:bg-red-900/30' : 'border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400'}`}
+              >
+                <LogOut className="h-4 w-4 md:mr-2" />
+                <span className="hidden md:inline">Logout</span>
+              </Button>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2 items-center">
-            <ThemeToggle />
-            <Button
-              onClick={() => setShowBulkDelete(true)}
-              variant="outline"
-              className={`border-2 ${isDark ? 'border-orange-500 text-orange-400 hover:bg-orange-900/30' : 'border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400'}`}
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Bulk Delete
-            </Button>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className={`border-2 ${isDark ? 'border-red-500 text-red-400 hover:bg-red-900/30' : 'border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400'}`}
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
-          </div>
+          <Button
+            onClick={() => setShowBulkDelete(true)}
+            variant="outline"
+            size="sm"
+            className={`w-full md:w-auto border-2 ${isDark ? 'border-orange-500 text-orange-400 hover:bg-orange-900/30' : 'border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400'}`}
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
+            Bulk Delete
+          </Button>
         </div>
 
         {/* Call Stats Overview Bar */}
@@ -781,41 +785,83 @@ const AdminDashboard = () => {
 
         {/* Tabs for Queries, Consultant Reports, and Consultant Management */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 mb-6 md:mb-8 bg-gray-100 p-1 rounded-lg gap-1">
+          {/* Mobile Tab Navigation - Horizontal Scroll */}
+          <div className="md:hidden mb-4 overflow-x-auto pb-2 -mx-2 px-2">
+            <TabsList className="inline-flex w-max min-w-full bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
+              <TabsTrigger
+                value="queries"
+                className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <MessageSquare className="h-3 w-3 mr-1" />
+                Queries
+              </TabsTrigger>
+              <TabsTrigger
+                value="reports"
+                className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <FileText className="h-3 w-3 mr-1" />
+                Reports
+              </TabsTrigger>
+              <TabsTrigger
+                value="calls"
+                className="data-[state=active]:bg-indigo-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <PhoneCall className="h-3 w-3 mr-1" />
+                Stats
+              </TabsTrigger>
+              <TabsTrigger
+                value="admissions"
+                className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <GraduationCap className="h-3 w-3 mr-1" />
+                Admissions
+              </TabsTrigger>
+              <TabsTrigger
+                value="consultants"
+                className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <Settings className="h-3 w-3 mr-1" />
+                Consultants
+              </TabsTrigger>
+            </TabsList>
+          </div>
+          
+          {/* Desktop Tab Navigation */}
+          <TabsList className="hidden md:grid w-full grid-cols-5 mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="queries"
-              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
             >
-              <MessageSquare className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span className="hidden sm:inline">Student </span>Queries
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Student Queries
             </TabsTrigger>
             <TabsTrigger
               value="reports"
-              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
             >
-              <FileText className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span className="hidden sm:inline">Consultant </span>Reports
+              <FileText className="h-4 w-4 mr-2" />
+              Consultant Reports
             </TabsTrigger>
             <TabsTrigger
               value="calls"
-              className="data-[state=active]:bg-indigo-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+              className="data-[state=active]:bg-indigo-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
             >
-              <PhoneCall className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span className="hidden sm:inline">Call </span>Stats
+              <PhoneCall className="h-4 w-4 mr-2" />
+              Call Stats
             </TabsTrigger>
             <TabsTrigger
               value="admissions"
-              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+              className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
             >
-              <GraduationCap className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <GraduationCap className="h-4 w-4 mr-2" />
               Admissions
             </TabsTrigger>
             <TabsTrigger
               value="consultants"
-              className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold text-xs md:text-sm px-2 py-2"
+              className="data-[state=active]:bg-blue-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
             >
-              <Settings className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span className="hidden sm:inline">Manage </span>Consultants
+              <Settings className="h-4 w-4 mr-2" />
+              Manage Consultants
             </TabsTrigger>
           </TabsList>
 
