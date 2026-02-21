@@ -562,7 +562,7 @@ const ConsultantDashboard = () => {
             )}
 
             {/* Report Form */}
-            <Card className="shadow-xl border-2 border-gray-200">
+            <Card className={`shadow-xl border-2 ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200'}`}>
               <CardHeader className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 md:p-6">
                 <CardTitle className="text-lg md:text-2xl">Student Calling Report</CardTitle>
                 <p className="text-green-100 text-xs md:text-sm">Fill in the details for each student call</p>
@@ -571,7 +571,7 @@ const ConsultantDashboard = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Student Name */}
                   <div>
-                    <Label htmlFor="student_name" className="text-gray-900 font-semibold flex items-center gap-2">
+                    <Label htmlFor="student_name" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <User className="h-4 w-4 text-green-500" />
                       Student Name *
                     </Label>
