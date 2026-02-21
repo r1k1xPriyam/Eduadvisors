@@ -127,6 +127,35 @@ const AdminDashboard = () => {
     }
   };
 
+  // Delete Consultant Call Stats
+  const handleDeleteConsultantCalls = async () => {
+    if (!deleteCallsPassword) {
+      toast.error('Please enter admin password');
+      return;
+    }
+    
+    setIsDeletingCalls(true);
+    try {
+      const response = await axios.delete(`${API}/admin/calls/${deleteCallsConsultantId}?password=${encodeURIComponent(deleteCallsPassword)}`);
+      
+      if (response.data.success) {
+        toast.success('Call Stats Deleted', {
+          description: response.data.message,
+        });
+        fetchCallStats(); // Refresh call stats
+        setShowDeleteCallStats(false);
+        setDeleteCallsPassword('');
+        setDeleteCallsConsultantId('');
+      }
+    } catch (error) {
+      toast.error('Delete Failed', {
+        description: error.response?.data?.detail || 'Failed to delete call stats',
+      });
+    } finally {
+      setIsDeletingCalls(false);
+    }
+  };
+
   // Bulk Delete Handler
   const handleBulkDelete = async () => {
     if (!bulkDeletePassword) {
