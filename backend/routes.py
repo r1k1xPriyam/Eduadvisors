@@ -636,6 +636,31 @@ async def get_all_calls():
         logger.error(f"Error fetching all calls: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch calls")
 
+# Delete call stats for a specific consultant (Admin only)
+@router.delete("/admin/calls/{consultant_id}", response_model=dict)
+async def delete_consultant_calls(consultant_id: str, password: str):
+    """Delete all call logs for a specific consultant"""
+    try:
+        # Verify admin password
+        if password != ADMIN_PASSWORD:
+            raise HTTPException(status_code=401, detail="Invalid admin password")
+        
+        # Delete all calls for this consultant
+        result = await db.call_logs.delete_many({"consultant_id": consultant_id})
+        
+        logger.info(f"Deleted {result.deleted_count} call logs for consultant {consultant_id}")
+        
+        return {
+            "success": True,
+            "message": f"Successfully deleted {result.deleted_count} call logs for consultant",
+            "deleted_count": result.deleted_count
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting consultant calls: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete calls")
+
 # ============ BULK DELETE ENDPOINTS (Admin) ============
 
 ADMIN_PASSWORD = "EDUadvisors@souvikCEO2026"
