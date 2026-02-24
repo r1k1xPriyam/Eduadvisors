@@ -63,6 +63,7 @@ class ConsultantReportCreate(BaseModel):
     career_interest: str
     college_interest: Optional[str] = ""
     interest_scope: str  # ACTIVELY INTERESTED, LESS INTERESTED, RECALLING NEEDED, DROPOUT THIS YEAR, ALREADY COLLEGE SELECTED, NOT INTERESTED
+    next_followup_date: Optional[str] = None  # ISO date string for follow-up reminder
     other_remarks: Optional[str] = ""
 
 class ConsultantReport(BaseModel):
@@ -76,9 +77,28 @@ class ConsultantReport(BaseModel):
     career_interest: str
     college_interest: str
     interest_scope: str
+    next_followup_date: Optional[str] = None
+    followup_completed: bool = False
     other_remarks: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+# Call Log Model for detailed tracking
+class CallLogCreate(BaseModel):
+    student_name: Optional[str] = ""
+    contact_number: str
+    remarks: Optional[str] = ""
+    call_type: str  # successful, failed, attempted
+
+class CallLog(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    consultant_id: str
+    consultant_name: str
+    student_name: str
+    contact_number: str
+    call_type: str
+    remarks: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class Course(BaseModel):
     id: str
