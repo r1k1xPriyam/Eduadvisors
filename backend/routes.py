@@ -577,21 +577,26 @@ async def log_call(
     contact_number: str = None,
     remarks: str = None
 ):
-    """Log a call (can be quick log without full details)"""
+    """Log a call - contact_number is mandatory for failed/attempted calls"""
     try:
         consultant_name = get_consultant_name(consultant_id)
         if not consultant_name:
             raise HTTPException(status_code=401, detail="Unauthorized")
         
+        # Validate contact_number is mandatory for quick log (failed/attempted)
+        if call_type in ["failed", "attempted"]:
+            if not contact_number or contact_number.strip() == "" or contact_number == "N/A":
+                raise HTTPException(status_code=400, detail="Contact number is mandatory for quick call logging")
+        
         call_log = {
-            "id": f"call_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{consultant_id}",
+            "id": f"call_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S%f')}_{consultant_id}",
             "consultant_id": consultant_id,
             "consultant_name": consultant_name,
             "call_type": call_type,
-            "student_name": student_name or "N/A",
-            "contact_number": contact_number or "N/A",
-            "remarks": remarks or "",
-            "created_at": datetime.utcnow().isoformat()
+            "student_name": student_name.strip() if student_name else "N/A",
+            "contact_number": contact_number.strip() if contact_number else "N/A",
+            "remarks": remarks.strip() if remarks else "",
+            "created_at": datetime.now(timezone.utc).isoformat()
         }
         
         await db.call_logs.insert_one(call_log)
