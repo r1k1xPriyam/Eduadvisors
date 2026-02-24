@@ -1,64 +1,81 @@
 <analysis>**original_problem_statement:**
-The user wants to build a comprehensive website for their educational consultancy, Edu Advisor. The initial request was for a professional landing page. The scope has since expanded to a full-stack application with a React frontend and FastAPI backend.
+The user wants to build a comprehensive website for their educational consultancy, Edu Advisor. The project started as a landing page and evolved into a full-stack application with a React frontend and FastAPI backend.
 
 PRODUCT REQUIREMENTS:
-1.  **Public Website**: A multi-section landing page (Hero, About, Services, Courses, Success Gallery) with a student query form. A GET COUNSELLING NOW button on the hero section should trigger the existing query popup. The site should support both light and dark modes.
-2.  **Login Portals**: Secure login portals for Admin and Consultant roles, featuring interactive background images and a theme (light/dark) toggle.
+1.  **Public Website**: A multi-section landing page with a student query form and a GET COUNSELLING NOW button. The site must support light and dark modes.
+2.  **Login Portals**: Secure login for Admin and Consultant roles.
 3.  **Admin Dashboard**:
-    *   A secure, mobile-responsive portal for the  user with light/dark mode support.
-    *   View all student queries and consultant reports.
-    *   **Bulk Delete**: Ability to delete data (Queries, Reports, Calls, Admissions, All) in bulk with filters (consultant, date range) and password confirmation for security.
-    *   **Admissions Management**: Add, edit, and delete student admission records.
-    *   **Consultant Management**: Add, edit (user ID and password only, name is read-only), and remove consultant accounts.
-    *   **Call Statistics**: View aggregated call statistics for all consultants (total, successful, failed, attempted).
+    *   View all student queries, consultant reports, and call statistics.
+    *   **Bulk Delete**: Delete data with filters and password confirmation.
+    *   Manage admissions and consultant accounts.
+    *   **Delete Call Stats**: Ability to delete call statistics for each individual consultant.
+    *   **View Detailed Call Stats**: View details for successful, failed, and attempted calls for each consultant.
+    *   **View Reminders**: Access a list of Next Calling Reminders for all consultants.
 4.  **Consultant Portal**:
-    *   A secure, mobile-responsive portal for consultants with unique credentials and light/dark mode support.
-    *   **Daily Reporting**: Submit detailed student calling reports.
-    *   **Quick Call Logging**: A separate, simpler form to quickly log call outcomes (Success, Fail, Attempt) without full student details.
-    *   **View Data**: View their own submitted reports, credited admissions, and total call statistics.
+    *   Submit detailed student calling reports. Mandatory fields must be enforced.
+    *   Handle duplicate reports (based on phone number) by overwriting the old report after user confirmation.
+    *   **Quick Call Logging**: A simple form to log only Failed or Attempted calls. Contact number is mandatory.
+    *   **View Data**: View own submitted reports, admissions, and call statistics (both summary and detailed).
+    *   **Next Calling Reminder**: An optional calendar input to set a follow-up reminder for a student. A notification should appear on the portal on the reminder day. A separate section will display all upcoming reminders.
+    *   **Bulk Report Upload**: Ability to download a sample CSV, fill it, and upload it to submit multiple reports at once.
 
 **User's preferred language**: English
 
 **what currently exists?**
-A full-stack application with a React/FastAPI/MongoDB stack. The application is feature-complete according to the user's latest requests. All core portals (Public Website, Admin Dashboard, Consultant Dashboard) are implemented. Key features include admissions tracking, a dual system for consultant reporting (detailed reports vs. quick call logs), bulk data deletion for admins, mobile-responsive design across dashboards, and a sitewide light/dark theme toggle. The backend has been extended to support all these new features.
+A full-stack application with a React/FastAPI/MongoDB stack. The app includes the public website, admin portal, and consultant portal. Previous features like authentication, admissions tracking, dual reporting, bulk delete, mobile responsiveness, and dark/light mode are implemented and verified.
+
+The agent has started implementing a new, large set of 7 features requested by the user. The backend  has been updated, and modifications to  have begun to support the new logic.
 
 **Last working item**:
-    - Last item agent was working: Implementing a sitewide light/dark theme toggle. This involved creating a , wrapping the main , updating , and adding toggle controls and dark-mode-specific styles to all major pages and components (, , , , ).
-    - Status: USER VERIFICATION PENDING
+    - Last item agent was working: Implementing the backend logic for the 7 new features requested by the user. The agent updated  to add a reminder field and started modifying  to handle the new business logic (duplicate reports, mandatory fields, reminders, CSV uploads, etc.).
+    - Status: IN PROGRESS
     - Agent Testing Done: N
-    - Which testing method agent to use? Frontend testing agent
+    - Which testing method agent to use? both
     - User Testing Done: N
 
 **All Pending/In progress Issue list**:
-  - There are no known bugs or issues. The primary pending item is the verification of the last implemented feature.
+  - The primary pending work is the implementation of the 7 new features. There are no known bugs from previous work.
 
 **In progress Task List**:
-  - Task 1: Verify the dark/light mode implementation. (P0)
+  - Task 1: Complete Backend Implementation for New Features (P0)
 
  Task Detail:
   - Task 1: 
-     - **Where to resume**: The theme toggle has been added to all relevant pages. The next step is to conduct a thorough test to ensure all components, pages (public site, login pages, admin dashboard, consultant dashboard), modals, and text are rendered correctly in both light and dark modes. The agent only performed a cursory screenshot check of the main page.
-     - **What will be achieved with this?**: This will confirm that the dark/light mode feature is working flawlessly across the entire application, providing a polished user experience.
-     - **Status**: TESTING PENDING
-     - **Should Test frontend/backend/both after fix?**: frontend
+     - **Where to resume**: Continue editing . The agent has started adding the new endpoints and modifying existing ones. The immediate next step is to complete the logic for all 7 features in the backend.
+     - **What will be achieved with this?**: The backend API will fully support the new frontend requirements for report handling, call logging, reminders, and CSV uploads.
+     - **Status**: IN PROGRESS
+     - **Should Test frontend/backend/both after fix?**: backend
      - **Blocked on something**: No.
 
 **Upcoming and Future Tasks**
-    - The user has not specified any new tasks. The project is functionally complete based on all requests to date.
+    Upcoming Tasks:
+    - **P0: Frontend for Duplicate Report Handling**: Implement a confirmation modal in  when a report with an existing phone number is submitted.
+    - **P0: Frontend for Mandatory Fields**: Add client-side validation and warning messages for required fields in the consultant report form.
+    - **P0: Frontend for Quick Log Call**: Make the 'Contact Number' field mandatory in the Quick Log Call modal.
+    - **P0: Frontend for Detailed Call Stats (Admin & Consultant)**: In both dashboards, make the call stat numbers clickable to open a modal/view showing a detailed list of the corresponding calls.
+    - **P0: Frontend for Next Calling Reminder Feature**:
+        - Add a calendar input field to the report submission form.
+        - Create a new tab/section in both dashboards to display upcoming reminders.
+        - Implement a notification system for consultants on the reminder day.
+    - **P0: Frontend for CSV Bulk Report Upload**:
+        - Add Download Sample CSV and Upload CSV functionality to the .
+
+    Future Tasks:
+    - **Refactor Dashboards**: Break down the large  and  components into smaller, more manageable pieces.
+    - **Upgrade Authentication**: Replace the current insecure -based session management with a proper JWT-based system.
 
 **Completed work in this session**
-- Implemented a full admissions tracking system (Admin & Consultant).
-- Implemented a dual consultant reporting system: detailed reports and a new Quick Call Log feature.
-- Created a Call Stats dashboard for both Admins (view all) and Consultants (view own).
-- Implemented a secure Bulk Delete feature for admins with password verification.
-- Made the entire Admin and Consultant dashboards fully mobile-responsive.
-- Added interactive, animated backgrounds to the Admin and Consultant login pages.
-- Added a GET COUNSELLING NOW button to the main website's hero section.
-- Updated the Success Gallery with a new image and removed a specified item.
-- Implemented a sitewide light/dark theme toggle (pending final verification).
+- Fixed mobile responsiveness issues in Admin and Consultant dashboards by implementing horizontally scrollable tabs.
+- Updated the Admin user's password in the backend and frontend.
+- Resolved numerous dark theme visibility issues across the entire application, ensuring text, labels, and input fields are clearly visible in dark mode.
+- Reworked the call logging logic:
+    - Quick Log Call is now restricted to Failed and Attempted calls.
+    - Submitting a full Student Calling Report automatically logs a Successful call.
+- Implemented a feature for Admins to delete all call statistics for a specific consultant, secured by a password confirmation modal.
+- Started backend modifications for the next set of 7 feature requests.
 
 **Earlier issues found/mentioned but not fixed**
-   - None.
+   - None. All prior issues were resolved.
 
 **Known issue recurrence from previous fork**
   - None.
@@ -67,66 +84,71 @@ A full-stack application with a React/FastAPI/MongoDB stack. The application is 
 
 
 **Key Technical Concepts**
-- **Frontend**: React, React Router, TailwindCSS, Shadcn UI, React Context API (for theme).
-- **Backend**: FastAPI, Motor (async MongoDB driver).
+- **Frontend**: React, React Router, TailwindCSS, Shadcn UI, React Context API.
+- **Backend**: FastAPI, Motor (async MongoDB driver), Pydantic.
 - **Database**: MongoDB.
-- **Authentication**: -based session management.
+- **Authentication**: -based session management (slated for refactoring).
 
 **key DB schema**
-  - **student_queries**: 
-  - **consultant_reports**: 
+  - **consultant_reports**:  (Updated)
+  - **call_logs**:  (Updated)
   - **consultants**: 
   - **admissions**: 
-  - **call_logs**:  (New)
 
 **changes in tech stack**
   - None.
 
 **All files of reference**
-- : Updated with endpoints for call logging and bulk deletion.
-- : Heavily modified for call stats, bulk delete, mobile responsiveness, and dark mode.
-- : Heavily modified for call logging, mobile responsiveness, and dark mode.
-- : Updated with interactive background and dark mode support.
-- : Updated with interactive background and dark mode support.
-- : Wrapped with the new .
-- : Newly created to manage the light/dark theme state.
-- : Updated to enable dark mode via class.
-- : Updated to include the theme toggle button.
+- : **(In Progress)** Core file for implementing the new business logic.
+- : Updated to add  to the report schema.
+- : Recently fixed for UI issues; will require significant updates for new features.
+- : Recently fixed for UI issues; will require significant updates for new features.
+- : Hardcoded admin password was updated here.
 
 **Areas that need refactoring**:
-- **Authentication**: The current -based session is insecure and should be upgraded to a proper token-based (JWT) system.
-- **Component Complexity**:  and  are now extremely large. They should be broken down into smaller, single-responsibility components (e.g., separate components for each tab's content) to improve maintainability.
+- **Component Complexity**:  and  have grown very large and should be broken down into smaller components.
+- **Authentication**: The current session management is insecure and needs to be upgraded to a token-based (JWT) system.
 
 **key api endpoints**
-- 
-- 
-- 
-- 
+-  (Modified for duplicate handling, mandatory fields, reminders)
+-  (Modified to enforce mandatory contact number)
+-  (Implemented for admin use)
+- **Planned New Endpoints**:
+  - 
+  - 
+  - 
+  - 
+  -  (for CSV upload)
 
 **Critical Info for New Agent**
-- The immediate priority is to thoroughly test the newly implemented dark/light mode feature across the entire application to ensure visual consistency and functionality.
-- Once verified, the application is considered feature-complete based on all user requests to date. You should confirm this with the user and await further instructions.
-- Be prepared to discuss potential future improvements, such as upgrading the authentication system.
+- The user has approved a large batch of 7 complex features. The project has moved from a bug-fixing/polishing phase to a major feature development phase.
+- The previous agent has already started the backend work. The immediate priority is to complete the implementation in  to support all new features before starting any frontend work.
+- The user has given the agent autonomy to implement the features as understood. It's crucial to follow the plan laid out by the previous agent to ensure all requirements are met.
 
 **documents and test reports created in this job**
-  -  (updated multiple times).
+  - 
+  - 
+  - 
 
 **Last 10 User Messages and any pending HUMAN messages** 
- - **User:** I need both light and dark background options for each webpage. And give me the admin's user id and password, please. (COMPLETED, PENDING VERIFICATION)
- - **User:** I need an option for consultants to see total calls, this should be viewable by the admin as well. Make the app fully smartphone-friendly. Allow admins to bulk delete data with password confirmation. Add interactive backgrounds to login portals. (COMPLETED)
- - **User:** The admin panel should also be smartphone screen interactive. (COMPLETED)
- - **User:** Give a button GET COUNSELLING NOW on the main website that triggers the query popup. Remove STUDY ABROAD from the website and replace the Engineering Dreams image. (COMPLETED)
+ - **User:** yes implement by your own (COMPLETED - User gave go-ahead on the agent's plan for the 7 new features)
+ - **User:** (Provided a list of 7 new major features including duplicate report handling, mandatory fields, call log updates, a reminder system, and CSV upload) (IN PROGRESS)
+ - **User:** some of the texts and input fields or other options can't be seen in dark theme due to dark colour or other issues, so kindly fixed it by detecting your own (COMPLETED)
+ - **User:** when a consultant submitting a report it showing failed submission... and the call stats delete option from admin is not working (COMPLETED - Both issues were debugged and fixed)
+ - **User:** call statistics can be also deleted by admin for each consultant and normal student calling report for each consultant will be noted as a successfull call... (COMPLETED)
+ - **User:** now change the admin's password with- EDUadvisors@souvikCEO2026 and fix the theme related issues... (COMPLETED)
+ - **User:** i want to make it smartphone screen responsive while pc screen responsive also (some of the admin and consultant's options in mobile are overlapping each other) (COMPLETED)
 
 **Project Health Check:**
-- **Broken**: None
-- **Mocked**: None
-- **In-Progress**: Dark/Light mode implementation (awaiting full verification).
+- **Broken**: None. The application was stable before the new feature work began.
+- **Mocked**: None.
+- **In-Progress**: Backend implementation for the 7 new features requested by the user.
 
 **3rd Party Integrations**
 - None.
 
 **Testing status**
-  - Testing agent used after significant changes: NO (Agent performed multiple large feature updates without using the testing agent).
+  - Testing agent used after significant changes: YES (Used to verify mobile responsiveness and dark mode fixes).
   - Troubleshoot agent used after agent stuck in loop: NO
   - Test files created: []
   - Known regressions: None.
@@ -142,4 +164,4 @@ A full-stack application with a React/FastAPI/MongoDB stack. The application is 
   - Password: 
 
 **What agent forgot to execute**
-- The agent did not perform comprehensive testing on the last major feature (dark mode) before attempting to finish. While the implementation seems complete, its functional and visual correctness across the entire complex application has not been verified.</analysis>
+- The agent was in the middle of a large, multi-step implementation when the session ended. No tasks were forgotten, but the current work is incomplete and is the highest priority for the next session.</analysis>
