@@ -141,17 +141,44 @@ async def consultant_login(user_id: str, password: str):
 
 # Consultant Report Endpoints
 @router.post("/consultant/reports", response_model=dict)
-async def create_consultant_report(report_data: ConsultantReportCreate, consultant_id: str):
+async def create_consultant_report(report_data: ConsultantReportCreate, consultant_id: str, update_existing: bool = False):
     try:
         # Verify consultant
         consultant_name = get_consultant_name(consultant_id)
         if not consultant_name:
             raise HTTPException(status_code=401, detail="Unauthorized")
         
+        # Check for duplicate report with same phone number for this consultant
+        existing_report = await db.consultant_reports.find_one({
+            "consultant_id": consultant_id,
+            "contact_number": report_data.contact_number
+        })
+        
+        if existing_report and not update_existing:
+            # Return info about existing report for confirmation
+            return {
+                "success": False,
+                "duplicate": True,
+                "message": f"A report for this phone number already exists (Student: {existing_report.get('student_name', 'Unknown')}). Do you want to update it?",
+                "existing_report_id": existing_report.get("id")
+            }
+        
+        if existing_report and update_existing:
+            # Delete the old report and its associated call log
+            await db.consultant_reports.delete_one({"id": existing_report.get("id")})
+            # Also update the call log - mark old one as updated
+            await db.call_logs.delete_many({
+                "consultant_id": consultant_id,
+                "contact_number": report_data.contact_number,
+                "call_type": "successful"
+            })
+            logger.info(f"Deleted existing report for phone {report_data.contact_number}")
+        
         # Create report
         report_dict = report_data.dict()
         report_dict["consultant_id"] = consultant_id
         report_dict["consultant_name"] = consultant_name
+        report_dict["followup_completed"] = False
         report_obj = ConsultantReport(**report_dict)
         
         # Insert into database
@@ -170,11 +197,12 @@ async def create_consultant_report(report_data: ConsultantReportCreate, consulta
         }
         await db.call_logs.insert_one(call_log)
         
-        logger.info(f"Consultant report created by {consultant_name}: {report_obj.id} (auto-logged as successful call)")
+        action = "updated" if (existing_report and update_existing) else "created"
+        logger.info(f"Consultant report {action} by {consultant_name}: {report_obj.id}")
         
         return {
             "success": True,
-            "message": "Report submitted successfully",
+            "message": f"Report {action} successfully",
             "report_id": report_obj.id
         }
     except HTTPException:
@@ -182,6 +210,27 @@ async def create_consultant_report(report_data: ConsultantReportCreate, consulta
     except Exception as e:
         logger.error(f"Error creating consultant report: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to submit report")
+
+# Check for duplicate report
+@router.get("/consultant/reports/check-duplicate", response_model=dict)
+async def check_duplicate_report(consultant_id: str, contact_number: str):
+    try:
+        existing_report = await db.consultant_reports.find_one({
+            "consultant_id": consultant_id,
+            "contact_number": contact_number
+        })
+        
+        if existing_report:
+            return {
+                "exists": True,
+                "student_name": existing_report.get("student_name"),
+                "report_id": existing_report.get("id"),
+                "created_at": existing_report.get("created_at")
+            }
+        return {"exists": False}
+    except Exception as e:
+        logger.error(f"Error checking duplicate: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to check duplicate")
 
 @router.get("/consultant/reports/{consultant_id}", response_model=dict)
 async def get_consultant_reports(consultant_id: str):
