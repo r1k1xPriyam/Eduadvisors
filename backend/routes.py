@@ -791,3 +791,303 @@ async def verify_admin_password(password: str):
         return {"success": True, "message": "Password verified"}
     raise HTTPException(status_code=401, detail="Invalid password")
 
+
+# ============ DETAILED CALL STATS ENDPOINTS ============
+
+@router.get("/admin/calls/details", response_model=dict)
+async def get_admin_call_details(consultant_id: str = None, call_type: str = None):
+    """Get detailed call list for admin - filterable by consultant and call type"""
+    try:
+        query = {}
+        if consultant_id:
+            query["consultant_id"] = consultant_id
+        if call_type:
+            query["call_type"] = call_type
+        
+        calls = await db.call_logs.find(query, {"_id": 0}).sort("created_at", -1).to_list(10000)
+        
+        return {
+            "success": True,
+            "calls": calls,
+            "count": len(calls)
+        }
+    except Exception as e:
+        logger.error(f"Error fetching call details: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch call details")
+
+
+@router.get("/consultant/calls/details/{consultant_id}", response_model=dict)
+async def get_consultant_call_details(consultant_id: str, call_type: str = None):
+    """Get detailed call list for a specific consultant"""
+    try:
+        consultant_name = get_consultant_name(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+        
+        query = {"consultant_id": consultant_id}
+        if call_type:
+            query["call_type"] = call_type
+        
+        calls = await db.call_logs.find(query, {"_id": 0}).sort("created_at", -1).to_list(10000)
+        
+        return {
+            "success": True,
+            "consultant_name": consultant_name,
+            "calls": calls,
+            "count": len(calls)
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching consultant call details: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch call details")
+
+
+# ============ REMINDERS ENDPOINTS ============
+
+@router.get("/consultant/reminders/{consultant_id}", response_model=dict)
+async def get_consultant_reminders(consultant_id: str):
+    """Get all upcoming follow-up reminders for a consultant"""
+    try:
+        consultant_name = get_consultant_name(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+        
+        # Get today's date as ISO string for comparison
+        today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+        
+        # Fetch reports with next_followup_date set
+        reports = await db.consultant_reports.find(
+            {
+                "consultant_id": consultant_id,
+                "next_followup_date": {"$ne": None, "$ne": ""},
+                "followup_completed": {"$ne": True}
+            },
+            {"_id": 0}
+        ).sort("next_followup_date", 1).to_list(10000)
+        
+        # Categorize reminders
+        today_reminders = []
+        upcoming_reminders = []
+        overdue_reminders = []
+        
+        for report in reports:
+            followup_date = report.get("next_followup_date", "")
+            if followup_date:
+                if followup_date == today:
+                    today_reminders.append(report)
+                elif followup_date > today:
+                    upcoming_reminders.append(report)
+                else:
+                    overdue_reminders.append(report)
+        
+        return {
+            "success": True,
+            "consultant_name": consultant_name,
+            "today_reminders": today_reminders,
+            "upcoming_reminders": upcoming_reminders,
+            "overdue_reminders": overdue_reminders,
+            "total_pending": len(today_reminders) + len(upcoming_reminders) + len(overdue_reminders)
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching reminders: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch reminders")
+
+
+@router.get("/admin/reminders", response_model=dict)
+async def get_all_reminders():
+    """Get all upcoming follow-up reminders for admin view"""
+    try:
+        today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+        
+        reports = await db.consultant_reports.find(
+            {
+                "next_followup_date": {"$ne": None, "$ne": ""},
+                "followup_completed": {"$ne": True}
+            },
+            {"_id": 0}
+        ).sort("next_followup_date", 1).to_list(10000)
+        
+        today_reminders = []
+        upcoming_reminders = []
+        overdue_reminders = []
+        
+        for report in reports:
+            followup_date = report.get("next_followup_date", "")
+            if followup_date:
+                if followup_date == today:
+                    today_reminders.append(report)
+                elif followup_date > today:
+                    upcoming_reminders.append(report)
+                else:
+                    overdue_reminders.append(report)
+        
+        return {
+            "success": True,
+            "today_reminders": today_reminders,
+            "upcoming_reminders": upcoming_reminders,
+            "overdue_reminders": overdue_reminders,
+            "total_pending": len(today_reminders) + len(upcoming_reminders) + len(overdue_reminders)
+        }
+    except Exception as e:
+        logger.error(f"Error fetching all reminders: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch reminders")
+
+
+@router.put("/consultant/reminders/{report_id}/complete", response_model=dict)
+async def mark_reminder_complete(report_id: str, consultant_id: str):
+    """Mark a followup reminder as complete"""
+    try:
+        consultant_name = get_consultant_name(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+        
+        result = await db.consultant_reports.update_one(
+            {"id": report_id, "consultant_id": consultant_id},
+            {"$set": {"followup_completed": True, "updated_at": datetime.now(timezone.utc)}}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Report not found")
+        
+        return {"success": True, "message": "Reminder marked as complete"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error marking reminder complete: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update reminder")
+
+
+# ============ CSV BULK UPLOAD ENDPOINTS ============
+
+@router.get("/consultant/sample-csv", response_model=dict)
+async def get_sample_csv():
+    """Get sample CSV format for bulk upload"""
+    sample_data = [
+        {
+            "student_name": "John Doe",
+            "contact_number": "9876543210",
+            "institution_name": "ABC School",
+            "competitive_exam_preference": "JEE",
+            "career_interest": "Engineering",
+            "college_interest": "IIT Kharagpur",
+            "interest_scope": "ACTIVELY INTERESTED",
+            "next_followup_date": "2026-02-25",
+            "other_remarks": "Very interested in CSE"
+        },
+        {
+            "student_name": "Jane Smith",
+            "contact_number": "9123456789",
+            "institution_name": "XYZ College",
+            "competitive_exam_preference": "NEET",
+            "career_interest": "Medical",
+            "college_interest": "",
+            "interest_scope": "LESS INTERESTED",
+            "next_followup_date": "",
+            "other_remarks": ""
+        }
+    ]
+    
+    headers = [
+        "student_name", "contact_number", "institution_name", 
+        "competitive_exam_preference", "career_interest", "college_interest",
+        "interest_scope", "next_followup_date", "other_remarks"
+    ]
+    
+    return {
+        "success": True,
+        "headers": headers,
+        "sample_data": sample_data,
+        "interest_scope_options": [
+            "ACTIVELY INTERESTED", "LESS INTERESTED", "RECALLING NEEDED",
+            "DROPOUT THIS YEAR", "ALREADY COLLEGE SELECTED", "NOT INTERESTED"
+        ]
+    }
+
+
+@router.post("/consultant/bulk-reports", response_model=dict)
+async def upload_bulk_reports(consultant_id: str, reports: list):
+    """Upload multiple reports from CSV data"""
+    try:
+        consultant_name = get_consultant_name(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+        
+        required_fields = ["student_name", "contact_number", "institution_name", 
+                          "competitive_exam_preference", "career_interest", "interest_scope"]
+        
+        valid_interest_scopes = [
+            "ACTIVELY INTERESTED", "LESS INTERESTED", "RECALLING NEEDED",
+            "DROPOUT THIS YEAR", "ALREADY COLLEGE SELECTED", "NOT INTERESTED"
+        ]
+        
+        success_count = 0
+        errors = []
+        
+        for idx, report_data in enumerate(reports):
+            row_num = idx + 1
+            
+            # Validate required fields
+            missing_fields = [f for f in required_fields if not report_data.get(f, "").strip()]
+            if missing_fields:
+                errors.append(f"Row {row_num}: Missing required fields: {', '.join(missing_fields)}")
+                continue
+            
+            # Validate interest_scope
+            if report_data.get("interest_scope", "").strip() not in valid_interest_scopes:
+                errors.append(f"Row {row_num}: Invalid interest_scope value")
+                continue
+            
+            try:
+                report_obj = {
+                    "id": str(uuid.uuid4()),
+                    "consultant_id": consultant_id,
+                    "consultant_name": consultant_name,
+                    "student_name": report_data.get("student_name", "").strip(),
+                    "contact_number": report_data.get("contact_number", "").strip(),
+                    "institution_name": report_data.get("institution_name", "").strip(),
+                    "competitive_exam_preference": report_data.get("competitive_exam_preference", "").strip(),
+                    "career_interest": report_data.get("career_interest", "").strip(),
+                    "college_interest": report_data.get("college_interest", "").strip(),
+                    "interest_scope": report_data.get("interest_scope", "").strip(),
+                    "next_followup_date": report_data.get("next_followup_date", "").strip() or None,
+                    "followup_completed": False,
+                    "other_remarks": report_data.get("other_remarks", "").strip(),
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "updated_at": datetime.now(timezone.utc).isoformat()
+                }
+                
+                await db.consultant_reports.insert_one(report_obj)
+                
+                # Auto-log successful call
+                call_log = {
+                    "id": str(uuid.uuid4()),
+                    "consultant_id": consultant_id,
+                    "consultant_name": consultant_name,
+                    "student_name": report_obj["student_name"],
+                    "contact_number": report_obj["contact_number"],
+                    "call_type": "successful",
+                    "remarks": f"Bulk upload - {report_obj['career_interest']}",
+                    "created_at": datetime.now(timezone.utc).isoformat()
+                }
+                await db.call_logs.insert_one(call_log)
+                
+                success_count += 1
+            except Exception as e:
+                errors.append(f"Row {row_num}: Failed to save - {str(e)}")
+        
+        return {
+            "success": True,
+            "message": f"Successfully uploaded {success_count} reports",
+            "success_count": success_count,
+            "error_count": len(errors),
+            "errors": errors
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in bulk upload: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to process bulk upload")
+
