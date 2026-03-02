@@ -163,12 +163,16 @@ const ConsultantDashboard = () => {
     if (consultantId && activeTab === 'calls') {
       fetchCallStats();
     }
+    if (consultantId && activeTab === 'reminders') {
+      fetchReminders();
+    }
   }, [consultantId, activeTab]);
 
-  // Fetch call stats on load
+  // Fetch call stats and reminders on load
   useEffect(() => {
     if (consultantId) {
       fetchCallStats();
+      fetchReminders();
     }
   }, [consultantId]);
 
