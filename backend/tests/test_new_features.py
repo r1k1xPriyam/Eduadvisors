@@ -488,20 +488,11 @@ class TestCSVBulkUpload:
             }
         ]
         
-        # Send reports as named parameter in JSON body
+        # Send reports as direct array in body
         response = requests.post(
             f"{BASE_URL}/api/consultant/bulk-reports?consultant_id={CONSULTANT_ID}",
-            json={"reports": reports}
+            json=reports
         )
-        
-        # If 422, check if endpoint expects different format
-        if response.status_code == 422:
-            # Try alternative - maybe backend expects array directly
-            response = requests.post(
-                f"{BASE_URL}/api/consultant/bulk-reports",
-                params={"consultant_id": CONSULTANT_ID},
-                json=reports
-            )
         
         assert response.status_code == 200
         data = response.json()
