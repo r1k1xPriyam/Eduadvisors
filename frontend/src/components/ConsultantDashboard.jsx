@@ -1056,18 +1056,6 @@ const ConsultantDashboard = () => {
                       </p>
                     )}
                   </div>
-                    <Input
-                      id="career_interest"
-                      name="career_interest"
-                      type="text"
-                      required
-                      value={formData.career_interest}
-                      onChange={handleChange}
-                      placeholder="e.g., Engineering, Medical, Management"
-                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
-                      disabled={isSubmitting}
-                    />
-                  </div>
 
                   {/* College Interest (Optional) */}
                   <div>
