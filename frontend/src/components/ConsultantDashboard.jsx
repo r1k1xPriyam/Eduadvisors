@@ -905,7 +905,7 @@ const ConsultantDashboard = () => {
                   <div>
                     <Label htmlFor="student_name" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <User className="h-4 w-4 text-green-500" />
-                      Student Name *
+                      Student Name <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="student_name"
@@ -915,16 +915,22 @@ const ConsultantDashboard = () => {
                       value={formData.student_name}
                       onChange={handleChange}
                       placeholder="Enter student's full name"
-                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''} ${validationErrors.student_name ? 'border-red-500' : ''}`}
                       disabled={isSubmitting}
                     />
+                    {validationErrors.student_name && (
+                      <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                        <AlertTriangle className="h-3 w-3" />
+                        {validationErrors.student_name}
+                      </p>
+                    )}
                   </div>
 
                   {/* Contact Number */}
                   <div>
                     <Label htmlFor="contact_number" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <Phone className="h-4 w-4 text-green-500" />
-                      Contact Number *
+                      Contact Number <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="contact_number"
@@ -934,16 +940,22 @@ const ConsultantDashboard = () => {
                       value={formData.contact_number}
                       onChange={handleChange}
                       placeholder="Enter contact number"
-                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''} ${validationErrors.contact_number ? 'border-red-500' : ''}`}
                       disabled={isSubmitting}
                     />
+                    {validationErrors.contact_number && (
+                      <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                        <AlertTriangle className="h-3 w-3" />
+                        {validationErrors.contact_number}
+                      </p>
+                    )}
                   </div>
 
                   {/* Institution Name */}
                   <div>
                     <Label htmlFor="institution_name" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <Building className="h-4 w-4 text-green-500" />
-                      Institution Name *
+                      Institution Name <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="institution_name"
@@ -953,16 +965,22 @@ const ConsultantDashboard = () => {
                       value={formData.institution_name}
                       onChange={handleChange}
                       placeholder="Enter institution/school/college name"
-                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''} ${validationErrors.institution_name ? 'border-red-500' : ''}`}
                       disabled={isSubmitting}
                     />
+                    {validationErrors.institution_name && (
+                      <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                        <AlertTriangle className="h-3 w-3" />
+                        {validationErrors.institution_name}
+                      </p>
+                    )}
                   </div>
 
                   {/* Competitive Exam Preference */}
                   <div>
                     <Label htmlFor="competitive_exam_preference" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <BookOpen className="h-4 w-4 text-green-500" />
-                      Competitive Exam Preference *
+                      Competitive Exam Preference <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="competitive_exam_preference"
@@ -972,17 +990,41 @@ const ConsultantDashboard = () => {
                       value={formData.competitive_exam_preference}
                       onChange={handleChange}
                       placeholder="e.g., JEE, NEET, WBJEE, JENPAS"
-                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''}`}
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''} ${validationErrors.competitive_exam_preference ? 'border-red-500' : ''}`}
                       disabled={isSubmitting}
                     />
+                    {validationErrors.competitive_exam_preference && (
+                      <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                        <AlertTriangle className="h-3 w-3" />
+                        {validationErrors.competitive_exam_preference}
+                      </p>
+                    )}
                   </div>
 
                   {/* Career Interest */}
                   <div>
                     <Label htmlFor="career_interest" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <Briefcase className="h-4 w-4 text-green-500" />
-                      Career Interest *
+                      Career Interest <span className="text-red-500">*</span>
                     </Label>
+                    <Input
+                      id="career_interest"
+                      name="career_interest"
+                      type="text"
+                      required
+                      value={formData.career_interest}
+                      onChange={handleChange}
+                      placeholder="e.g., Engineering, Medical, Management"
+                      className={`mt-2 ${isDark ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400' : ''} ${validationErrors.career_interest ? 'border-red-500' : ''}`}
+                      disabled={isSubmitting}
+                    />
+                    {validationErrors.career_interest && (
+                      <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                        <AlertTriangle className="h-3 w-3" />
+                        {validationErrors.career_interest}
+                      </p>
+                    )}
+                  </div>
                     <Input
                       id="career_interest"
                       name="career_interest"
