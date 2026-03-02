@@ -2444,34 +2444,40 @@ const AdminDashboard = () => {
                   </CardHeader>
                   <CardContent className="p-6 space-y-4">
                     <div>
-                      <Label htmlFor="edit_user_id">User ID (Editable)</Label>
+                      <Label htmlFor="edit_user_id" className={isDark ? 'text-gray-200' : ''}>User ID (Editable)</Label>
                       <Input
                         id="edit_user_id"
                         value={editingConsultant.new_user_id || editingConsultant.user_id}
                         onChange={(e) => setEditingConsultant({ ...editingConsultant, new_user_id: e.target.value.toUpperCase() })}
-                        className="mt-1"
+                        className={`mt-1 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
                         placeholder="Enter new User ID"
                       />
-                      <p className="text-xs text-gray-500 mt-1">Original: {editingConsultant.original_user_id}</p>
+                      <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Original: {editingConsultant.original_user_id}</p>
                     </div>
                     <div>
-                      <Label>Full Name (Cannot be changed)</Label>
+                      <Label htmlFor="edit_name" className={isDark ? 'text-gray-200' : ''}>Full Name (Editable)</Label>
                       <Input
+                        id="edit_name"
                         value={editingConsultant.name}
-                        disabled
-                        className="mt-1 bg-gray-100 cursor-not-allowed"
+                        onChange={(e) => setEditingConsultant({ ...editingConsultant, name: e.target.value.toUpperCase() })}
+                        className={`mt-1 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
+                        placeholder="Enter full name"
                       />
-                      <p className="text-xs text-amber-600 mt-1">Name cannot be modified after creation</p>
+                      <p className={`text-xs text-green-600 mt-1`}>Name can be modified and saved permanently</p>
                     </div>
                     <div>
-                      <Label htmlFor="edit_password">New Password (leave blank to keep current)</Label>
+                      <Label htmlFor="edit_password" className={isDark ? 'text-gray-200' : ''}>New Password (leave blank to keep current)</Label>
                       <Input
                         id="edit_password"
                         value={editingConsultant.password || ''}
                         onChange={(e) => setEditingConsultant({ ...editingConsultant, password: e.target.value })}
                         placeholder="Enter new password"
-                        className="mt-1"
+                        className={`mt-1 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
                       />
+                    </div>
+                    <div className={`p-3 rounded-lg ${isDark ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
+                      <p className="text-sm font-semibold">Changes are stored permanently</p>
+                      <p className="text-xs mt-1">All modifications will be saved to the database and persist across restarts.</p>
                     </div>
                     <div className="flex gap-3 pt-4">
                       <Button
@@ -2484,6 +2490,7 @@ const AdminDashboard = () => {
                       <Button
                         variant="outline"
                         onClick={() => setEditingConsultant(null)}
+                        className={isDark ? 'border-gray-600 text-gray-200' : ''}
                       >
                         Cancel
                       </Button>
