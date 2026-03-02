@@ -865,7 +865,7 @@ async def get_consultant_reminders(consultant_id: str):
         reports = await db.consultant_reports.find(
             {
                 "consultant_id": consultant_id,
-                "next_followup_date": {"$ne": None, "$ne": ""},
+                "next_followup_date": {"$nin": [None, ""]},
                 "followup_completed": {"$ne": True}
             },
             {"_id": 0}
