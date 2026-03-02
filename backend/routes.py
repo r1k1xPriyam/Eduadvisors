@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Body
 from models import StudentQuery, StudentQueryCreate, College, Course, ConsultantReport, ConsultantReportCreate
 from typing import List
 import logging
@@ -1019,7 +1019,7 @@ async def get_sample_csv():
 
 
 @router.post("/consultant/bulk-reports", response_model=dict)
-async def upload_bulk_reports(consultant_id: str, reports: list):
+async def upload_bulk_reports(consultant_id: str, reports: list = Body(...)):
     """Upload multiple reports from CSV data"""
     try:
         consultant_name = get_consultant_name(consultant_id)
