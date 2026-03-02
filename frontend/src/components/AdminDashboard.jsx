@@ -1038,6 +1038,13 @@ const AdminDashboard = () => {
                 </span>
               )}
             </TabsTrigger>
+            <TabsTrigger
+              value="analytics"
+              className="data-[state=active]:bg-cyan-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
+            >
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Analytics
+            </TabsTrigger>
           </TabsList>
 
           {/* Student Queries Tab */}
