@@ -132,6 +132,7 @@ const AdminDashboard = () => {
     fetchAdmissions();
     fetchCallStats();
     fetchReminders();
+    fetchAllAnalytics();
   }, []);
 
   useEffect(() => {
@@ -141,6 +142,32 @@ const AdminDashboard = () => {
   useEffect(() => {
     filterReports();
   }, [consultantReports, reportSearchTerm, selectedConsultant, selectedDate]);
+
+  // Fetch All Analytics Data
+  const fetchAllAnalytics = async () => {
+    setLoadingAnalytics(true);
+    try {
+      const [overview, calls, interest, trend, performance, monthly] = await Promise.all([
+        axios.get(`${API}/admin/analytics/overview`),
+        axios.get(`${API}/admin/analytics/call-distribution`),
+        axios.get(`${API}/admin/analytics/interest-scope`),
+        axios.get(`${API}/admin/analytics/reports-trend`),
+        axios.get(`${API}/admin/analytics/consultant-performance`),
+        axios.get(`${API}/admin/analytics/monthly-admissions`)
+      ]);
+      
+      if (overview.data.success) setAnalyticsOverview(overview.data.overview);
+      if (calls.data.success) setCallDistribution(calls.data.distribution);
+      if (interest.data.success) setInterestDistribution(interest.data.distribution);
+      if (trend.data.success) setReportsTrend(trend.data.trend);
+      if (performance.data.success) setConsultantPerformance(performance.data.performance);
+      if (monthly.data.success) setMonthlyAdmissions(monthly.data.monthly);
+    } catch (error) {
+      console.error('Error fetching analytics:', error);
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  };
 
   // Fetch Call Stats
   const fetchCallStats = async () => {
