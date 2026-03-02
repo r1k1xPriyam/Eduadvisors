@@ -193,17 +193,26 @@ const ConsultantDashboard = () => {
   };
 
   // Fetch Reminders
-  const fetchReminders = async () => {
+  const fetchReminders = async (showNotification = false) => {
     if (!consultantId) return;
     setLoadingReminders(true);
     try {
       const response = await axios.get(`${API}/consultant/reminders/${consultantId}`);
       if (response.data.success) {
+        const todayReminders = response.data.today_reminders || [];
+        const overdueReminders = response.data.overdue_reminders || [];
+        
         setReminders({
-          today_reminders: response.data.today_reminders || [],
+          today_reminders: todayReminders,
           upcoming_reminders: response.data.upcoming_reminders || [],
-          overdue_reminders: response.data.overdue_reminders || []
+          overdue_reminders: overdueReminders
         });
+        
+        // Show notification popup on login if there are reminders
+        if (showNotification && (todayReminders.length > 0 || overdueReminders.length > 0)) {
+          setNotificationReminders([...overdueReminders, ...todayReminders]);
+          setShowReminderNotification(true);
+        }
       }
     } catch (error) {
       console.error('Error fetching reminders:', error);
