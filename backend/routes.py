@@ -133,7 +133,7 @@ async def delete_query(query_id: str):
 @router.post("/consultant/login", response_model=dict)
 async def consultant_login(user_id: str, password: str):
     try:
-        result = verify_consultant(user_id, password)
+        result = await verify_consultant_async(user_id, password)
         if result["success"]:
             logger.info(f"Consultant {user_id} logged in successfully")
             return result
@@ -150,7 +150,7 @@ async def consultant_login(user_id: str, password: str):
 async def create_consultant_report(report_data: ConsultantReportCreate, consultant_id: str, update_existing: bool = False):
     try:
         # Verify consultant
-        consultant_name = get_consultant_name(consultant_id)
+        consultant_name = await get_consultant_name_async(consultant_id)
         if not consultant_name:
             raise HTTPException(status_code=401, detail="Unauthorized")
         
