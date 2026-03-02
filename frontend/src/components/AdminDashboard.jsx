@@ -183,6 +183,20 @@ const AdminDashboard = () => {
     }
   };
 
+  // Delete reminder by admin
+  const deleteReminder = async (reportId) => {
+    try {
+      const response = await axios.delete(`${API}/admin/reminders/${reportId}`);
+      if (response.data.success) {
+        toast.success('Reminder deleted successfully');
+        fetchReminders();
+      }
+    } catch (error) {
+      console.error('Error deleting reminder:', error);
+      toast.error('Failed to delete reminder');
+    }
+  };
+
   // Delete Consultant Call Stats
   const handleDeleteConsultantCalls = async () => {
     if (!deleteCallsPassword) {
