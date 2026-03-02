@@ -508,12 +508,18 @@ async def update_admission(
         from datetime import datetime
         
         update_data = {"updated_at": datetime.utcnow()}
-        if student_name: update_data["student_name"] = student_name
-        if course: update_data["course"] = course
-        if college: update_data["college"] = college
-        if admission_date: update_data["admission_date"] = admission_date
-        if payout_amount is not None: update_data["payout_amount"] = payout_amount
-        if payout_status: update_data["payout_status"] = payout_status
+        if student_name:
+            update_data["student_name"] = student_name
+        if course:
+            update_data["course"] = course
+        if college:
+            update_data["college"] = college
+        if admission_date:
+            update_data["admission_date"] = admission_date
+        if payout_amount is not None:
+            update_data["payout_amount"] = payout_amount
+        if payout_status:
+            update_data["payout_status"] = payout_status
         
         result = await db.admissions.update_one(
             {"id": admission_id},
