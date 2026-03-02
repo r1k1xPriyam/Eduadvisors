@@ -893,6 +893,37 @@ const ConsultantDashboard = () => {
               </div>
             )}
 
+            {/* Bulk Upload Section */}
+            <Card className={`mb-4 ${isDark ? 'bg-gray-800 border-gray-700' : 'border-gray-200'}`}>
+              <CardContent className="p-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Bulk Report Upload</h3>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Upload multiple reports at once using CSV</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={downloadSampleCsv}
+                      variant="outline"
+                      size="sm"
+                      className={isDark ? 'border-gray-600' : ''}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Sample CSV
+                    </Button>
+                    <Button
+                      onClick={() => fileInputRef.current?.click()}
+                      size="sm"
+                      className="bg-green-500 hover:bg-green-600 text-white"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload CSV
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Report Form */}
             <Card className={`shadow-xl border-2 ${isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200'}`}>
               <CardHeader className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 md:p-6">
