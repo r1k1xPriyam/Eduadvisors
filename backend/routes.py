@@ -1085,7 +1085,7 @@ async def get_sample_csv():
 async def upload_bulk_reports(consultant_id: str, reports: list = Body(...)):
     """Upload multiple reports from CSV data"""
     try:
-        consultant_name = get_consultant_name(consultant_id)
+        consultant_name = await get_consultant_name_async(consultant_id)
         if not consultant_name:
             raise HTTPException(status_code=401, detail="Unauthorized")
         
