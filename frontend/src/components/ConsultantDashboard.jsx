@@ -250,12 +250,36 @@ const ConsultantDashboard = () => {
       if (response.data.success) {
         toast.success('Follow-up marked as complete!');
         fetchReminders();
+        // Remove from notification list if open
+        setNotificationReminders(prev => prev.filter(r => r.id !== reportId));
+        if (notificationReminders.length <= 1) {
+          setShowReminderNotification(false);
+        }
         // Prompt to submit new report
         toast.info('Please submit an updated report for this student', { duration: 5000 });
       }
     } catch (error) {
       console.error('Error marking reminder complete:', error);
       toast.error('Failed to update reminder');
+    }
+  };
+
+  // Ignore reminder
+  const ignoreReminder = async (reportId) => {
+    try {
+      const response = await axios.put(`${API}/consultant/reminders/${reportId}/ignore?consultant_id=${consultantId}`);
+      if (response.data.success) {
+        toast.success('Reminder ignored');
+        fetchReminders();
+        // Remove from notification list if open
+        setNotificationReminders(prev => prev.filter(r => r.id !== reportId));
+        if (notificationReminders.length <= 1) {
+          setShowReminderNotification(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error ignoring reminder:', error);
+      toast.error('Failed to ignore reminder');
     }
   };
 
