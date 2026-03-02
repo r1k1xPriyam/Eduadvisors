@@ -4,7 +4,13 @@ from typing import List
 import logging
 import uuid
 from datetime import datetime, timezone
-from consultants import verify_consultant, get_consultant_name, get_all_consultants, add_consultant, update_consultant, delete_consultant
+from consultants import (
+    verify_consultant, get_consultant_name, get_all_consultants, 
+    add_consultant, update_consultant, delete_consultant,
+    verify_consultant_async, get_consultant_name_async, get_all_consultants_async,
+    add_consultant_async, update_consultant_async, delete_consultant_async,
+    init_consultants_db
+)
 
 logger = logging.getLogger(__name__)
 
