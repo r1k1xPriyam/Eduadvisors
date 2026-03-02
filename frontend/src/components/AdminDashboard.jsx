@@ -2768,6 +2768,272 @@ const AdminDashboard = () => {
               </div>
             )}
           </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics">
+            {/* Refresh Button */}
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Dashboard Analytics</h2>
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Overview of all key metrics</p>
+              </div>
+              <Button
+                onClick={fetchAllAnalytics}
+                variant="outline"
+                disabled={loadingAnalytics}
+                className={isDark ? 'border-gray-600' : 'border-gray-300'}
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${loadingAnalytics ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+            </div>
+
+            {loadingAnalytics ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className={`ml-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading analytics...</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Overview Cards */}
+                {analyticsOverview && (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Total Reports</p>
+                            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analyticsOverview.total_reports}</p>
+                            <p className={`text-xs ${isDark ? 'text-green-400' : 'text-green-600'}`}>+{analyticsOverview.today_reports} today</p>
+                          </div>
+                          <FileText className={`h-8 w-8 ${isDark ? 'text-green-400' : 'text-green-500'}`} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Total Calls</p>
+                            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analyticsOverview.total_calls}</p>
+                            <p className={`text-xs ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>+{analyticsOverview.today_calls} today</p>
+                          </div>
+                          <PhoneCall className={`h-8 w-8 ${isDark ? 'text-blue-400' : 'text-blue-500'}`} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Total Admissions</p>
+                            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analyticsOverview.total_admissions}</p>
+                            <p className={`text-xs ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>+{analyticsOverview.month_admissions} this month</p>
+                          </div>
+                          <GraduationCap className={`h-8 w-8 ${isDark ? 'text-purple-400' : 'text-purple-500'}`} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Student Queries</p>
+                            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analyticsOverview.total_queries}</p>
+                            <p className={`text-xs ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>{analyticsOverview.week_reports} reports this week</p>
+                          </div>
+                          <MessageSquare className={`h-8 w-8 ${isDark ? 'text-yellow-400' : 'text-yellow-500'}`} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {/* Charts Row 1 */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Call Distribution Pie Chart */}
+                  <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                    <CardHeader>
+                      <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
+                        <PieChart className="h-5 w-5 text-cyan-500" />
+                        Call Statistics Distribution
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {callDistribution.length > 0 ? (
+                        <ResponsiveContainer width="100%" height={250}>
+                          <RechartsPieChart>
+                            <Pie
+                              data={callDistribution}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                            >
+                              {callDistribution.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                          </RechartsPieChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No call data available</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Interest Scope Distribution */}
+                  <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                    <CardHeader>
+                      <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
+                        <PieChart className="h-5 w-5 text-purple-500" />
+                        Student Interest Scope
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {interestDistribution.length > 0 ? (
+                        <ResponsiveContainer width="100%" height={250}>
+                          <RechartsPieChart>
+                            <Pie
+                              data={interestDistribution}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                            >
+                              {interestDistribution.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                          </RechartsPieChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No interest data available</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Reports Trend Line Chart */}
+                <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                  <CardHeader>
+                    <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
+                      <TrendingUp className="h-5 w-5 text-green-500" />
+                      Reports Trend (Last 14 Days)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {reportsTrend.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart data={reportsTrend}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
+                          <XAxis dataKey="date" stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                          <YAxis stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: isDark ? '#1f2937' : '#fff',
+                              border: isDark ? '1px solid #374151' : '1px solid #e5e7eb',
+                              color: isDark ? '#fff' : '#000'
+                            }}
+                          />
+                          <Area type="monotone" dataKey="reports" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No trend data available</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Charts Row 2 */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Consultant Performance Bar Chart */}
+                  <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                    <CardHeader>
+                      <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
+                        <BarChart3 className="h-5 w-5 text-blue-500" />
+                        Top Consultant Performance
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {consultantPerformance.length > 0 ? (
+                        <ResponsiveContainer width="100%" height={300}>
+                          <BarChart data={consultantPerformance} layout="vertical">
+                            <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
+                            <XAxis type="number" stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                            <YAxis dataKey="name" type="category" stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={11} width={80} />
+                            <Tooltip 
+                              contentStyle={{ 
+                                backgroundColor: isDark ? '#1f2937' : '#fff',
+                                border: isDark ? '1px solid #374151' : '1px solid #e5e7eb',
+                                color: isDark ? '#fff' : '#000'
+                              }}
+                            />
+                            <Legend />
+                            <Bar dataKey="reports" fill="#22c55e" name="Reports" />
+                            <Bar dataKey="calls" fill="#3b82f6" name="Calls" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No performance data available</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Monthly Admissions Bar Chart */}
+                  <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                    <CardHeader>
+                      <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
+                        <GraduationCap className="h-5 w-5 text-purple-500" />
+                        Monthly Admissions (Last 6 Months)
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {monthlyAdmissions.length > 0 ? (
+                        <ResponsiveContainer width="100%" height={300}>
+                          <BarChart data={monthlyAdmissions}>
+                            <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
+                            <XAxis dataKey="month" stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                            <YAxis stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                            <Tooltip 
+                              contentStyle={{ 
+                                backgroundColor: isDark ? '#1f2937' : '#fff',
+                                border: isDark ? '1px solid #374151' : '1px solid #e5e7eb',
+                                color: isDark ? '#fff' : '#000'
+                              }}
+                            />
+                            <Bar dataKey="admissions" fill="#8b5cf6" name="Admissions" radius={[4, 4, 0, 0]} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No admission data available</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
+          </TabsContent>
         </Tabs>
 
         {/* Call Details Modal */}
