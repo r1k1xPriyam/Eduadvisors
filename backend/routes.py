@@ -385,7 +385,7 @@ async def get_course(course_id: str):
 async def get_consultants():
     """Get all consultants for admin management"""
     try:
-        consultants = get_all_consultants()
+        consultants = await get_all_consultants_async()
         return {
             "success": True,
             "consultants": consultants,
@@ -397,12 +397,12 @@ async def get_consultants():
 
 @router.post("/admin/consultants", response_model=dict)
 async def create_consultant(user_id: str, name: str, password: str):
-    """Add a new consultant"""
+    """Add a new consultant - permanently stored in database"""
     try:
-        result = add_consultant(user_id, name, password)
+        result = await add_consultant_async(user_id, name, password)
         if not result["success"]:
             raise HTTPException(status_code=400, detail=result["message"])
-        logger.info(f"Consultant {user_id} added successfully")
+        logger.info(f"Consultant {user_id} added permanently to database")
         return result
     except HTTPException:
         raise
@@ -411,13 +411,13 @@ async def create_consultant(user_id: str, name: str, password: str):
         raise HTTPException(status_code=500, detail="Failed to add consultant")
 
 @router.put("/admin/consultants/{user_id}", response_model=dict)
-async def modify_consultant(user_id: str, new_user_id: str = None, password: str = None):
-    """Update consultant details - Only User ID and Password can be changed"""
+async def modify_consultant(user_id: str, new_user_id: str = None, password: str = None, name: str = None):
+    """Update consultant details - User ID, Password, and Name can be modified"""
     try:
-        result = update_consultant(user_id, new_user_id, password)
+        result = await update_consultant_async(user_id, new_user_id, password, name)
         if not result["success"]:
             raise HTTPException(status_code=400, detail=result["message"])
-        logger.info(f"Consultant {user_id} updated successfully")
+        logger.info(f"Consultant {user_id} updated in database")
         return result
     except HTTPException:
         raise
@@ -427,12 +427,12 @@ async def modify_consultant(user_id: str, new_user_id: str = None, password: str
 
 @router.delete("/admin/consultants/{user_id}", response_model=dict)
 async def remove_consultant(user_id: str):
-    """Delete a consultant"""
+    """Delete a consultant - permanently removed from database"""
     try:
-        result = delete_consultant(user_id)
+        result = await delete_consultant_async(user_id)
         if not result["success"]:
             raise HTTPException(status_code=404, detail=result["message"])
-        logger.info(f"Consultant {user_id} deleted successfully")
+        logger.info(f"Consultant {user_id} permanently deleted from database")
         return result
     except HTTPException:
         raise
