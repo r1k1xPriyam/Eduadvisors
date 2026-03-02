@@ -14,6 +14,9 @@ from database import db, client
 # Import routes
 from routes import router as api_routes
 
+# Import consultants initialization
+from consultants import init_consultants_db
+
 # Create the main app without a prefix
 app = FastAPI()
 
@@ -45,6 +48,13 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database collections on startup"""
+    # Initialize consultants collection in MongoDB
+    await init_consultants_db(db)
+    logger.info("Consultants database initialized")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
