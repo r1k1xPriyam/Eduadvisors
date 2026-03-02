@@ -16,12 +16,16 @@ import {
 } from './ui/table';
 import { Calendar } from './ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, MessageSquare, Filter, LogOut, Users, FileText, X, Trash2, Plus, Edit, UserPlus, Settings, GraduationCap, DollarSign, Building, CheckCircle, PhoneCall, PhoneOff, PhoneMissed, AlertTriangle, Lock, RefreshCw, Bell, BellRing, Eye, CheckCircle2 } from 'lucide-react';
+import { Search, Download, Phone, Mail, Calendar as CalendarIcon, BookOpen, MessageSquare, Filter, LogOut, Users, FileText, X, Trash2, Plus, Edit, UserPlus, Settings, GraduationCap, DollarSign, Building, CheckCircle, PhoneCall, PhoneOff, PhoneMissed, AlertTriangle, Lock, RefreshCw, Bell, BellRing, Eye, CheckCircle2, BarChart3, TrendingUp, PieChart } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  PieChart as RechartsPieChart, Pie, Cell, LineChart, Line, Area, AreaChart
+} from 'recharts';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
