@@ -2667,6 +2667,7 @@ const AdminDashboard = () => {
                               <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
                               <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Reminder Date</TableHead>
                               <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Interest</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Actions</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -2682,6 +2683,17 @@ const AdminDashboard = () => {
                                 <TableCell className={isDark ? 'text-gray-300' : ''}>{reminder.next_followup_date}</TableCell>
                                 <TableCell>
                                   <Badge className="bg-blue-100 text-blue-800">{reminder.career_interest}</Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => deleteReminder(reminder.id)}
+                                    className={`text-red-500 hover:bg-red-50 ${isDark ? 'border-red-700 hover:bg-red-900/30' : ''}`}
+                                  >
+                                    <Trash2 className="h-3 w-3 mr-1" />
+                                    Delete
+                                  </Button>
                                 </TableCell>
                               </TableRow>
                             ))}
