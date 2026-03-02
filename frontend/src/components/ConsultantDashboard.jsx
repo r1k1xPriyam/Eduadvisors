@@ -1384,40 +1384,244 @@ const ConsultantDashboard = () => {
             <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
               <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 md:p-6">
                 <CardTitle className="text-lg md:text-xl">My Call History</CardTitle>
-                <p className="text-indigo-100 text-xs md:text-sm">Track all your calls - successful, failed, and attempted</p>
+                <p className="text-indigo-100 text-xs md:text-sm">Click on any stat to view detailed call list</p>
               </CardHeader>
               <CardContent className="p-4 md:p-6">
-                <div className="text-center py-8 md:py-12">
-                  <PhoneCall className={`h-12 w-12 md:h-16 md:w-16 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
-                  <p className={`text-base md:text-lg ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>Use "Quick Log Call" to track your calls</p>
-                  <p className={`text-xs md:text-sm mt-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Your call statistics are displayed in the cards above</p>
-                  <div className="mt-6 grid grid-cols-3 gap-4 max-w-md mx-auto">
-                    <div className={`p-3 md:p-4 rounded-lg ${isDark ? 'bg-green-900/30' : 'bg-green-50'}`}>
-                      <CheckCircle className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-green-400' : 'text-green-500'}`} />
-                      <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-green-400' : 'text-green-600'}`}>{callStats.successful_calls}</p>
-                      <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Successful</p>
-                    </div>
-                    <div className={`p-3 md:p-4 rounded-lg ${isDark ? 'bg-red-900/30' : 'bg-red-50'}`}>
-                      <PhoneOff className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-red-400' : 'text-red-500'}`} />
-                      <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-red-400' : 'text-red-600'}`}>{callStats.failed_calls}</p>
-                      <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Failed</p>
-                    </div>
-                    <div className={`p-3 md:p-4 rounded-lg ${isDark ? 'bg-yellow-900/30' : 'bg-yellow-50'}`}>
-                      <PhoneMissed className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-yellow-400' : 'text-yellow-500'}`} />
-                      <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>{callStats.attempted_calls}</p>
-                      <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Attempted</p>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={() => setShowQuickCall(true)}
-                    className="mt-6 bg-gradient-to-r from-indigo-500 to-purple-600"
+                <p className={`text-xs md:text-sm mb-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  Click on any of the cards below to see detailed call information
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
+                  {/* Total Calls */}
+                  <button
+                    onClick={() => fetchCallDetails('all')}
+                    className={`p-3 md:p-4 rounded-lg cursor-pointer transition-all hover:scale-105 ${isDark ? 'bg-blue-900/30 hover:bg-blue-900/50' : 'bg-blue-50 hover:bg-blue-100'}`}
                   >
-                    <PhoneCall className="h-4 w-4 mr-2" />
-                    Log a Call
-                  </Button>
+                    <PhoneCall className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-blue-400' : 'text-blue-500'}`} />
+                    <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>{callStats.total_calls}</p>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total</p>
+                  </button>
+                  {/* Successful */}
+                  <button
+                    onClick={() => fetchCallDetails('successful')}
+                    className={`p-3 md:p-4 rounded-lg cursor-pointer transition-all hover:scale-105 ${isDark ? 'bg-green-900/30 hover:bg-green-900/50' : 'bg-green-50 hover:bg-green-100'}`}
+                  >
+                    <CheckCircle className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-green-400' : 'text-green-500'}`} />
+                    <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-green-400' : 'text-green-600'}`}>{callStats.successful_calls}</p>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Successful</p>
+                  </button>
+                  {/* Failed */}
+                  <button
+                    onClick={() => fetchCallDetails('failed')}
+                    className={`p-3 md:p-4 rounded-lg cursor-pointer transition-all hover:scale-105 ${isDark ? 'bg-red-900/30 hover:bg-red-900/50' : 'bg-red-50 hover:bg-red-100'}`}
+                  >
+                    <PhoneOff className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-red-400' : 'text-red-500'}`} />
+                    <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-red-400' : 'text-red-600'}`}>{callStats.failed_calls}</p>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Failed</p>
+                  </button>
+                  {/* Attempted */}
+                  <button
+                    onClick={() => fetchCallDetails('attempted')}
+                    className={`p-3 md:p-4 rounded-lg cursor-pointer transition-all hover:scale-105 ${isDark ? 'bg-yellow-900/30 hover:bg-yellow-900/50' : 'bg-yellow-50 hover:bg-yellow-100'}`}
+                  >
+                    <PhoneMissed className={`h-6 w-6 md:h-8 md:w-8 mx-auto mb-2 ${isDark ? 'text-yellow-400' : 'text-yellow-500'}`} />
+                    <p className={`text-lg md:text-2xl font-bold ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>{callStats.attempted_calls}</p>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Attempted</p>
+                  </button>
                 </div>
+                <Button
+                  onClick={() => setShowQuickCall(true)}
+                  className="w-full md:w-auto bg-gradient-to-r from-indigo-500 to-purple-600"
+                >
+                  <PhoneCall className="h-4 w-4 mr-2" />
+                  Log a Call
+                </Button>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Reminders Tab */}
+          <TabsContent value="reminders">
+            {/* Notification Banner for Today's Reminders */}
+            {(reminders.today_reminders.length > 0 || reminders.overdue_reminders.length > 0) && (
+              <div className={`mb-4 p-4 rounded-lg border-l-4 border-orange-500 ${isDark ? 'bg-orange-900/20' : 'bg-orange-50'}`}>
+                <div className="flex items-center gap-2">
+                  <BellRing className="h-5 w-5 text-orange-500 animate-pulse" />
+                  <p className={`font-semibold ${isDark ? 'text-orange-300' : 'text-orange-700'}`}>
+                    You have {reminders.today_reminders.length} reminder(s) for today
+                    {reminders.overdue_reminders.length > 0 && ` and ${reminders.overdue_reminders.length} overdue reminder(s)`}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Refresh Button */}
+            <div className="flex justify-end mb-4">
+              <Button
+                onClick={fetchReminders}
+                variant="outline"
+                disabled={loadingReminders}
+                className={isDark ? 'border-gray-600' : 'border-gray-300'}
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${loadingReminders ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+            </div>
+
+            {loadingReminders ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className={`ml-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading reminders...</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Overdue Reminders */}
+                {reminders.overdue_reminders.length > 0 && (
+                  <Card className={`border-l-4 border-red-500 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+                    <CardHeader className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <AlertTriangle className="h-5 w-5" />
+                        Overdue Reminders ({reminders.overdue_reminders.length})
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Reminder Date</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Actions</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {reminders.overdue_reminders.map((reminder, idx) => (
+                              <TableRow key={reminder.id || idx} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                                <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{reminder.student_name}</TableCell>
+                                <TableCell>
+                                  <a href={`tel:${reminder.contact_number}`} className="text-blue-500 hover:underline">
+                                    {reminder.contact_number}
+                                  </a>
+                                </TableCell>
+                                <TableCell className="text-red-500">{reminder.next_followup_date}</TableCell>
+                                <TableCell>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => markReminderComplete(reminder.id)}
+                                    className="bg-green-500 hover:bg-green-600 text-white text-xs"
+                                  >
+                                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                                    Followed Up
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Today's Reminders */}
+                {reminders.today_reminders.length > 0 && (
+                  <Card className={`border-l-4 border-orange-500 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+                    <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <BellRing className="h-5 w-5" />
+                        Today's Reminders ({reminders.today_reminders.length})
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Interest</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Actions</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {reminders.today_reminders.map((reminder, idx) => (
+                              <TableRow key={reminder.id || idx} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                                <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{reminder.student_name}</TableCell>
+                                <TableCell>
+                                  <a href={`tel:${reminder.contact_number}`} className="text-blue-500 hover:underline">
+                                    {reminder.contact_number}
+                                  </a>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge className="bg-blue-100 text-blue-800">{reminder.career_interest}</Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => markReminderComplete(reminder.id)}
+                                    className="bg-green-500 hover:bg-green-600 text-white text-xs"
+                                  >
+                                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                                    Followed Up
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Upcoming Reminders */}
+                <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                  <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Bell className="h-5 w-5" />
+                      Upcoming Reminders ({reminders.upcoming_reminders.length})
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    {reminders.upcoming_reminders.length === 0 ? (
+                      <div className="text-center py-8">
+                        <Bell className={`h-12 w-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                        <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No upcoming reminders</p>
+                      </div>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Reminder Date</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Interest</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {reminders.upcoming_reminders.map((reminder, idx) => (
+                              <TableRow key={reminder.id || idx} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                                <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{reminder.student_name}</TableCell>
+                                <TableCell>
+                                  <a href={`tel:${reminder.contact_number}`} className="text-blue-500 hover:underline">
+                                    {reminder.contact_number}
+                                  </a>
+                                </TableCell>
+                                <TableCell className={isDark ? 'text-gray-300' : ''}>{reminder.next_followup_date}</TableCell>
+                                <TableCell>
+                                  <Badge className="bg-blue-100 text-blue-800">{reminder.career_interest}</Badge>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </TabsContent>
 
           {/* My Admissions Tab */}
