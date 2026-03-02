@@ -8,121 +8,71 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 ### Public Website
 - **Landing Page**: Multi-section page with Hero, About, Services, Courses, Colleges, Testimonials, Success Gallery, FAQ, and Contact sections
 - **GET COUNSELLING NOW Button**: Prominent CTA button in Hero section that opens the student query popup
-- **Success Gallery**: Interactive carousel showcasing student success stories (Engineering, Medical, Graduation, Campus Life, Future Leaders)
-- **Course/College Modals**: Clickable courses and colleges showing detailed information
+- **Success Gallery**: Interactive carousel showcasing student success stories
 - **Contact Form**: Students can submit queries which are saved to the database
-- **Query Popup**: Student lead capture popup with auto-show and manual trigger via button
 - **Light/Dark Theme**: Full dark mode support across all pages
 
 ### Admin Dashboard (`/admin`)
 - **Secure Login**: ID: `ADMIN`, Password: `EDUadvisors@souvikCEO2026`
-- **Interactive Login Background**: Floating animated icons (Shield, Users, BarChart3, FileCheck)
-- **Light/Dark Theme Toggle**: Full dark mode support
 - **6 Tab Interface**: Student Queries, Consultant Reports, Call Stats, Admissions, Manage Consultants, Reminders
-- **Call Stats Overview Bar**: Shows Total Calls, Successful, Failed, Attempted across all consultants
-- **Call Statistics by Consultant**: Table showing each consultant's call breakdown, success rate, and DELETE action
-- **Clickable Call Stats**: Click on any call stat (Total/Successful/Failed/Attempted) to view detailed call list
-- **Delete Call Stats per Consultant**: Admin can delete all call statistics for a specific consultant with password confirmation
-- **Reminders Tab**: View all consultant follow-up reminders categorized as Overdue, Today, Upcoming
-- **Student Queries Management**: View, search, filter, delete, and update query status
-- **Consultant Reports**: View all daily reports, filter by date and consultant, delete reports
-- **Admissions Tracking**: Full CRUD for tracking student admissions and consultant payouts
-- **Consultant Management**: Add/Edit/Delete with User ID editable, Full Name read-only
-- **Bulk Delete Feature**:
-  - Delete data by type (Reports, Calls, Queries, Admissions, All)
-  - Filter by consultant
-  - Filter by date range
-  - **Password re-confirmation required** for sensitive deletion
-- **Mobile-Responsive**: Full smartphone compatibility with horizontally scrollable tabs
+- **Call Statistics by Consultant**: Table showing each consultant's call breakdown with **clickable stats** to view detailed call list
+- **Reminders Tab**: View all consultant follow-up reminders (Overdue, Today, Upcoming) with **Delete** action
+- **Consultant Management**: 
+  - **Permanently stored in MongoDB** - All changes persist across restarts
+  - Add new consultants with User ID, Name, Password
+  - Edit **all fields** (User ID, Name, Password)
+  - Delete consultants permanently
+- **Reports Visibility**: View all consultant reports with search and filter options
+- **Bulk Delete Feature**: Delete data by type with password confirmation
 
 ### Consultant Portal (`/consultant`)
-- **Unique Logins**: 25 consultants with individual credentials
-- **Interactive Login Background**: Floating animated icons (Phone, FileText, Award, Target)
-- **Light/Dark Theme Toggle**: Full dark mode support
+- **Unique Logins**: 24 consultants with individual credentials (stored permanently in MongoDB)
 - **5 Tab Interface**: Submit Report, My Reports, My Calls, Reminders, My Admissions
-- **Call Stats Bar**: Shows consultant's Total Calls, Successful, Failed, Attempted
-- **Clickable Call Stats**: Click on any stat in My Calls tab to view detailed call list in modal
-- **Auto-Logging of Successful Calls**: When a consultant submits a detailed Student Calling Report, it automatically logs as a successful call
-- **Quick Log Call Feature**:
-  - Quick call logging for FAILED or ATTEMPTED calls only
-  - **Mandatory Contact Number**: Cannot log call without contact number
-  - Optional fields: Student Name, Remarks
-  - Two quick actions: Failed, Attempted (Success is auto-logged via report submission)
-  - Note displayed explaining successful calls are automatically logged when submitting detailed reports
-- **Daily Report Submission**: 
-  - Full detailed student calling reports (auto-logs as successful call)
-  - **Mandatory Fields**: Student Name, Contact Number, Institution Name, Competitive Exam Preference, Career Interest, Interest Scope (marked with red asterisks)
-  - **Validation Warnings**: Warning messages displayed if mandatory fields are missing
-  - **Next Calling Reminder**: Optional calendar input to set follow-up reminder date
-  - **Duplicate Report Handling**: When submitting with existing phone number, shows confirmation modal to update/replace old report
-- **Bulk Report Upload**:
-  - Download Sample CSV with correct format
-  - Upload CSV to submit multiple reports at once
-  - Auto-validation of required fields
-  - Auto-logs successful calls for each uploaded report
-- **Reminders Tab**: View own follow-up reminders categorized as Overdue, Today, Upcoming with "Followed Up" action
-- **My Reports Tab**: View own submitted reports with date filter
-- **My Calls Tab**: View call statistics breakdown with clickable detailed view
-- **My Admissions Tab**: View admissions credited by admin with payout summary
-- **Mobile-Responsive**: Full smartphone compatibility with horizontally scrollable tabs
+- **Notification Popup on Login**: When consultant logs in, shows popup for today's/overdue reminders
+- **Reminder Actions**: 
+  - **"Already Followed Up"** - Marks reminder as complete, prompts for new report
+  - **"Ignore"** - Dismisses reminder permanently
+  - Status syncs between Admin and Consultant panels
+- **Call Stats**: Clickable stats showing detailed call list
+- **Quick Log Call**: Mandatory contact number for failed/attempted calls
+- **Report Submission**: 
+  - Mandatory fields validation with warnings
+  - Duplicate report handling (overwrites old)
+  - Next Calling Reminder calendar input
+- **Bulk CSV Upload**: Download sample, upload multiple reports
+- **My Reports Tab**: View own submitted reports (normal and bulk)
 
 ## Tech Stack
 - **Frontend**: React, React Router, TailwindCSS, Shadcn UI, React Context (Theme)
 - **Backend**: FastAPI, Motor (async MongoDB driver)
 - **Database**: MongoDB
+- **Collections**: consultants, consultant_reports, call_logs, student_queries, admissions
 
 ## API Endpoints
 
-### Call Logging
-- `POST /api/consultant/calls` - Log a call (mandatory contact number for failed/attempted)
-- `GET /api/consultant/calls/{consultant_id}` - Get consultant's call stats
-- `GET /api/consultant/calls/details/{consultant_id}` - Get detailed call list with optional type filter
-- `GET /api/admin/calls` - Get all call stats with per-consultant breakdown
-- `GET /api/admin/calls/details` - Get detailed call list for admin (filter by consultant/type)
+### Consultant Management (Permanent Storage)
+- `GET /api/admin/consultants` - Get all consultants from MongoDB
+- `POST /api/admin/consultants` - Add new consultant (persists to DB)
+- `PUT /api/admin/consultants/{user_id}` - Update consultant (Name, User ID, Password)
+- `DELETE /api/admin/consultants/{user_id}` - Delete consultant permanently
 
 ### Reminders
 - `GET /api/consultant/reminders/{consultant_id}` - Get consultant's follow-up reminders
 - `GET /api/admin/reminders` - Get all reminders (admin view)
-- `PUT /api/consultant/reminders/{report_id}/complete` - Mark reminder as complete
+- `PUT /api/consultant/reminders/{report_id}/complete` - Mark as "Already Followed Up"
+- `PUT /api/consultant/reminders/{report_id}/ignore` - Mark as "Ignored"
+- `DELETE /api/admin/reminders/{report_id}` - Admin delete reminder
 
-### Bulk Operations
-- `POST /api/admin/bulk-delete` - Bulk delete with password verification
-- `POST /api/admin/verify-password` - Verify admin password
-- `GET /api/consultant/sample-csv` - Download sample CSV format
-- `POST /api/consultant/bulk-reports` - Upload bulk reports from CSV data
+### Call Logging
+- `POST /api/consultant/calls` - Log call (mandatory contact for failed/attempted)
+- `GET /api/consultant/calls/details/{consultant_id}` - Get detailed call list
+- `GET /api/admin/calls/details` - Admin view of detailed calls
 
-### Student Queries
-- `GET /api/queries` - Fetch all student queries
-- `POST /api/queries` - Submit new query
-- `PATCH /api/queries/{query_id}/status` - Update query status
-- `DELETE /api/queries/{query_id}` - Delete query
-
-### Consultant Reports
-- `POST /api/consultant/login` - Authenticate consultant
-- `POST /api/consultant/reports` - Submit consultant report (with duplicate handling)
-- `GET /api/consultant/reports/check-duplicate` - Check if report exists for phone number
-- `GET /api/consultant/reports/{consultant_id}` - Fetch reports for specific consultant
-- `GET /api/admin/consultant-reports` - Fetch all consultant reports
-- `DELETE /api/consultant/reports/{report_id}` - Delete report
-
-### Admissions
-- `POST /api/admin/admissions` - Create admission record
-- `GET /api/admin/admissions` - Get all admissions
-- `PUT /api/admin/admissions/{admission_id}` - Update admission
-- `DELETE /api/admin/admissions/{admission_id}` - Delete admission
-- `GET /api/consultant/admissions/{consultant_id}` - Get consultant's credited admissions
-
-### Consultant Management
-- `GET /api/admin/consultants` - Get all consultants
-- `POST /api/admin/consultants` - Add new consultant
-- `PUT /api/admin/consultants/{user_id}` - Update consultant (User ID and Password only)
-- `DELETE /api/admin/consultants/{user_id}` - Delete consultant
-
-## Database Schema
-- **student_queries**: `{name, phone, email, course, message, current_institution, status, created_at}`
-- **consultant_reports**: `{consultant_name, consultant_id, student_name, contact_number, institution_name, interest_scope, next_followup_date, followup_completed, ...}`
-- **call_logs**: `{id, consultant_id, consultant_name, call_type, student_name, contact_number, remarks, created_at}`
-- **admissions**: `{id, student_name, course, college, admission_date, consultant_id, consultant_name, payout_amount, payout_status, created_at}`
+### Reports
+- `POST /api/consultant/reports` - Submit report (handles duplicates)
+- `GET /api/consultant/reports/{consultant_id}` - Consultant's own reports
+- `GET /api/admin/consultant-reports` - All reports for admin
+- `POST /api/consultant/bulk-reports` - Bulk CSV upload
 
 ---
 
@@ -131,33 +81,25 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 ### ✅ Completed (March 2, 2026)
 - Full-stack application with React + FastAPI + MongoDB
 - **Mobile-Responsive Design** - All pages fully smartphone compatible
-- **Interactive Login Backgrounds** - Floating animated icons on Admin and Consultant login pages
-- **Call Logging System** - Quick log calls (failed/attempted) with mandatory contact number
-- **Call Stats for Admin** - View all consultants' call statistics with success rates (clickable for details)
-- **Call Stats for Consultants** - View own call statistics with detailed list modal
-- **Bulk Delete with Password Verification** - Delete data by type, consultant, date range
-- **Duplicate Report Handling** - Confirmation modal when submitting report with existing phone number
-- **Mandatory Field Validation** - Red asterisk marking, warning messages on form submission
-- **Next Calling Reminder** - Calendar input for follow-up dates with Reminders tab
-- **Bulk CSV Upload** - Download sample and upload multiple reports at once
-- **Reminders Management** - Admin and Consultant view of overdue/today/upcoming reminders
-- Landing page with all sections including Success Gallery
-- GET COUNSELLING NOW button
-- Student query submission system
-- Admin dashboard with 6-tab interface
-- Admissions Tracking System
-- Consultant Management
-- Consultant portal with 5-tab interface
-- Daily report submission
-- Route protection
-- Calendar Date Filters
-- CSV export functionality
+- **Consultant Credentials in MongoDB** - Permanently stored, all CRUD operations persist
+- **Reminder System Enhanced**:
+  - Notification popup on consultant login
+  - "Already Followed Up" and "Ignore" options
+  - Admin can delete reminders
+  - Status synced between panels
+- **Reports Visibility** - Both bulk and normal reports visible in Admin and Consultant panels
+- **Dark Theme Fixes** - All text and inputs readable in dark mode
+- Call logging with mandatory contact number
+- Detailed call stats view (clickable)
+- Duplicate report handling
+- Mandatory field validation
+- CSV bulk upload
+- All previous features preserved
 
-### 🔄 Pending/Backlog
-- **Future**: JWT-based authentication
-- **Future**: Move consultant credentials to database
-- **Future**: Email notifications
-- **Future**: SMS notifications for reminders
+### ✅ Verified by Testing Agent
+- 18/18 backend API tests passed (100%)
+- Frontend UI 100% verified via Playwright
+- MongoDB persistence confirmed for consultants collection
 
 ---
 
@@ -168,7 +110,7 @@ Edu Advisor is a comprehensive educational consultancy website with a React fron
 - User ID: `ADMIN`
 - Password: `EDUadvisors@souvikCEO2026`
 
-### Consultants (25 total)
+### Consultants (24 total - stored in MongoDB)
 - PRIYAMPATRA / Priyam123!@#
 - AK007 / 7001377649
-- (See `/app/backend/consultants.py` for full list)
+- (See MongoDB 'consultants' collection for full list)
