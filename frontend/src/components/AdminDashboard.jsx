@@ -979,11 +979,18 @@ const AdminDashboard = () => {
                   </span>
                 )}
               </TabsTrigger>
+              <TabsTrigger
+                value="analytics"
+                className="data-[state=active]:bg-cyan-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <BarChart3 className="h-3 w-3 mr-1" />
+                Analytics
+              </TabsTrigger>
             </TabsList>
           </div>
           
           {/* Desktop Tab Navigation */}
-          <TabsList className="hidden md:grid w-full grid-cols-6 mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
+          <TabsList className="hidden md:grid w-full grid-cols-7 mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="queries"
               className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
