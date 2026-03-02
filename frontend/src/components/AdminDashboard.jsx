@@ -94,6 +94,15 @@ const AdminDashboard = () => {
   const [reminders, setReminders] = useState({ today_reminders: [], upcoming_reminders: [], overdue_reminders: [] });
   const [loadingReminders, setLoadingReminders] = useState(false);
 
+  // Analytics State
+  const [analyticsOverview, setAnalyticsOverview] = useState(null);
+  const [callDistribution, setCallDistribution] = useState([]);
+  const [interestDistribution, setInterestDistribution] = useState([]);
+  const [reportsTrend, setReportsTrend] = useState([]);
+  const [consultantPerformance, setConsultantPerformance] = useState([]);
+  const [monthlyAdmissions, setMonthlyAdmissions] = useState([]);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+
   const [newAdmission, setNewAdmission] = useState({
     student_name: '',
     course: '',
