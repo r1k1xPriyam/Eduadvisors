@@ -591,7 +591,7 @@ async def log_call(
 ):
     """Log a call - contact_number is mandatory for failed/attempted calls"""
     try:
-        consultant_name = get_consultant_name(consultant_id)
+        consultant_name = await get_consultant_name_async(consultant_id)
         if not consultant_name:
             raise HTTPException(status_code=401, detail="Unauthorized")
         
