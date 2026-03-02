@@ -118,6 +118,7 @@ const AdminDashboard = () => {
     fetchConsultants();
     fetchAdmissions();
     fetchCallStats();
+    fetchReminders();
   }, []);
 
   useEffect(() => {
@@ -137,6 +138,48 @@ const AdminDashboard = () => {
       }
     } catch (error) {
       console.error('Error fetching call stats:', error);
+    }
+  };
+
+  // Fetch All Reminders
+  const fetchReminders = async () => {
+    setLoadingReminders(true);
+    try {
+      const response = await axios.get(`${API}/admin/reminders`);
+      if (response.data.success) {
+        setReminders({
+          today_reminders: response.data.today_reminders || [],
+          upcoming_reminders: response.data.upcoming_reminders || [],
+          overdue_reminders: response.data.overdue_reminders || []
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching reminders:', error);
+    } finally {
+      setLoadingReminders(false);
+    }
+  };
+
+  // Fetch Call Details for a consultant
+  const fetchCallDetails = async (consultantId, consultantName, callType) => {
+    setLoadingCallDetails(true);
+    setCallDetailsConsultantId(consultantId);
+    setCallDetailsConsultantName(consultantName);
+    setCallDetailsType(callType);
+    setShowCallDetails(true);
+    try {
+      const url = callType === 'all'
+        ? `${API}/admin/calls/details?consultant_id=${consultantId}`
+        : `${API}/admin/calls/details?consultant_id=${consultantId}&call_type=${callType}`;
+      const response = await axios.get(url);
+      if (response.data.success) {
+        setCallDetailsList(response.data.calls || []);
+      }
+    } catch (error) {
+      console.error('Error fetching call details:', error);
+      toast.error('Failed to fetch call details');
+    } finally {
+      setLoadingCallDetails(false);
     }
   };
 
