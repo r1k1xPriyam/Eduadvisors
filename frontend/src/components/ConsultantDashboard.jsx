@@ -1877,6 +1877,231 @@ const ConsultantDashboard = () => {
             </Card>
           </div>
         )}
+
+        {/* Duplicate Report Confirmation Modal */}
+        {showDuplicateModal && duplicateInfo && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className={`max-w-md w-full ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+              <CardHeader className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                <CardTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5" />
+                  Duplicate Report Found
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <p className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+                  {duplicateInfo.message}
+                </p>
+                <div className={`p-3 rounded-lg ${isDark ? 'bg-yellow-900/30 text-yellow-300' : 'bg-yellow-50 text-yellow-700'}`}>
+                  <p className="text-sm">
+                    <strong>Warning:</strong> If you proceed, the old report will be permanently deleted and replaced with this new report.
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleDuplicateCancel}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleDuplicateConfirm}
+                    className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+                  >
+                    Yes, Update Report
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Call Details Modal */}
+        {showCallDetails && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className={`max-w-4xl w-full max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+              <CardHeader className={`bg-gradient-to-r ${
+                callDetailsType === 'successful' ? 'from-green-500 to-green-600' :
+                callDetailsType === 'failed' ? 'from-red-500 to-red-600' :
+                callDetailsType === 'attempted' ? 'from-yellow-500 to-yellow-600' :
+                'from-blue-500 to-indigo-600'
+              } text-white`}>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    {callDetailsType === 'successful' && <CheckCircle className="h-5 w-5" />}
+                    {callDetailsType === 'failed' && <PhoneOff className="h-5 w-5" />}
+                    {callDetailsType === 'attempted' && <PhoneMissed className="h-5 w-5" />}
+                    {callDetailsType === 'all' && <PhoneCall className="h-5 w-5" />}
+                    {callDetailsType === 'all' ? 'All' : callDetailsType.charAt(0).toUpperCase() + callDetailsType.slice(1)} Calls ({callDetailsList.length})
+                  </CardTitle>
+                  <button onClick={() => setShowCallDetails(false)} className="text-white hover:text-gray-200">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                {loadingCallDetails ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                ) : callDetailsList.length === 0 ? (
+                  <div className="text-center py-12">
+                    <PhoneCall className={`h-12 w-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                    <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No calls found</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Date & Time</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Type</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Remarks</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {callDetailsList.map((call, idx) => (
+                          <TableRow key={call.id || idx} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                            <TableCell className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>
+                              {formatDate(call.created_at)}
+                            </TableCell>
+                            <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>
+                              {call.student_name || 'N/A'}
+                            </TableCell>
+                            <TableCell>
+                              <a href={`tel:${call.contact_number}`} className="text-blue-500 hover:underline">
+                                {call.contact_number}
+                              </a>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={
+                                call.call_type === 'successful' ? 'bg-green-100 text-green-800' :
+                                call.call_type === 'failed' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                              }>
+                                {call.call_type}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                              {call.remarks || '-'}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* CSV Upload Modal */}
+        {showCsvUpload && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className={`max-w-4xl w-full max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+              <CardHeader className="bg-gradient-to-r from-green-500 to-teal-600 text-white">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Upload className="h-5 w-5" />
+                    Bulk Report Upload Preview
+                  </CardTitle>
+                  <button onClick={() => { setShowCsvUpload(false); setCsvData([]); setCsvErrors([]); }} className="text-white hover:text-gray-200">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 md:p-6">
+                {csvErrors.length > 0 && (
+                  <div className={`mb-4 p-3 rounded-lg ${isDark ? 'bg-red-900/30 text-red-300' : 'bg-red-50 text-red-700'}`}>
+                    <p className="font-semibold mb-2">Errors found:</p>
+                    <ul className="list-disc list-inside text-sm">
+                      {csvErrors.map((err, idx) => (
+                        <li key={idx}>{err}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <p className={`mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                  Preview of {csvData.length} valid report(s) to be uploaded:
+                </p>
+
+                <div className="overflow-x-auto mb-4">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                        <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>#</TableHead>
+                        <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student</TableHead>
+                        <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
+                        <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Institution</TableHead>
+                        <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Interest Scope</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {csvData.slice(0, 10).map((row, idx) => (
+                        <TableRow key={idx} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                          <TableCell className={isDark ? 'text-gray-300' : ''}>{idx + 1}</TableCell>
+                          <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{row.student_name}</TableCell>
+                          <TableCell className={isDark ? 'text-gray-300' : ''}>{row.contact_number}</TableCell>
+                          <TableCell className={isDark ? 'text-gray-300' : ''}>{row.institution_name}</TableCell>
+                          <TableCell>
+                            <Badge className="bg-blue-100 text-blue-800">{row.interest_scope}</Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {csvData.length > 10 && (
+                  <p className={`text-sm mb-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                    ... and {csvData.length - 10} more rows
+                  </p>
+                )}
+
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => { setShowCsvUpload(false); setCsvData([]); setCsvErrors([]); }}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={uploadCsvReports}
+                    disabled={isUploadingCsv || csvData.length === 0}
+                    className="flex-1 bg-green-500 hover:bg-green-600 text-white"
+                  >
+                    {isUploadingCsv ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Uploading...
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload {csvData.length} Reports
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Hidden File Input for CSV */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept=".csv"
+          onChange={handleCsvFileChange}
+          className="hidden"
+        />
       </div>
     </div>
   );
