@@ -247,12 +247,20 @@ const ConsultantDashboard = () => {
   };
 
   const handleQuickCall = async (callType) => {
+    // Validate contact number is mandatory
+    if (!quickCallData.contact_number || quickCallData.contact_number.trim() === '') {
+      toast.error('Contact Number Required', {
+        description: 'Please enter a contact number before logging the call',
+      });
+      return;
+    }
+    
     try {
       const params = new URLSearchParams({
         consultant_id: consultantId,
         call_type: callType,
-        student_name: quickCallData.student_name || 'N/A',
-        contact_number: quickCallData.contact_number || 'N/A',
+        student_name: quickCallData.student_name || '',
+        contact_number: quickCallData.contact_number.trim(),
         remarks: quickCallData.remarks || ''
       });
       const response = await axios.post(`${API}/consultant/calls?${params.toString()}`);
@@ -264,7 +272,8 @@ const ConsultantDashboard = () => {
       }
     } catch (error) {
       console.error('Error logging call:', error);
-      toast.error('Failed to log call');
+      const errorMsg = error.response?.data?.detail || 'Failed to log call';
+      toast.error(errorMsg);
     }
   };
 
