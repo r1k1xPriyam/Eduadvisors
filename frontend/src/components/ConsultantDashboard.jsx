@@ -1561,14 +1561,25 @@ const ConsultantDashboard = () => {
                                 </TableCell>
                                 <TableCell className="text-red-500">{reminder.next_followup_date}</TableCell>
                                 <TableCell>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => markReminderComplete(reminder.id)}
-                                    className="bg-green-500 hover:bg-green-600 text-white text-xs"
-                                  >
-                                    <CheckCircle2 className="h-3 w-3 mr-1" />
-                                    Followed Up
-                                  </Button>
+                                  <div className="flex gap-1">
+                                    <Button
+                                      size="sm"
+                                      onClick={() => markReminderComplete(reminder.id)}
+                                      className="bg-green-500 hover:bg-green-600 text-white text-xs"
+                                    >
+                                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                                      Followed Up
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => ignoreReminder(reminder.id)}
+                                      className={`text-xs ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : ''}`}
+                                    >
+                                      <X className="h-3 w-3 mr-1" />
+                                      Ignore
+                                    </Button>
+                                  </div>
                                 </TableCell>
                               </TableRow>
                             ))}
@@ -1612,14 +1623,25 @@ const ConsultantDashboard = () => {
                                   <Badge className="bg-blue-100 text-blue-800">{reminder.career_interest}</Badge>
                                 </TableCell>
                                 <TableCell>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => markReminderComplete(reminder.id)}
-                                    className="bg-green-500 hover:bg-green-600 text-white text-xs"
-                                  >
-                                    <CheckCircle2 className="h-3 w-3 mr-1" />
-                                    Followed Up
-                                  </Button>
+                                  <div className="flex gap-1">
+                                    <Button
+                                      size="sm"
+                                      onClick={() => markReminderComplete(reminder.id)}
+                                      className="bg-green-500 hover:bg-green-600 text-white text-xs"
+                                    >
+                                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                                      Followed Up
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => ignoreReminder(reminder.id)}
+                                      className={`text-xs ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : ''}`}
+                                    >
+                                      <X className="h-3 w-3 mr-1" />
+                                      Ignore
+                                    </Button>
+                                  </div>
                                 </TableCell>
                               </TableRow>
                             ))}
