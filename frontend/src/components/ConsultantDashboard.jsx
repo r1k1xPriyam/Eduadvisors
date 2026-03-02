@@ -1026,7 +1026,7 @@ const ConsultantDashboard = () => {
                       disabled={isSubmitting}
                       required
                     >
-                      <SelectTrigger className={`w-full ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}>
+                      <SelectTrigger className={`w-full ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''} ${validationErrors.interest_scope ? 'border-red-500' : ''}`}>
                         <SelectValue placeholder="Select interest level" />
                       </SelectTrigger>
                       <SelectContent className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
@@ -1037,6 +1037,62 @@ const ConsultantDashboard = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    {validationErrors.interest_scope && (
+                      <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                        <AlertTriangle className="h-3 w-3" />
+                        {validationErrors.interest_scope}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Next Calling Reminder (Optional) */}
+                  <div>
+                    <Label htmlFor="next_followup_date" className={`font-semibold flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
+                      <Bell className="h-4 w-4 text-orange-500" />
+                      Next Calling Reminder (Optional)
+                    </Label>
+                    <p className={`text-xs mb-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                      Set a follow-up reminder date for this student
+                    </p>
+                    <Popover open={isFollowupCalendarOpen} onOpenChange={setIsFollowupCalendarOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={isSubmitting}
+                          className={`w-full justify-start text-left font-normal ${isDark ? 'bg-gray-700 border-gray-600 text-white hover:bg-gray-600' : ''} ${!formData.next_followup_date && 'text-muted-foreground'}`}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {formData.next_followup_date 
+                            ? format(new Date(formData.next_followup_date), 'dd MMM yyyy')
+                            : 'Select reminder date'}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className={`w-auto p-0 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`} align="start">
+                        <Calendar
+                          mode="single"
+                          selected={formData.next_followup_date ? new Date(formData.next_followup_date) : undefined}
+                          onSelect={(date) => {
+                            setFormData(prev => ({ ...prev, next_followup_date: date ? date.toISOString() : '' }));
+                            setIsFollowupCalendarOpen(false);
+                          }}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    {formData.next_followup_date && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setFormData(prev => ({ ...prev, next_followup_date: '' }))}
+                        className="mt-1 text-red-500 hover:text-red-700 hover:bg-red-50 text-xs"
+                      >
+                        <X className="h-3 w-3 mr-1" />
+                        Clear Reminder
+                      </Button>
+                    )}
                   </div>
 
                   {/* Other Remarks (Optional) */}
