@@ -958,6 +958,26 @@ const ConsultantDashboard = () => {
                     </Button>
                   </div>
                 </div>
+                
+                {/* Warning Banner for Bulk Upload */}
+                <div className={`mt-4 p-4 rounded-lg border-l-4 border-yellow-500 ${isDark ? 'bg-yellow-900/20' : 'bg-yellow-50'}`}>
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className={`h-5 w-5 mt-0.5 ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                    <div>
+                      <p className={`font-semibold ${isDark ? 'text-yellow-300' : 'text-yellow-800'}`}>
+                        Important: CSV Format Requirements
+                      </p>
+                      <ul className={`text-xs mt-2 space-y-1 ${isDark ? 'text-yellow-200' : 'text-yellow-700'}`}>
+                        <li>• <strong>Download the Sample CSV first</strong> to see the correct format</li>
+                        <li>• <strong>Mandatory fields:</strong> Student Name, Contact Number, Institution Name, Competitive Exam Preference, Career Interest, Interest Scope</li>
+                        <li>• <strong>Interest Scope values must be:</strong> ACTIVELY INTERESTED, LESS INTERESTED, RECALLING NEEDED, DROPOUT THIS YEAR, ALREADY COLLEGE SELECTED, NOT INTERESTED</li>
+                        <li>• <strong>Optional fields:</strong> College Interest, Next Followup Date (YYYY-MM-DD), Other Remarks</li>
+                        <li>• Rows with missing mandatory fields will be <strong>skipped with error message</strong></li>
+                        <li>• Each valid row will be logged as a <strong>Successful Call</strong> automatically</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
