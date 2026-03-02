@@ -77,6 +77,19 @@ const AdminDashboard = () => {
   const [bulkDeleteStartDate, setBulkDeleteStartDate] = useState('');
   const [bulkDeleteEndDate, setBulkDeleteEndDate] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Call Details State
+  const [showCallDetails, setShowCallDetails] = useState(false);
+  const [callDetailsType, setCallDetailsType] = useState('');
+  const [callDetailsConsultantId, setCallDetailsConsultantId] = useState('');
+  const [callDetailsConsultantName, setCallDetailsConsultantName] = useState('');
+  const [callDetailsList, setCallDetailsList] = useState([]);
+  const [loadingCallDetails, setLoadingCallDetails] = useState(false);
+
+  // Reminders State
+  const [reminders, setReminders] = useState({ today_reminders: [], upcoming_reminders: [], overdue_reminders: [] });
+  const [loadingReminders, setLoadingReminders] = useState(false);
+
   const [newAdmission, setNewAdmission] = useState({
     student_name: '',
     course: '',
