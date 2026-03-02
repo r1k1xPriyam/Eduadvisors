@@ -123,6 +123,10 @@ const ConsultantDashboard = () => {
   const [isUploadingCsv, setIsUploadingCsv] = useState(false);
   const fileInputRef = useRef(null);
   
+  // Notification Popup State (shows on login)
+  const [showReminderNotification, setShowReminderNotification] = useState(false);
+  const [notificationReminders, setNotificationReminders] = useState([]);
+  
   const [formData, setFormData] = useState({
     student_name: '',
     contact_number: '',
