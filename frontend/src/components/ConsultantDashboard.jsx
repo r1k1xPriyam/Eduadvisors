@@ -1060,7 +1060,7 @@ const ConsultantDashboard = () => {
                   <div>
                     <Label htmlFor="interest_scope" className={`font-semibold flex items-center gap-2 mb-2 ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>
                       <FileText className="h-4 w-4 text-green-500" />
-                      Interest Scope *
+                      Interest Scope <span className="text-red-500">*</span>
                     </Label>
                     <Select
                       value={formData.interest_scope}
