@@ -955,15 +955,19 @@ async def get_all_reminders():
 
 @router.put("/consultant/reminders/{report_id}/complete", response_model=dict)
 async def mark_reminder_complete(report_id: str, consultant_id: str):
-    """Mark a followup reminder as complete"""
+    """Mark a followup reminder as complete (Already Followed Up)"""
     try:
-        consultant_name = get_consultant_name(consultant_id)
+        consultant_name = await get_consultant_name_async(consultant_id)
         if not consultant_name:
             raise HTTPException(status_code=401, detail="Unauthorized")
         
         result = await db.consultant_reports.update_one(
             {"id": report_id, "consultant_id": consultant_id},
-            {"$set": {"followup_completed": True, "updated_at": datetime.now(timezone.utc)}}
+            {"$set": {
+                "followup_completed": True, 
+                "followup_status": "completed",
+                "updated_at": datetime.now(timezone.utc)
+            }}
         )
         
         if result.matched_count == 0:
@@ -975,6 +979,59 @@ async def mark_reminder_complete(report_id: str, consultant_id: str):
     except Exception as e:
         logger.error(f"Error marking reminder complete: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to update reminder")
+
+
+@router.put("/consultant/reminders/{report_id}/ignore", response_model=dict)
+async def ignore_reminder(report_id: str, consultant_id: str):
+    """Ignore a followup reminder (permanently dismissed)"""
+    try:
+        consultant_name = await get_consultant_name_async(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+        
+        result = await db.consultant_reports.update_one(
+            {"id": report_id, "consultant_id": consultant_id},
+            {"$set": {
+                "followup_completed": True,
+                "followup_status": "ignored",
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Report not found")
+        
+        return {"success": True, "message": "Reminder ignored"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error ignoring reminder: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update reminder")
+
+
+@router.delete("/admin/reminders/{report_id}", response_model=dict)
+async def admin_delete_reminder(report_id: str):
+    """Admin can delete/clear a reminder by removing the followup date"""
+    try:
+        result = await db.consultant_reports.update_one(
+            {"id": report_id},
+            {"$set": {
+                "next_followup_date": None,
+                "followup_completed": True,
+                "followup_status": "deleted_by_admin",
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Report not found")
+        
+        return {"success": True, "message": "Reminder deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting reminder: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete reminder")
 
 
 # ============ CSV BULK UPLOAD ENDPOINTS ============
