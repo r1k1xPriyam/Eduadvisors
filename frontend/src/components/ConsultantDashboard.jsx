@@ -730,13 +730,22 @@ const ConsultantDashboard = () => {
                   />
                 </div>
                 <div>
-                  <Label className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>Contact Number (Optional)</Label>
+                  <Label className={`text-sm font-semibold ${isDark ? 'text-gray-300' : ''}`}>
+                    Contact Number <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     value={quickCallData.contact_number}
                     onChange={(e) => setQuickCallData({...quickCallData, contact_number: e.target.value})}
-                    placeholder="Enter number or leave blank"
-                    className={`mt-1 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''}`}
+                    placeholder="Enter contact number (Required)"
+                    className={`mt-1 ${isDark ? 'bg-gray-700 border-gray-600 text-white' : ''} ${!quickCallData.contact_number ? 'border-red-300 focus:border-red-500' : ''}`}
+                    required
                   />
+                  {!quickCallData.contact_number && (
+                    <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                      <AlertTriangle className="h-3 w-3" />
+                      Contact number is mandatory
+                    </p>
+                  )}
                 </div>
                 <div>
                   <Label className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>Remarks (Optional)</Label>
@@ -752,6 +761,7 @@ const ConsultantDashboard = () => {
                   <Button
                     onClick={() => handleQuickCall('failed')}
                     className="bg-red-500 hover:bg-red-600 text-white"
+                    disabled={!quickCallData.contact_number?.trim()}
                   >
                     <PhoneOff className="h-4 w-4 mr-2" />
                     Failed Call
@@ -759,6 +769,7 @@ const ConsultantDashboard = () => {
                   <Button
                     onClick={() => handleQuickCall('attempted')}
                     className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                    disabled={!quickCallData.contact_number?.trim()}
                   >
                     <PhoneMissed className="h-4 w-4 mr-2" />
                     Attempted
