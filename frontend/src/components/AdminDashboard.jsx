@@ -432,7 +432,7 @@ const AdminDashboard = () => {
     }
   };
 
-  // Update Consultant - Only User ID and Password can be changed
+  // Update Consultant - User ID, Password, and Name can all be changed
   const handleUpdateConsultant = async () => {
     if (!editingConsultant) return;
     try {
@@ -441,10 +441,11 @@ const AdminDashboard = () => {
         params.append('new_user_id', editingConsultant.new_user_id);
       }
       if (editingConsultant.password) params.append('password', editingConsultant.password);
+      if (editingConsultant.name) params.append('name', editingConsultant.name);
       
       const response = await axios.put(`${API}/admin/consultants/${editingConsultant.original_user_id}?${params.toString()}`);
       if (response.data.success) {
-        toast.success('Consultant updated successfully');
+        toast.success('Consultant updated permanently');
         fetchConsultants();
         setEditingConsultant(null);
       }
@@ -456,13 +457,13 @@ const AdminDashboard = () => {
 
   // Delete Consultant
   const handleDeleteConsultant = async (userId) => {
-    if (!window.confirm(`Are you sure you want to delete consultant ${userId}? This action cannot be undone.`)) {
+    if (!window.confirm(`Are you sure you want to permanently delete consultant ${userId}? This action cannot be undone.`)) {
       return;
     }
     try {
       const response = await axios.delete(`${API}/admin/consultants/${userId}`);
       if (response.data.success) {
-        toast.success('Consultant deleted successfully');
+        toast.success('Consultant permanently deleted from database');
         fetchConsultants();
       }
     } catch (error) {
