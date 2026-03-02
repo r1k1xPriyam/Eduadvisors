@@ -866,7 +866,7 @@ async def get_consultant_call_details(consultant_id: str, call_type: str = None)
 async def get_consultant_reminders(consultant_id: str):
     """Get all upcoming follow-up reminders for a consultant"""
     try:
-        consultant_name = get_consultant_name(consultant_id)
+        consultant_name = await get_consultant_name_async(consultant_id)
         if not consultant_name:
             raise HTTPException(status_code=401, detail="Unauthorized")
         
