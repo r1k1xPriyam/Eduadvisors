@@ -1711,16 +1711,44 @@ const AdminDashboard = () => {
                               </div>
                             </TableCell>
                             <TableCell className="text-center">
-                              <Badge className={isDark ? 'bg-indigo-900/50 text-indigo-300' : 'bg-indigo-100 text-indigo-800'}>{stats.total_calls}</Badge>
+                              <button
+                                onClick={() => fetchCallDetails(consultantId, stats.consultant_name, 'all')}
+                                className="cursor-pointer hover:scale-110 transition-transform"
+                              >
+                                <Badge className={`${isDark ? 'bg-indigo-900/50 text-indigo-300 hover:bg-indigo-900/70' : 'bg-indigo-100 text-indigo-800 hover:bg-indigo-200'}`}>
+                                  {stats.total_calls}
+                                </Badge>
+                              </button>
                             </TableCell>
                             <TableCell className="text-center">
-                              <Badge className={isDark ? 'bg-green-900/50 text-green-300' : 'bg-green-100 text-green-800'}>{stats.successful_calls}</Badge>
+                              <button
+                                onClick={() => fetchCallDetails(consultantId, stats.consultant_name, 'successful')}
+                                className="cursor-pointer hover:scale-110 transition-transform"
+                              >
+                                <Badge className={`${isDark ? 'bg-green-900/50 text-green-300 hover:bg-green-900/70' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}>
+                                  {stats.successful_calls}
+                                </Badge>
+                              </button>
                             </TableCell>
                             <TableCell className="text-center">
-                              <Badge className={isDark ? 'bg-red-900/50 text-red-300' : 'bg-red-100 text-red-800'}>{stats.failed_calls}</Badge>
+                              <button
+                                onClick={() => fetchCallDetails(consultantId, stats.consultant_name, 'failed')}
+                                className="cursor-pointer hover:scale-110 transition-transform"
+                              >
+                                <Badge className={`${isDark ? 'bg-red-900/50 text-red-300 hover:bg-red-900/70' : 'bg-red-100 text-red-800 hover:bg-red-200'}`}>
+                                  {stats.failed_calls}
+                                </Badge>
+                              </button>
                             </TableCell>
                             <TableCell className="text-center">
-                              <Badge className={isDark ? 'bg-yellow-900/50 text-yellow-300' : 'bg-yellow-100 text-yellow-800'}>{stats.attempted_calls}</Badge>
+                              <button
+                                onClick={() => fetchCallDetails(consultantId, stats.consultant_name, 'attempted')}
+                                className="cursor-pointer hover:scale-110 transition-transform"
+                              >
+                                <Badge className={`${isDark ? 'bg-yellow-900/50 text-yellow-300 hover:bg-yellow-900/70' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'}`}>
+                                  {stats.attempted_calls}
+                                </Badge>
+                              </button>
                             </TableCell>
                             <TableCell className="text-center">
                               <span className={`font-semibold ${
