@@ -2172,6 +2172,89 @@ const ConsultantDashboard = () => {
           </div>
         )}
 
+        {/* Reminder Notification Popup - Shows on Login */}
+        {showReminderNotification && notificationReminders.length > 0 && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className={`max-w-lg w-full max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+              <CardHeader className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <BellRing className="h-5 w-5 animate-pulse" />
+                      Follow-up Reminders!
+                    </CardTitle>
+                    <p className="text-sm text-orange-100 mt-1">
+                      You have {notificationReminders.length} student(s) to follow up
+                    </p>
+                  </div>
+                  <button onClick={() => setShowReminderNotification(false)} className="text-white hover:text-gray-200">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 space-y-3">
+                {notificationReminders.map((reminder, idx) => (
+                  <div 
+                    key={reminder.id || idx} 
+                    className={`p-4 rounded-lg border-l-4 ${
+                      reminder.next_followup_date < new Date().toISOString().split('T')[0] 
+                        ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
+                        : 'border-orange-500 bg-orange-50 dark:bg-orange-900/20'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>{reminder.student_name}</p>
+                        <a href={`tel:${reminder.contact_number}`} className="text-blue-500 text-sm hover:underline">
+                          {reminder.contact_number}
+                        </a>
+                      </div>
+                      <Badge className={
+                        reminder.next_followup_date < new Date().toISOString().split('T')[0]
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-orange-100 text-orange-800'
+                      }>
+                        {reminder.next_followup_date < new Date().toISOString().split('T')[0] ? 'Overdue' : 'Today'}
+                      </Badge>
+                    </div>
+                    <p className={`text-sm mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Interest: {reminder.career_interest} | Date: {reminder.next_followup_date}
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        onClick={() => markReminderComplete(reminder.id)}
+                        className="bg-green-500 hover:bg-green-600 text-white flex-1"
+                      >
+                        <CheckCircle2 className="h-4 w-4 mr-1" />
+                        Already Followed Up
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => ignoreReminder(reminder.id)}
+                        className={`flex-1 ${isDark ? 'border-gray-600 text-gray-300' : ''}`}
+                      >
+                        <X className="h-4 w-4 mr-1" />
+                        Ignore
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                <div className="pt-2 border-t">
+                  <Button
+                    onClick={() => setShowReminderNotification(false)}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Close & View Later
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {/* Hidden File Input for CSV */}
         <input
           type="file"
