@@ -97,6 +97,32 @@ const ConsultantDashboard = () => {
   const [quickCallData, setQuickCallData] = useState({ call_type: 'attempted', student_name: '', contact_number: '', remarks: '' });
   const [loadingAdmissions, setLoadingAdmissions] = useState(false);
   
+  // Duplicate Report State
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+  const [duplicateInfo, setDuplicateInfo] = useState(null);
+  const [pendingFormData, setPendingFormData] = useState(null);
+  
+  // Validation Errors State
+  const [validationErrors, setValidationErrors] = useState({});
+  
+  // Reminders State
+  const [reminders, setReminders] = useState({ today_reminders: [], upcoming_reminders: [], overdue_reminders: [] });
+  const [loadingReminders, setLoadingReminders] = useState(false);
+  const [isFollowupCalendarOpen, setIsFollowupCalendarOpen] = useState(false);
+  
+  // Detailed Call Stats Modal
+  const [showCallDetails, setShowCallDetails] = useState(false);
+  const [callDetailsType, setCallDetailsType] = useState('');
+  const [callDetailsList, setCallDetailsList] = useState([]);
+  const [loadingCallDetails, setLoadingCallDetails] = useState(false);
+  
+  // CSV Upload State
+  const [showCsvUpload, setShowCsvUpload] = useState(false);
+  const [csvData, setCsvData] = useState([]);
+  const [csvErrors, setCsvErrors] = useState([]);
+  const [isUploadingCsv, setIsUploadingCsv] = useState(false);
+  const fileInputRef = useRef(null);
+  
   const [formData, setFormData] = useState({
     student_name: '',
     contact_number: '',
@@ -105,6 +131,7 @@ const ConsultantDashboard = () => {
     career_interest: '',
     college_interest: '',
     interest_scope: '',
+    next_followup_date: '',
     other_remarks: ''
   });
 
