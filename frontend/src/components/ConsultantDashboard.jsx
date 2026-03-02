@@ -172,11 +172,11 @@ const ConsultantDashboard = () => {
     }
   }, [consultantId, activeTab]);
 
-  // Fetch call stats and reminders on load
+  // Fetch call stats and reminders on load (with notification on initial load)
   useEffect(() => {
     if (consultantId) {
       fetchCallStats();
-      fetchReminders();
+      fetchReminders(true); // true = show notification popup
     }
   }, [consultantId]);
 
