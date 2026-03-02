@@ -539,9 +539,17 @@ const ConsultantDashboard = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e, forceUpdate = false) => {
+    e?.preventDefault();
     
+    // Validate mandatory fields
+    if (!validateForm()) {
+      toast.error('Please fill all mandatory fields', {
+        description: 'Fields marked with * are required',
+      });
+      return;
+    }
+
     if (!canSubmit) {
       toast.error('Please wait', {
         description: 'You can submit another report after 5 seconds',
@@ -553,23 +561,44 @@ const ConsultantDashboard = () => {
     setCanSubmit(false);
 
     try {
-      const response = await axios.post(
-        `${API}/consultant/reports?consultant_id=${consultantId}`,
-        formData
-      );
+      const submitData = { ...formData };
+      if (submitData.next_followup_date) {
+        submitData.next_followup_date = format(new Date(submitData.next_followup_date), 'yyyy-MM-dd');
+      }
+
+      const url = forceUpdate 
+        ? `${API}/consultant/reports?consultant_id=${consultantId}&update_existing=true`
+        : `${API}/consultant/reports?consultant_id=${consultantId}`;
+      
+      const response = await axios.post(url, submitData);
       
       if (response.data.success) {
-        toast.success('Report Submitted Successfully!', {
+        const action = forceUpdate ? 'Updated' : 'Submitted';
+        toast.success(`Report ${action} Successfully!`, {
           description: 'Your daily calling report has been recorded.',
         });
         
         resetForm();
         setLastSubmitTime(new Date());
+        setShowDuplicateModal(false);
+        setDuplicateInfo(null);
+        setPendingFormData(null);
+        fetchCallStats();
+        fetchReminders();
         
         // Enable next submission after 5 seconds
         setTimeout(() => {
           setCanSubmit(true);
         }, 5000);
+      } else if (response.data.duplicate) {
+        // Duplicate found - ask for confirmation
+        setDuplicateInfo({
+          message: response.data.message,
+          existingReportId: response.data.existing_report_id
+        });
+        setPendingFormData({ ...formData });
+        setShowDuplicateModal(true);
+        setCanSubmit(true);
       }
     } catch (error) {
       console.error('Submission error:', error);
@@ -580,6 +609,20 @@ const ConsultantDashboard = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleDuplicateConfirm = async () => {
+    if (pendingFormData) {
+      setFormData(pendingFormData);
+      await handleSubmit(null, true);
+    }
+  };
+
+  const handleDuplicateCancel = () => {
+    setShowDuplicateModal(false);
+    setDuplicateInfo(null);
+    setPendingFormData(null);
+    setCanSubmit(true);
   };
 
   return (
