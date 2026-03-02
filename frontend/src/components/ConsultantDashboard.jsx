@@ -188,6 +188,64 @@ const ConsultantDashboard = () => {
     }
   };
 
+  // Fetch Reminders
+  const fetchReminders = async () => {
+    if (!consultantId) return;
+    setLoadingReminders(true);
+    try {
+      const response = await axios.get(`${API}/consultant/reminders/${consultantId}`);
+      if (response.data.success) {
+        setReminders({
+          today_reminders: response.data.today_reminders || [],
+          upcoming_reminders: response.data.upcoming_reminders || [],
+          overdue_reminders: response.data.overdue_reminders || []
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching reminders:', error);
+    } finally {
+      setLoadingReminders(false);
+    }
+  };
+
+  // Fetch Call Details
+  const fetchCallDetails = async (callType) => {
+    if (!consultantId) return;
+    setLoadingCallDetails(true);
+    setCallDetailsType(callType);
+    setShowCallDetails(true);
+    try {
+      const url = callType === 'all' 
+        ? `${API}/consultant/calls/details/${consultantId}`
+        : `${API}/consultant/calls/details/${consultantId}?call_type=${callType}`;
+      const response = await axios.get(url);
+      if (response.data.success) {
+        setCallDetailsList(response.data.calls || []);
+      }
+    } catch (error) {
+      console.error('Error fetching call details:', error);
+      toast.error('Failed to fetch call details');
+    } finally {
+      setLoadingCallDetails(false);
+    }
+  };
+
+  // Mark reminder as complete
+  const markReminderComplete = async (reportId) => {
+    try {
+      const response = await axios.put(`${API}/consultant/reminders/${reportId}/complete?consultant_id=${consultantId}`);
+      if (response.data.success) {
+        toast.success('Follow-up marked as complete!');
+        fetchReminders();
+        // Prompt to submit new report
+        toast.info('Please submit an updated report for this student', { duration: 5000 });
+      }
+    } catch (error) {
+      console.error('Error marking reminder complete:', error);
+      toast.error('Failed to update reminder');
+    }
+  };
+
   const handleQuickCall = async (callType) => {
     try {
       const params = new URLSearchParams({
