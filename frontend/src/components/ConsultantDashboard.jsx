@@ -807,6 +807,18 @@ const ConsultantDashboard = () => {
                 Calls
               </TabsTrigger>
               <TabsTrigger
+                value="reminders"
+                className="data-[state=active]:bg-orange-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap relative"
+              >
+                <Bell className="h-3 w-3 mr-1" />
+                Reminders
+                {(reminders.today_reminders.length > 0 || reminders.overdue_reminders.length > 0) && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                    {reminders.today_reminders.length + reminders.overdue_reminders.length}
+                  </span>
+                )}
+              </TabsTrigger>
+              <TabsTrigger
                 value="admissions"
                 className="data-[state=active]:bg-purple-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
               >
@@ -817,7 +829,7 @@ const ConsultantDashboard = () => {
           </div>
           
           {/* Desktop Tab Navigation */}
-          <TabsList className="hidden md:grid w-full grid-cols-4 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
+          <TabsList className="hidden md:grid w-full grid-cols-5 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="submit"
               className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
@@ -838,6 +850,18 @@ const ConsultantDashboard = () => {
             >
               <PhoneCall className="h-4 w-4 mr-2" />
               My Calls
+            </TabsTrigger>
+            <TabsTrigger
+              value="reminders"
+              className="data-[state=active]:bg-orange-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2 relative"
+            >
+              <Bell className="h-4 w-4 mr-2" />
+              Reminders
+              {(reminders.today_reminders.length > 0 || reminders.overdue_reminders.length > 0) && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {reminders.today_reminders.length + reminders.overdue_reminders.length}
+                </span>
+              )}
             </TabsTrigger>
             <TabsTrigger
               value="admissions"
