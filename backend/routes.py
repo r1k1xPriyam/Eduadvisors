@@ -1165,3 +1165,220 @@ async def upload_bulk_reports(consultant_id: str, reports: list = Body(...)):
         logger.error(f"Error in bulk upload: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to process bulk upload")
 
+
+
+# ============ ANALYTICS ENDPOINTS ============
+
+@router.get("/admin/analytics/overview", response_model=dict)
+async def get_analytics_overview():
+    """Get overview analytics for admin dashboard"""
+    try:
+        from datetime import timedelta
+        
+        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        this_week_start = today - timedelta(days=today.weekday())
+        this_month_start = today.replace(day=1)
+        
+        # Total counts
+        total_reports = await db.consultant_reports.count_documents({})
+        total_calls = await db.call_logs.count_documents({})
+        total_admissions = await db.admissions.count_documents({})
+        total_queries = await db.student_queries.count_documents({})
+        
+        # Today's counts
+        today_iso = today.isoformat()
+        today_reports = await db.consultant_reports.count_documents({
+            "created_at": {"$gte": today_iso}
+        })
+        today_calls = await db.call_logs.count_documents({
+            "created_at": {"$gte": today_iso}
+        })
+        
+        # This week
+        week_iso = this_week_start.isoformat()
+        week_reports = await db.consultant_reports.count_documents({
+            "created_at": {"$gte": week_iso}
+        })
+        
+        # This month
+        month_iso = this_month_start.isoformat()
+        month_admissions = await db.admissions.count_documents({
+            "created_at": {"$gte": month_iso}
+        })
+        
+        return {
+            "success": True,
+            "overview": {
+                "total_reports": total_reports,
+                "total_calls": total_calls,
+                "total_admissions": total_admissions,
+                "total_queries": total_queries,
+                "today_reports": today_reports,
+                "today_calls": today_calls,
+                "week_reports": week_reports,
+                "month_admissions": month_admissions
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error fetching analytics overview: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch analytics")
+
+
+@router.get("/admin/analytics/call-distribution", response_model=dict)
+async def get_call_distribution():
+    """Get call type distribution for pie chart"""
+    try:
+        successful = await db.call_logs.count_documents({"call_type": "successful"})
+        failed = await db.call_logs.count_documents({"call_type": "failed"})
+        attempted = await db.call_logs.count_documents({"call_type": "attempted"})
+        
+        return {
+            "success": True,
+            "distribution": [
+                {"name": "Successful", "value": successful, "color": "#22c55e"},
+                {"name": "Failed", "value": failed, "color": "#ef4444"},
+                {"name": "Attempted", "value": attempted, "color": "#eab308"}
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error fetching call distribution: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch call distribution")
+
+
+@router.get("/admin/analytics/interest-scope", response_model=dict)
+async def get_interest_scope_distribution():
+    """Get interest scope distribution for pie chart"""
+    try:
+        pipeline = [
+            {"$group": {"_id": "$interest_scope", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ]
+        results = await db.consultant_reports.aggregate(pipeline).to_list(100)
+        
+        colors = {
+            "ACTIVELY INTERESTED": "#22c55e",
+            "LESS INTERESTED": "#f97316",
+            "RECALLING NEEDED": "#eab308",
+            "DROPOUT THIS YEAR": "#ef4444",
+            "ALREADY COLLEGE SELECTED": "#3b82f6",
+            "NOT INTERESTED": "#6b7280"
+        }
+        
+        distribution = [
+            {
+                "name": r["_id"] or "Unknown",
+                "value": r["count"],
+                "color": colors.get(r["_id"], "#8b5cf6")
+            }
+            for r in results if r["_id"]
+        ]
+        
+        return {"success": True, "distribution": distribution}
+    except Exception as e:
+        logger.error(f"Error fetching interest scope distribution: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch interest scope distribution")
+
+
+@router.get("/admin/analytics/reports-trend", response_model=dict)
+async def get_reports_trend():
+    """Get daily reports trend for last 14 days"""
+    try:
+        from datetime import timedelta
+        
+        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        trend_data = []
+        
+        for i in range(13, -1, -1):
+            date = today - timedelta(days=i)
+            next_date = date + timedelta(days=1)
+            
+            count = await db.consultant_reports.count_documents({
+                "created_at": {"$gte": date.isoformat(), "$lt": next_date.isoformat()}
+            })
+            
+            trend_data.append({
+                "date": date.strftime("%b %d"),
+                "reports": count
+            })
+        
+        return {"success": True, "trend": trend_data}
+    except Exception as e:
+        logger.error(f"Error fetching reports trend: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch reports trend")
+
+
+@router.get("/admin/analytics/consultant-performance", response_model=dict)
+async def get_consultant_performance():
+    """Get consultant performance comparison"""
+    try:
+        # Get reports by consultant
+        reports_pipeline = [
+            {"$group": {"_id": "$consultant_name", "reports": {"$sum": 1}}},
+            {"$sort": {"reports": -1}},
+            {"$limit": 10}
+        ]
+        reports_results = await db.consultant_reports.aggregate(reports_pipeline).to_list(10)
+        
+        # Get calls by consultant
+        calls_pipeline = [
+            {"$group": {"_id": "$consultant_name", "calls": {"$sum": 1}}},
+            {"$sort": {"calls": -1}}
+        ]
+        calls_results = await db.call_logs.aggregate(calls_pipeline).to_list(100)
+        calls_map = {r["_id"]: r["calls"] for r in calls_results}
+        
+        performance = []
+        for r in reports_results:
+            name = r["_id"]
+            if name:
+                short_name = name.split()[0] if name else "Unknown"
+                performance.append({
+                    "name": short_name,
+                    "fullName": name,
+                    "reports": r["reports"],
+                    "calls": calls_map.get(name, 0)
+                })
+        
+        return {"success": True, "performance": performance}
+    except Exception as e:
+        logger.error(f"Error fetching consultant performance: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch consultant performance")
+
+
+@router.get("/admin/analytics/monthly-admissions", response_model=dict)
+async def get_monthly_admissions():
+    """Get monthly admissions for the last 6 months"""
+    try:
+        from datetime import timedelta
+        
+        today = datetime.now(timezone.utc)
+        monthly_data = []
+        
+        for i in range(5, -1, -1):
+            # Calculate month start and end
+            month = today.month - i
+            year = today.year
+            while month <= 0:
+                month += 12
+                year -= 1
+            
+            month_start = datetime(year, month, 1, tzinfo=timezone.utc)
+            if month == 12:
+                month_end = datetime(year + 1, 1, 1, tzinfo=timezone.utc)
+            else:
+                month_end = datetime(year, month + 1, 1, tzinfo=timezone.utc)
+            
+            count = await db.admissions.count_documents({
+                "created_at": {"$gte": month_start.isoformat(), "$lt": month_end.isoformat()}
+            })
+            
+            monthly_data.append({
+                "month": month_start.strftime("%b"),
+                "admissions": count
+            })
+        
+        return {"success": True, "monthly": monthly_data}
+    except Exception as e:
+        logger.error(f"Error fetching monthly admissions: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch monthly admissions")
+
