@@ -2478,7 +2478,270 @@ const AdminDashboard = () => {
               </div>
             )}
           </TabsContent>
+
+          {/* Reminders Tab */}
+          <TabsContent value="reminders">
+            {/* Notification Banner */}
+            {(reminders.today_reminders.length > 0 || reminders.overdue_reminders.length > 0) && (
+              <div className={`mb-4 p-4 rounded-lg border-l-4 border-orange-500 ${isDark ? 'bg-orange-900/20' : 'bg-orange-50'}`}>
+                <div className="flex items-center gap-2">
+                  <BellRing className="h-5 w-5 text-orange-500 animate-pulse" />
+                  <p className={`font-semibold ${isDark ? 'text-orange-300' : 'text-orange-700'}`}>
+                    {reminders.today_reminders.length} reminder(s) for today
+                    {reminders.overdue_reminders.length > 0 && ` • ${reminders.overdue_reminders.length} overdue reminder(s)`}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Refresh Button */}
+            <div className="flex justify-end mb-4">
+              <Button
+                onClick={fetchReminders}
+                variant="outline"
+                disabled={loadingReminders}
+                className={isDark ? 'border-gray-600' : 'border-gray-300'}
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${loadingReminders ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+            </div>
+
+            {loadingReminders ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className={`ml-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading reminders...</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Overdue Reminders */}
+                {reminders.overdue_reminders.length > 0 && (
+                  <Card className={`border-l-4 border-red-500 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+                    <CardHeader className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <AlertTriangle className="h-5 w-5" />
+                        Overdue Reminders ({reminders.overdue_reminders.length})
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Consultant</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Reminder Date</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Interest</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {reminders.overdue_reminders.map((reminder, idx) => (
+                              <TableRow key={reminder.id || idx} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                                <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{reminder.consultant_name}</TableCell>
+                                <TableCell className={isDark ? 'text-gray-300' : ''}>{reminder.student_name}</TableCell>
+                                <TableCell>
+                                  <a href={`tel:${reminder.contact_number}`} className="text-blue-500 hover:underline">
+                                    {reminder.contact_number}
+                                  </a>
+                                </TableCell>
+                                <TableCell className="text-red-500 font-semibold">{reminder.next_followup_date}</TableCell>
+                                <TableCell>
+                                  <Badge className="bg-blue-100 text-blue-800">{reminder.career_interest}</Badge>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Today's Reminders */}
+                {reminders.today_reminders.length > 0 && (
+                  <Card className={`border-l-4 border-orange-500 ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+                    <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <BellRing className="h-5 w-5" />
+                        Today's Reminders ({reminders.today_reminders.length})
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Consultant</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Interest</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {reminders.today_reminders.map((reminder, idx) => (
+                              <TableRow key={reminder.id || idx} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                                <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{reminder.consultant_name}</TableCell>
+                                <TableCell className={isDark ? 'text-gray-300' : ''}>{reminder.student_name}</TableCell>
+                                <TableCell>
+                                  <a href={`tel:${reminder.contact_number}`} className="text-blue-500 hover:underline">
+                                    {reminder.contact_number}
+                                  </a>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge className="bg-blue-100 text-blue-800">{reminder.career_interest}</Badge>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Upcoming Reminders */}
+                <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                  <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Bell className="h-5 w-5" />
+                      Upcoming Reminders ({reminders.upcoming_reminders.length})
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    {reminders.upcoming_reminders.length === 0 && reminders.today_reminders.length === 0 && reminders.overdue_reminders.length === 0 ? (
+                      <div className="text-center py-12">
+                        <Bell className={`h-16 w-16 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                        <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No reminders scheduled</p>
+                        <p className={`text-sm mt-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Reminders will appear when consultants set follow-up dates</p>
+                      </div>
+                    ) : reminders.upcoming_reminders.length === 0 ? (
+                      <div className="text-center py-8">
+                        <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No upcoming reminders</p>
+                      </div>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Consultant</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Reminder Date</TableHead>
+                              <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Interest</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {reminders.upcoming_reminders.map((reminder, idx) => (
+                              <TableRow key={reminder.id || idx} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                                <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>{reminder.consultant_name}</TableCell>
+                                <TableCell className={isDark ? 'text-gray-300' : ''}>{reminder.student_name}</TableCell>
+                                <TableCell>
+                                  <a href={`tel:${reminder.contact_number}`} className="text-blue-500 hover:underline">
+                                    {reminder.contact_number}
+                                  </a>
+                                </TableCell>
+                                <TableCell className={isDark ? 'text-gray-300' : ''}>{reminder.next_followup_date}</TableCell>
+                                <TableCell>
+                                  <Badge className="bg-blue-100 text-blue-800">{reminder.career_interest}</Badge>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </TabsContent>
         </Tabs>
+
+        {/* Call Details Modal */}
+        {showCallDetails && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className={`max-w-4xl w-full max-h-[90vh] overflow-y-auto ${isDark ? 'bg-gray-800 border-gray-700' : ''}`}>
+              <CardHeader className={`bg-gradient-to-r ${
+                callDetailsType === 'successful' ? 'from-green-500 to-green-600' :
+                callDetailsType === 'failed' ? 'from-red-500 to-red-600' :
+                callDetailsType === 'attempted' ? 'from-yellow-500 to-yellow-600' :
+                'from-blue-500 to-indigo-600'
+              } text-white`}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      {callDetailsType === 'successful' && <CheckCircle className="h-5 w-5" />}
+                      {callDetailsType === 'failed' && <PhoneOff className="h-5 w-5" />}
+                      {callDetailsType === 'attempted' && <PhoneMissed className="h-5 w-5" />}
+                      {callDetailsType === 'all' && <PhoneCall className="h-5 w-5" />}
+                      {callDetailsType === 'all' ? 'All' : callDetailsType.charAt(0).toUpperCase() + callDetailsType.slice(1)} Calls
+                    </CardTitle>
+                    <p className="text-sm opacity-90">{callDetailsConsultantName} ({callDetailsList.length} calls)</p>
+                  </div>
+                  <button onClick={() => setShowCallDetails(false)} className="text-white hover:text-gray-200">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0">
+                {loadingCallDetails ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                ) : callDetailsList.length === 0 ? (
+                  <div className="text-center py-12">
+                    <PhoneCall className={`h-12 w-12 mx-auto mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+                    <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No calls found</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className={isDark ? 'bg-gray-700' : 'bg-gray-50'}>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Date & Time</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Student</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Contact</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Type</TableHead>
+                          <TableHead className={`font-semibold ${isDark ? 'text-gray-200' : ''}`}>Remarks</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {callDetailsList.map((call, idx) => (
+                          <TableRow key={call.id || idx} className={isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}>
+                            <TableCell className={`text-sm ${isDark ? 'text-gray-300' : ''}`}>
+                              {new Date(call.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+                            </TableCell>
+                            <TableCell className={`font-medium ${isDark ? 'text-white' : ''}`}>
+                              {call.student_name || 'N/A'}
+                            </TableCell>
+                            <TableCell>
+                              <a href={`tel:${call.contact_number}`} className="text-blue-500 hover:underline">
+                                {call.contact_number}
+                              </a>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={
+                                call.call_type === 'successful' ? 'bg-green-100 text-green-800' :
+                                call.call_type === 'failed' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                              }>
+                                {call.call_type}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                              {call.remarks || '-'}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Delete Call Stats Modal */}
         {showDeleteCallStats && (
