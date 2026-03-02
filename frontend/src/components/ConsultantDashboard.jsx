@@ -385,8 +385,158 @@ const ConsultantDashboard = () => {
       career_interest: '',
       college_interest: '',
       interest_scope: '',
+      next_followup_date: '',
       other_remarks: ''
     });
+    setValidationErrors({});
+  };
+
+  // Validate mandatory fields
+  const validateForm = () => {
+    const errors = {};
+    const requiredFields = [
+      { key: 'student_name', label: 'Student Name' },
+      { key: 'contact_number', label: 'Contact Number' },
+      { key: 'institution_name', label: 'Institution Name' },
+      { key: 'competitive_exam_preference', label: 'Competitive Exam Preference' },
+      { key: 'career_interest', label: 'Career Interest' },
+      { key: 'interest_scope', label: 'Interest Scope' }
+    ];
+
+    requiredFields.forEach(field => {
+      if (!formData[field.key] || formData[field.key].trim() === '') {
+        errors[field.key] = `${field.label} is required`;
+      }
+    });
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // CSV Functions
+  const downloadSampleCsv = async () => {
+    try {
+      const response = await axios.get(`${API}/consultant/sample-csv`);
+      if (response.data.success) {
+        const headers = response.data.headers;
+        const sampleData = response.data.sample_data;
+        
+        let csvContent = headers.join(',') + '\n';
+        sampleData.forEach(row => {
+          csvContent += headers.map(h => `"${row[h] || ''}"`).join(',') + '\n';
+        });
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'sample_bulk_report.csv';
+        link.click();
+        toast.success('Sample CSV downloaded!');
+      }
+    } catch (error) {
+      console.error('Error downloading sample CSV:', error);
+      toast.error('Failed to download sample CSV');
+    }
+  };
+
+  const handleCsvFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.csv')) {
+      toast.error('Please upload a CSV file');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target.result;
+      parseCsvData(text);
+    };
+    reader.readAsText(file);
+  };
+
+  const parseCsvData = (text) => {
+    const lines = text.split('\n').filter(line => line.trim());
+    if (lines.length < 2) {
+      toast.error('CSV file must have headers and at least one data row');
+      return;
+    }
+
+    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+    const expectedHeaders = [
+      'student_name', 'contact_number', 'institution_name',
+      'competitive_exam_preference', 'career_interest', 'college_interest',
+      'interest_scope', 'next_followup_date', 'other_remarks'
+    ];
+
+    const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+    if (missingHeaders.length > 0) {
+      toast.error(`Missing headers: ${missingHeaders.join(', ')}`);
+      return;
+    }
+
+    const data = [];
+    const errors = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const values = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+      const row = {};
+      
+      headers.forEach((header, idx) => {
+        let value = values[idx] || '';
+        value = value.replace(/^"|"$/g, '').trim();
+        row[header] = value;
+      });
+
+      // Basic validation
+      if (!row.student_name || !row.contact_number || !row.institution_name || 
+          !row.competitive_exam_preference || !row.career_interest || !row.interest_scope) {
+        errors.push(`Row ${i}: Missing required fields`);
+      } else {
+        data.push(row);
+      }
+    }
+
+    setCsvData(data);
+    setCsvErrors(errors);
+    setShowCsvUpload(true);
+    
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const uploadCsvReports = async () => {
+    if (csvData.length === 0) {
+      toast.error('No valid data to upload');
+      return;
+    }
+
+    setIsUploadingCsv(true);
+    try {
+      const response = await axios.post(
+        `${API}/consultant/bulk-reports?consultant_id=${consultantId}`,
+        csvData
+      );
+      
+      if (response.data.success) {
+        toast.success(`Successfully uploaded ${response.data.success_count} reports!`);
+        if (response.data.errors && response.data.errors.length > 0) {
+          response.data.errors.forEach(err => toast.warning(err));
+        }
+        setShowCsvUpload(false);
+        setCsvData([]);
+        setCsvErrors([]);
+        fetchCallStats();
+        fetchMyReports();
+      }
+    } catch (error) {
+      console.error('Error uploading CSV:', error);
+      toast.error(error.response?.data?.detail || 'Failed to upload reports');
+    } finally {
+      setIsUploadingCsv(false);
+    }
   };
 
   const handleSubmit = async (e) => {
