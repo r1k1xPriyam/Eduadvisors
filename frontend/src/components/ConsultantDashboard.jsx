@@ -63,7 +63,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart as RechartsPieChart, Pie, Cell, AreaChart, Area
 } from 'recharts';
-import { BarChart3, TrendingUp, PieChart } from 'lucide-react';
+import { BarChart3, TrendingUp, PieChart, Plus, Trash2, TableIcon } from 'lucide-react';
+import Papa from 'papaparse';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -127,6 +128,13 @@ const ConsultantDashboard = () => {
   const [csvErrors, setCsvErrors] = useState([]);
   const [isUploadingCsv, setIsUploadingCsv] = useState(false);
   const fileInputRef = useRef(null);
+  
+  // Spreadsheet State
+  const [showSpreadsheet, setShowSpreadsheet] = useState(false);
+  const [spreadsheetRows, setSpreadsheetRows] = useState([]);
+  const [spreadsheetErrors, setSpreadsheetErrors] = useState({});
+  const [isUploadingSpreadsheet, setIsUploadingSpreadsheet] = useState(false);
+  const [bulkMode, setBulkMode] = useState(null); // 'csv' | 'spreadsheet' | null
   
   // Notification Popup State (shows on login)
   const [showReminderNotification, setShowReminderNotification] = useState(false);
@@ -534,20 +542,25 @@ const ConsultantDashboard = () => {
   };
 
   const parseCsvData = (text) => {
-    const lines = text.split('\n').filter(line => line.trim());
-    if (lines.length < 2) {
-      toast.error('CSV file must have headers and at least one data row');
+    const result = Papa.parse(text, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: (h) => h.trim(),
+    });
+
+    if (result.data.length === 0) {
+      toast.error('CSV file is empty or has no data rows');
       return;
     }
 
-    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
     const expectedHeaders = [
       'student_name', 'contact_number', 'institution_name',
       'competitive_exam_preference', 'career_interest', 'college_interest',
       'interest_scope', 'next_followup_date', 'other_remarks'
     ];
 
-    const missingHeaders = expectedHeaders.filter(h => !headers.includes(h));
+    const fileHeaders = result.meta.fields || [];
+    const missingHeaders = expectedHeaders.filter(h => !fileHeaders.includes(h));
     if (missingHeaders.length > 0) {
       toast.error(`Missing headers: ${missingHeaders.join(', ')}`);
       return;
@@ -556,23 +569,20 @@ const ConsultantDashboard = () => {
     const data = [];
     const errors = [];
 
-    for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-      const row = {};
-      
-      headers.forEach((header, idx) => {
-        let value = values[idx] || '';
-        value = value.replace(/^"|"$/g, '').trim();
-        row[header] = value;
-      });
+    result.data.forEach((row, i) => {
+      const clean = {};
+      expectedHeaders.forEach(h => { clean[h] = (row[h] || '').trim(); });
 
-      // Basic validation
-      if (!row.student_name || !row.contact_number || !row.institution_name || 
-          !row.competitive_exam_preference || !row.career_interest || !row.interest_scope) {
-        errors.push(`Row ${i}: Missing required fields`);
+      if (!clean.student_name || !clean.contact_number || !clean.institution_name ||
+          !clean.competitive_exam_preference || !clean.career_interest || !clean.interest_scope) {
+        errors.push(`Row ${i + 1}: Missing required fields (student_name, contact_number, institution_name, competitive_exam_preference, career_interest, interest_scope)`);
       } else {
-        data.push(row);
+        data.push(clean);
       }
+    });
+
+    if (result.errors.length > 0) {
+      result.errors.forEach(e => errors.push(`Parse error at row ${e.row + 1}: ${e.message}`));
     }
 
     setCsvData(data);
@@ -605,6 +615,7 @@ const ConsultantDashboard = () => {
         setShowCsvUpload(false);
         setCsvData([]);
         setCsvErrors([]);
+        setBulkMode(null);
         fetchCallStats();
         fetchMyReports();
       }
@@ -613,6 +624,105 @@ const ConsultantDashboard = () => {
       toast.error(error.response?.data?.detail || 'Failed to upload reports');
     } finally {
       setIsUploadingCsv(false);
+    }
+  };
+
+  // ============ SPREADSHEET FUNCTIONS ============
+  const emptyRow = () => ({
+    student_name: '', contact_number: '', institution_name: '',
+    competitive_exam_preference: '', career_interest: '', college_interest: '',
+    interest_scope: '', next_followup_date: '', other_remarks: ''
+  });
+
+  const addSpreadsheetRow = () => {
+    setSpreadsheetRows(prev => [...prev, emptyRow()]);
+  };
+
+  const removeSpreadsheetRow = (index) => {
+    setSpreadsheetRows(prev => prev.filter((_, i) => i !== index));
+    setSpreadsheetErrors(prev => {
+      const next = {};
+      Object.keys(prev).forEach(k => { if (parseInt(k) !== index) next[parseInt(k) > index ? parseInt(k) - 1 : k] = prev[k]; });
+      return next;
+    });
+  };
+
+  const updateSpreadsheetRow = (index, field, value) => {
+    setSpreadsheetRows(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+    // Clear error for this field
+    if (spreadsheetErrors[index]?.[field]) {
+      setSpreadsheetErrors(prev => {
+        const next = { ...prev };
+        if (next[index]) {
+          delete next[index][field];
+          if (Object.keys(next[index]).length === 0) delete next[index];
+        }
+        return next;
+      });
+    }
+  };
+
+  const validateSpreadsheet = () => {
+    const errors = {};
+    const requiredFields = ['student_name', 'contact_number', 'institution_name', 'competitive_exam_preference', 'career_interest', 'interest_scope'];
+    
+    spreadsheetRows.forEach((row, i) => {
+      requiredFields.forEach(field => {
+        if (!row[field]?.trim()) {
+          if (!errors[i]) errors[i] = {};
+          errors[i][field] = true;
+        }
+      });
+    });
+    
+    setSpreadsheetErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const openSpreadsheet = () => {
+    setSpreadsheetRows([emptyRow(), emptyRow(), emptyRow()]);
+    setSpreadsheetErrors({});
+    setShowSpreadsheet(true);
+    setBulkMode('spreadsheet');
+  };
+
+  const uploadSpreadsheetReports = async () => {
+    if (spreadsheetRows.length === 0) {
+      toast.error('Add at least one row');
+      return;
+    }
+    if (!validateSpreadsheet()) {
+      toast.error('Please fix highlighted errors before submitting');
+      return;
+    }
+
+    setIsUploadingSpreadsheet(true);
+    try {
+      const response = await axios.post(
+        `${API}/consultant/bulk-reports?consultant_id=${consultantId}`,
+        spreadsheetRows
+      );
+      if (response.data.success) {
+        toast.success(`Successfully uploaded ${response.data.success_count} reports!`);
+        if (response.data.errors?.length > 0) {
+          response.data.errors.forEach(err => toast.warning(err));
+        }
+        setShowSpreadsheet(false);
+        setSpreadsheetRows([]);
+        setSpreadsheetErrors({});
+        setBulkMode(null);
+        fetchCallStats();
+        fetchMyReports();
+      }
+    } catch (error) {
+      console.error('Error uploading spreadsheet:', error);
+      toast.error(error.response?.data?.detail || 'Failed to upload reports');
+    } finally {
+      setIsUploadingSpreadsheet(false);
     }
   };
 
@@ -985,53 +1095,226 @@ const ConsultantDashboard = () => {
             )}
 
             {/* Bulk Upload Section */}
-            <Card className={`mb-4 ${isDark ? 'bg-gray-800 border-gray-700' : 'border-gray-200'}`}>
+            <Card className={`mb-4 ${isDark ? 'bg-gray-800 border-gray-700' : 'border-gray-200'}`} data-testid="bulk-upload-section">
               <CardContent className="p-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                   <div>
-                    <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Bulk Report Upload</h3>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Upload multiple reports at once using CSV</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={downloadSampleCsv}
-                      variant="outline"
-                      size="sm"
-                      className={isDark ? 'border-gray-600' : ''}
-                    >
-                      <Download className="h-4 w-4 mr-2" />
-                      Download Sample CSV
-                    </Button>
-                    <Button
-                      onClick={() => fileInputRef.current?.click()}
-                      size="sm"
-                      className="bg-green-500 hover:bg-green-600 text-white"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload CSV
-                    </Button>
+                    <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Bulk Report Entry</h3>
+                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Add multiple reports at once — via spreadsheet or CSV upload</p>
                   </div>
                 </div>
-                
-                {/* Warning Banner for Bulk Upload */}
-                <div className={`mt-4 p-4 rounded-lg border-l-4 border-yellow-500 ${isDark ? 'bg-yellow-900/20' : 'bg-yellow-50'}`}>
-                  <div className="flex items-start gap-3">
-                    <AlertTriangle className={`h-5 w-5 mt-0.5 ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`} />
-                    <div>
-                      <p className={`font-semibold ${isDark ? 'text-yellow-300' : 'text-yellow-800'}`}>
-                        Important: CSV Format Requirements
-                      </p>
-                      <ul className={`text-xs mt-2 space-y-1 ${isDark ? 'text-yellow-200' : 'text-yellow-700'}`}>
-                        <li>• <strong>Download the Sample CSV first</strong> to see the correct format</li>
-                        <li>• <strong>Mandatory fields:</strong> Student Name, Contact Number, Institution Name, Competitive Exam Preference, Career Interest, Interest Scope</li>
-                        <li>• <strong>Interest Scope values must be:</strong> ACTIVELY INTERESTED, LESS INTERESTED, RECALLING NEEDED, DROPOUT THIS YEAR, ALREADY COLLEGE SELECTED, NOT INTERESTED</li>
-                        <li>• <strong>Optional fields:</strong> College Interest, Next Followup Date (YYYY-MM-DD), Other Remarks</li>
-                        <li>• Rows with missing mandatory fields will be <strong>skipped with error message</strong></li>
-                        <li>• Each valid row will be logged as a <strong>Successful Call</strong> automatically</li>
-                      </ul>
+
+                {/* Mode Selection Buttons */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                  <button
+                    onClick={openSpreadsheet}
+                    className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
+                      bulkMode === 'spreadsheet'
+                        ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20'
+                        : isDark ? 'border-gray-600 hover:border-cyan-500/50 bg-gray-700/50' : 'border-gray-200 hover:border-cyan-400'
+                    }`}
+                    data-testid="open-spreadsheet-btn"
+                  >
+                    <div className="p-2 bg-cyan-100 dark:bg-cyan-900/40 rounded-lg">
+                      <TableIcon className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+                    </div>
+                    <div className="text-left">
+                      <p className={`font-semibold text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>In-App Spreadsheet</p>
+                      <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Type directly into a table</p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => { setBulkMode('csv'); }}
+                    className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
+                      bulkMode === 'csv'
+                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                        : isDark ? 'border-gray-600 hover:border-green-500/50 bg-gray-700/50' : 'border-gray-200 hover:border-green-400'
+                    }`}
+                    data-testid="open-csv-mode-btn"
+                  >
+                    <div className="p-2 bg-green-100 dark:bg-green-900/40 rounded-lg">
+                      <Upload className="h-5 w-5 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div className="text-left">
+                      <p className={`font-semibold text-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>Upload CSV File</p>
+                      <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Import from a CSV file</p>
+                    </div>
+                  </button>
+                </div>
+
+                {/* CSV Mode Panel */}
+                {bulkMode === 'csv' && (
+                  <div className={`p-4 rounded-lg border ${isDark ? 'border-gray-600 bg-gray-700/50' : 'border-gray-200 bg-gray-50'}`} data-testid="csv-mode-panel">
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      <Button
+                        onClick={downloadSampleCsv}
+                        variant="outline"
+                        size="sm"
+                        className={isDark ? 'border-gray-500' : ''}
+                        data-testid="download-sample-csv-btn"
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Download Sample CSV
+                      </Button>
+                      <Button
+                        onClick={() => fileInputRef.current?.click()}
+                        size="sm"
+                        className="bg-green-500 hover:bg-green-600 text-white"
+                        data-testid="upload-csv-btn"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload CSV
+                      </Button>
+                    </div>
+                    <div className={`p-3 rounded-lg border-l-4 border-yellow-500 ${isDark ? 'bg-yellow-900/20' : 'bg-yellow-50'}`}>
+                      <div className="flex items-start gap-2">
+                        <AlertTriangle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`} />
+                        <div>
+                          <p className={`font-semibold text-xs ${isDark ? 'text-yellow-300' : 'text-yellow-800'}`}>CSV Format Requirements</p>
+                          <ul className={`text-xs mt-1 space-y-0.5 ${isDark ? 'text-yellow-200' : 'text-yellow-700'}`}>
+                            <li>Download the sample CSV first to see the correct format</li>
+                            <li><strong>Required:</strong> Student Name, Contact Number, Institution, Exam Preference, Career Interest, Interest Scope</li>
+                            <li><strong>Interest Scope:</strong> ACTIVELY INTERESTED, LESS INTERESTED, RECALLING NEEDED, DROPOUT THIS YEAR, ALREADY COLLEGE SELECTED, NOT INTERESTED</li>
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {/* Spreadsheet Mode Panel */}
+                {bulkMode === 'spreadsheet' && showSpreadsheet && (
+                  <div className={`rounded-lg border ${isDark ? 'border-gray-600' : 'border-gray-200'}`} data-testid="spreadsheet-panel">
+                    <div className={`flex items-center justify-between p-3 border-b ${isDark ? 'border-gray-600 bg-gray-700/50' : 'border-gray-200 bg-gray-50'}`}>
+                      <p className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                        {spreadsheetRows.length} row(s) — fill in details below
+                      </p>
+                      <Button onClick={addSpreadsheetRow} size="sm" variant="outline" className={isDark ? 'border-gray-500' : ''} data-testid="add-row-btn">
+                        <Plus className="h-4 w-4 mr-1" /> Add Row
+                      </Button>
+                    </div>
+                    <div className="overflow-x-auto max-h-[420px] overflow-y-auto">
+                      <table className="w-full text-sm">
+                        <thead className={`sticky top-0 z-10 ${isDark ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                          <tr>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>#</th>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Student Name *</th>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Contact No. *</th>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Institution *</th>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Exam Pref. *</th>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Career Interest *</th>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>College Interest</th>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Interest Scope *</th>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Followup Date</th>
+                            <th className={`px-2 py-2 text-left font-semibold text-xs ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Remarks</th>
+                            <th className={`px-2 py-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {spreadsheetRows.map((row, idx) => (
+                            <tr key={idx} className={`border-t ${isDark ? 'border-gray-600' : 'border-gray-200'}`}>
+                              <td className={`px-2 py-1 text-xs font-mono ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{idx + 1}</td>
+                              {['student_name', 'contact_number', 'institution_name', 'competitive_exam_preference', 'career_interest', 'college_interest'].map(field => (
+                                <td key={field} className="px-1 py-1">
+                                  <input
+                                    value={row[field]}
+                                    onChange={e => updateSpreadsheetRow(idx, field, e.target.value)}
+                                    className={`w-full px-2 py-1.5 text-xs rounded border ${
+                                      spreadsheetErrors[idx]?.[field]
+                                        ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                                        : isDark ? 'border-gray-600 bg-gray-800 text-white' : 'border-gray-300'
+                                    } focus:outline-none focus:ring-1 focus:ring-cyan-500`}
+                                    placeholder={field.replace(/_/g, ' ')}
+                                    data-testid={`spreadsheet-${field}-${idx}`}
+                                  />
+                                </td>
+                              ))}
+                              <td className="px-1 py-1">
+                                <select
+                                  value={row.interest_scope}
+                                  onChange={e => updateSpreadsheetRow(idx, 'interest_scope', e.target.value)}
+                                  className={`w-full px-2 py-1.5 text-xs rounded border ${
+                                    spreadsheetErrors[idx]?.interest_scope
+                                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                                      : isDark ? 'border-gray-600 bg-gray-800 text-white' : 'border-gray-300'
+                                  } focus:outline-none focus:ring-1 focus:ring-cyan-500`}
+                                  data-testid={`spreadsheet-interest_scope-${idx}`}
+                                >
+                                  <option value="">Select...</option>
+                                  {INTEREST_SCOPE_OPTIONS.map(opt => (
+                                    <option key={opt} value={opt}>{opt}</option>
+                                  ))}
+                                </select>
+                              </td>
+                              <td className="px-1 py-1">
+                                <input
+                                  type="date"
+                                  value={row.next_followup_date}
+                                  onChange={e => updateSpreadsheetRow(idx, 'next_followup_date', e.target.value)}
+                                  className={`w-full px-2 py-1.5 text-xs rounded border ${isDark ? 'border-gray-600 bg-gray-800 text-white' : 'border-gray-300'} focus:outline-none focus:ring-1 focus:ring-cyan-500`}
+                                  data-testid={`spreadsheet-followup-${idx}`}
+                                />
+                              </td>
+                              <td className="px-1 py-1">
+                                <input
+                                  value={row.other_remarks}
+                                  onChange={e => updateSpreadsheetRow(idx, 'other_remarks', e.target.value)}
+                                  className={`w-full px-2 py-1.5 text-xs rounded border ${isDark ? 'border-gray-600 bg-gray-800 text-white' : 'border-gray-300'} focus:outline-none focus:ring-1 focus:ring-cyan-500`}
+                                  placeholder="remarks"
+                                  data-testid={`spreadsheet-remarks-${idx}`}
+                                />
+                              </td>
+                              <td className="px-1 py-1 text-center">
+                                <button
+                                  onClick={() => removeSpreadsheetRow(idx)}
+                                  className="text-red-400 hover:text-red-600 p-1"
+                                  data-testid={`remove-row-${idx}`}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    {Object.keys(spreadsheetErrors).length > 0 && (
+                      <div className={`mx-3 my-2 p-2 rounded text-xs ${isDark ? 'bg-red-900/30 text-red-300' : 'bg-red-50 text-red-600'}`}>
+                        <AlertTriangle className="h-3 w-3 inline mr-1" />
+                        Fill all required fields (*) highlighted in red
+                      </div>
+                    )}
+                    <div className={`flex justify-between items-center p-3 border-t ${isDark ? 'border-gray-600' : 'border-gray-200'}`}>
+                      <Button
+                        onClick={() => { setShowSpreadsheet(false); setSpreadsheetRows([]); setSpreadsheetErrors({}); setBulkMode(null); }}
+                        variant="outline"
+                        size="sm"
+                        className={isDark ? 'border-gray-500' : ''}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={uploadSpreadsheetReports}
+                        disabled={isUploadingSpreadsheet || spreadsheetRows.length === 0}
+                        size="sm"
+                        className="bg-cyan-500 hover:bg-cyan-600 text-white"
+                        data-testid="submit-spreadsheet-btn"
+                      >
+                        {isUploadingSpreadsheet ? (
+                          <span className="flex items-center gap-2">
+                            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                            Uploading...
+                          </span>
+                        ) : (
+                          <>
+                            <Upload className="h-4 w-4 mr-2" />
+                            Submit {spreadsheetRows.length} Report(s)
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
