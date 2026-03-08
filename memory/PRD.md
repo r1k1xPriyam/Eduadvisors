@@ -1,116 +1,76 @@
 # Edu Advisor - Product Requirements Document
 
-## Overview
-Edu Advisor is a comprehensive educational consultancy website with a React frontend, FastAPI backend, and MongoDB database. Fully mobile-responsive design with light/dark theme support.
+## Original Problem Statement
+Build a comprehensive website for an educational consultancy, "Edu Advisor". Started as a landing page and evolved into a full-stack application with React frontend, FastAPI backend, and MongoDB database.
 
 ## Core Features
 
-### Public Website
-- **Landing Page**: Multi-section page with Hero, About, Services, Courses, Colleges, Testimonials, Success Gallery, FAQ, and Contact sections
-- **GET COUNSELLING NOW Button**: Prominent CTA button in Hero section that opens the student query popup
-- **Success Gallery**: Interactive carousel showcasing student success stories
-- **Contact Form**: Students can submit queries which are saved to the database
-- **Light/Dark Theme**: Full dark mode support across all pages
+### 1. Public Website
+- Multi-section landing page with student query form
+- "GET COUNSELLING NOW" button
+- Light/dark mode support
 
-### Admin Dashboard (`/admin`)
-- **Secure Login**: ID: `ADMIN`, Password: `EDUadvisors@souvikCEO2026`
-- **6 Tab Interface**: Student Queries, Consultant Reports, Call Stats, Admissions, Manage Consultants, Reminders
-- **Call Statistics by Consultant**: Table showing each consultant's call breakdown with **clickable stats** to view detailed call list
-- **Reminders Tab**: View all consultant follow-up reminders (Overdue, Today, Upcoming) with **Delete** action
-- **Consultant Management**: 
-  - **Permanently stored in MongoDB** - All changes persist across restarts
-  - Add new consultants with User ID, Name, Password
-  - Edit **all fields** (User ID, Name, Password)
-  - Delete consultants permanently
-- **Reports Visibility**: View all consultant reports with search and filter options
-- **Bulk Delete Feature**: Delete data by type with password confirmation
+### 2. Login Portals
+- Secure login for "Admin" and "Consultant" roles
+- localStorage-based session management (JWT upgrade planned)
 
-### Consultant Portal (`/consultant`)
-- **Unique Logins**: 24 consultants with individual credentials (stored permanently in MongoDB)
-- **5 Tab Interface**: Submit Report, My Reports, My Calls, Reminders, My Admissions
-- **Notification Popup on Login**: When consultant logs in, shows popup for today's/overdue reminders
-- **Reminder Actions**: 
-  - **"Already Followed Up"** - Marks reminder as complete, prompts for new report
-  - **"Ignore"** - Dismisses reminder permanently
-  - Status syncs between Admin and Consultant panels
-- **Call Stats**: Clickable stats showing detailed call list
-- **Quick Log Call**: Mandatory contact number for failed/attempted calls
-- **Report Submission**: 
-  - Mandatory fields validation with warnings
-  - Duplicate report handling (overwrites old)
-  - Next Calling Reminder calendar input
-- **Bulk CSV Upload**: Download sample, upload multiple reports
-- **My Reports Tab**: View own submitted reports (normal and bulk)
+### 3. Admin Dashboard (7 tabs)
+- **Student Queries**: View all student queries
+- **Consultant Reports**: View all reports from consultants
+- **Call Stats**: View detailed call statistics per consultant (click-through)
+- **Admissions**: View all admissions
+- **Manage Consultants**: Full CRUD - add, edit, delete consultants
+- **Reminders**: View/delete all consultant reminders
+- **Analytics**: 5 charts - Call Distribution Pie, Interest Scope Pie, Reports Trend, Consultant Performance, Monthly Admissions
+- Bulk delete with filters and password confirmation
+
+### 4. Consultant Portal (6 tabs)
+- **Submit Report**: Detailed student calling report form with mandatory field validation
+  - Duplicate report handling (phone number match → overwrite with confirmation)
+  - **Bulk Report Entry** (2 modes):
+    - **In-App Spreadsheet**: Interactive editable table with add/remove rows, inline validation, submit all
+    - **CSV Upload**: Download sample CSV, upload with papaparse parsing, preview & confirm
+- **My Reports**: View own submitted reports
+- **My Calls**: View call statistics (summary + detailed modal)
+  - Quick Call Logging for Failed/Attempted calls
+- **Reminders**: Upcoming/overdue/today reminders, mark as followed-up or ignore
+  - Login notification popup for due reminders
+- **My Admissions**: View own admissions
+- **Analytics**: 4 charts - Call Distribution Pie, Interest Scope Pie, Reports Trend (14 days), Daily Call Breakdown (14 days) + overview cards
 
 ## Tech Stack
-- **Frontend**: React, React Router, TailwindCSS, Shadcn UI, React Context (Theme)
-- **Backend**: FastAPI, Motor (async MongoDB driver)
+- **Frontend**: React, React Router, TailwindCSS, Shadcn UI, recharts, papaparse
+- **Backend**: FastAPI, Motor (async MongoDB), Pydantic
 - **Database**: MongoDB
-- **Collections**: consultants, consultant_reports, call_logs, student_queries, admissions
 
-## API Endpoints
+## Key DB Collections
+- `consultants`: {user_id, name, password}
+- `consultant_reports`: {student_name, contact_number, institution_name, competitive_exam_preference, career_interest, college_interest, interest_scope, next_followup_date, other_remarks, consultant_id, consultant_name, created_at}
+- `call_logs`: {consultant_id, consultant_name, student_name, contact_number, call_type, remarks, created_at}
+- `admissions`: {consultant_id, ...}
+- `reminders`: {consultant_id, student_name, contact_number, next_followup_date, ignored, ...}
+- `student_queries`: {name, email, phone, message, ...}
 
-### Consultant Management (Permanent Storage)
-- `GET /api/admin/consultants` - Get all consultants from MongoDB
-- `POST /api/admin/consultants` - Add new consultant (persists to DB)
-- `PUT /api/admin/consultants/{user_id}` - Update consultant (Name, User ID, Password)
-- `DELETE /api/admin/consultants/{user_id}` - Delete consultant permanently
+## Credentials
+- **Admin**: ADMIN / EDUadvisors@souvikCEO2026
+- **Consultant**: PRIYAMPATRA / Priyam123!@#
 
-### Reminders
-- `GET /api/consultant/reminders/{consultant_id}` - Get consultant's follow-up reminders
-- `GET /api/admin/reminders` - Get all reminders (admin view)
-- `PUT /api/consultant/reminders/{report_id}/complete` - Mark as "Already Followed Up"
-- `PUT /api/consultant/reminders/{report_id}/ignore` - Mark as "Ignored"
-- `DELETE /api/admin/reminders/{report_id}` - Admin delete reminder
+## What's Been Implemented (All Tested & Verified)
+- [x] Public landing page with dark/light mode
+- [x] Admin & Consultant login portals
+- [x] Admin Dashboard with all 7 tabs including Analytics
+- [x] Consultant Dashboard with all 6 tabs including Analytics
+- [x] Consultant CRUD (admin can add/edit/delete)
+- [x] Duplicate report handling with confirmation
+- [x] Mandatory field validation
+- [x] Quick call logging
+- [x] Full reminder system with notifications
+- [x] Bulk report entry: In-App Spreadsheet + CSV Upload (papaparse)
+- [x] Admin Analytics: 5 charts with backend endpoints
+- [x] Consultant Analytics: 4 charts with backend endpoints
+- [x] Bulk delete with filters
 
-### Call Logging
-- `POST /api/consultant/calls` - Log call (mandatory contact for failed/attempted)
-- `GET /api/consultant/calls/details/{consultant_id}` - Get detailed call list
-- `GET /api/admin/calls/details` - Admin view of detailed calls
-
-### Reports
-- `POST /api/consultant/reports` - Submit report (handles duplicates)
-- `GET /api/consultant/reports/{consultant_id}` - Consultant's own reports
-- `GET /api/admin/consultant-reports` - All reports for admin
-- `POST /api/consultant/bulk-reports` - Bulk CSV upload
-
----
-
-## Implementation Status
-
-### ✅ Completed (March 2, 2026)
-- Full-stack application with React + FastAPI + MongoDB
-- **Mobile-Responsive Design** - All pages fully smartphone compatible
-- **Consultant Credentials in MongoDB** - Permanently stored, all CRUD operations persist
-- **Reminder System Enhanced**:
-  - Notification popup on consultant login
-  - "Already Followed Up" and "Ignore" options
-  - Admin can delete reminders
-  - Status synced between panels
-- **Reports Visibility** - Both bulk and normal reports visible in Admin and Consultant panels
-- **Dark Theme Fixes** - All text and inputs readable in dark mode
-- Call logging with mandatory contact number
-- Detailed call stats view (clickable)
-- Duplicate report handling
-- Mandatory field validation
-- CSV bulk upload
-- All previous features preserved
-
-### ✅ Verified by Testing Agent
-- 18/18 backend API tests passed (100%)
-- Frontend UI 100% verified via Playwright
-- MongoDB persistence confirmed for consultants collection
-
----
-
-## Credentials Reference
-
-### Admin
-- URL: `/admin`
-- User ID: `ADMIN`
-- Password: `EDUadvisors@souvikCEO2026`
-
-### Consultants (24 total - stored in MongoDB)
-- PRIYAMPATRA / Priyam123!@#
-- AK007 / 7001377649
-- (See MongoDB 'consultants' collection for full list)
+## Backlog (Prioritized)
+- **P1**: Refactor large dashboard components into smaller files
+- **P1**: Upgrade to JWT-based authentication
+- **P2**: Dark theme full audit for visibility consistency
