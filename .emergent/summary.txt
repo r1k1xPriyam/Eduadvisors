@@ -7,75 +7,74 @@ PRODUCT REQUIREMENTS:
 3.  **Admin Dashboard**:
     *   View all student queries, consultant reports, and call statistics.
     *   **Bulk Delete**: Delete data with filters and password confirmation.
-    *   Manage admissions and consultant accounts.
-    *   **Delete Call Stats**: Ability to delete call statistics for each individual consultant.
-    *   **View Detailed Call Stats**: View details for successful, failed, and attempted calls for each consultant.
-    *   **View Reminders**: Access a list of Next Calling Reminders for all consultants.
+    *   **Manage Consultants**: Admins can permanently add, delete, or modify any consultant's credentials.
+    *   **View & Delete Call Stats**: View detailed call statistics (successful, failed, attempted) for each consultant by clicking on the numbers. Ability to delete call stats for individual consultants.
+    *   **View & Manage Reminders**: Access a list of Next Calling Reminders for all consultants, with the ability to delete them.
+    *   **Analytics Dashboard**: View 5 charts: Call Stats Over Time, Reports by Consultant, Admissions by Consultant, Call Status Distribution, and Top 5 Competitive Exam Preferences.
 4.  **Consultant Portal**:
-    *   Submit detailed student calling reports. Mandatory fields must be enforced.
-    *   Handle duplicate reports (based on phone number) by overwriting the old report after user confirmation.
+    *   Submit detailed student calling reports. Mandatory fields must be enforced with warnings.
+    *   Handle duplicate reports (based on phone number) by overwriting the old report after a confirmation prompt.
     *   **Quick Call Logging**: A simple form to log only Failed or Attempted calls. Contact number is mandatory.
-    *   **View Data**: View own submitted reports, admissions, and call statistics (both summary and detailed).
-    *   **Next Calling Reminder**: An optional calendar input to set a follow-up reminder for a student. A notification should appear on the portal on the reminder day. A separate section will display all upcoming reminders.
-    *   **Bulk Report Upload**: Ability to download a sample CSV, fill it, and upload it to submit multiple reports at once.
+    *   **View Data**: View own submitted reports, admissions, and call statistics (summary and detailed).
+    *   **Next Calling Reminder**: An optional calendar input to set a follow-up reminder.
+    *   **Reminder Management**: A dedicated section displays all upcoming reminders, sorted by date. Consultants receive a notification on login for due reminders and can mark them as Already followed up or Ignore.
+    *   **Bulk Report Upload**: Ability to download a sample CSV, fill it, and upload it to submit multiple reports. A warning prompt should appear before uploading.
 
 **User's preferred language**: English
 
 **what currently exists?**
-A full-stack application with a React/FastAPI/MongoDB stack. The app includes the public website, admin portal, and consultant portal. Previous features like authentication, admissions tracking, dual reporting, bulk delete, mobile responsiveness, and dark/light mode are implemented and verified.
-
-The agent has started implementing a new, large set of 7 features requested by the user. The backend  has been updated, and modifications to  have begun to support the new logic.
+A full-stack application with a React/FastAPI/MongoDB stack. The app includes the public website, admin portal, and consultant portal. All major features requested by the user, including dual reporting, bulk delete, a comprehensive reminder system with notifications, full consultant CRUD management, and an analytics dashboard, have been implemented. The consultant data has been migrated from a static file to the MongoDB database.
 
 **Last working item**:
-    - Last item agent was working: Implementing the backend logic for the 7 new features requested by the user. The agent updated  to add a reminder field and started modifying  to handle the new business logic (duplicate reports, mandatory fields, reminders, CSV uploads, etc.).
-    - Status: IN PROGRESS
+    - Last item agent was working: The agent just finished implementing a new Analytics tab in the Admin Dashboard, complete with 5 data visualization charts using . This included adding the necessary backend endpoints to fetch the analytics data. Additionally, a warning modal was added for the bulk CSV upload feature in the Consultant Dashboard.
+    - Status: USER VERIFICATION PENDING
     - Agent Testing Done: N
     - Which testing method agent to use? both
     - User Testing Done: N
 
 **All Pending/In progress Issue list**:
-  - The primary pending work is the implementation of the 7 new features. There are no known bugs from previous work.
+  - Issue 1:  (Verify Admin Analytics and Bulk Upload Warning, P0)
+  
+  Issues Detail:
+  - Issue 1: 
+     - Attempted fixes: The agent has implemented the code for the analytics dashboard and the bulk upload warning. The backend service was restarted successfully. However, the agent did not perform any frontend testing (screenshot) or call the testing agent to verify that the charts render correctly with data and the warning modal functions as expected.
+     - Next debug checklist: 
+        1.  Take a screenshot of the Admin Dashboard to verify the new Analytics tab and the charts within it are rendering.
+        2.  Inspect browser console logs and backend logs for any data fetching errors related to the analytics endpoints.
+        3.  Test the Bulk Report Upload feature in the Consultant Dashboard to ensure the new warning modal appears before the upload.
+        4.  If any issues are found, debug  for the charts and  for the modal. Check  for the analytics API logic.
+     - Why fix this issue and what will be achieved with the fix? This is the final step to complete the user's latest feature request for an analytics dashboard.
+     - Status:  TESTING PENDING
+     - Is recurring issue? N
+     - Should Test frontend/backend/both after fix? both
+     - Blocked on other issue: None
 
 **In progress Task List**:
-  - Task 1: Complete Backend Implementation for New Features (P0)
-
- Task Detail:
-  - Task 1: 
-     - **Where to resume**: Continue editing . The agent has started adding the new endpoints and modifying existing ones. The immediate next step is to complete the logic for all 7 features in the backend.
-     - **What will be achieved with this?**: The backend API will fully support the new frontend requirements for report handling, call logging, reminders, and CSV uploads.
-     - **Status**: IN PROGRESS
-     - **Should Test frontend/backend/both after fix?**: backend
-     - **Blocked on something**: No.
+  - None.
 
 **Upcoming and Future Tasks**
     Upcoming Tasks:
-    - **P0: Frontend for Duplicate Report Handling**: Implement a confirmation modal in  when a report with an existing phone number is submitted.
-    - **P0: Frontend for Mandatory Fields**: Add client-side validation and warning messages for required fields in the consultant report form.
-    - **P0: Frontend for Quick Log Call**: Make the 'Contact Number' field mandatory in the Quick Log Call modal.
-    - **P0: Frontend for Detailed Call Stats (Admin & Consultant)**: In both dashboards, make the call stat numbers clickable to open a modal/view showing a detailed list of the corresponding calls.
-    - **P0: Frontend for Next Calling Reminder Feature**:
-        - Add a calendar input field to the report submission form.
-        - Create a new tab/section in both dashboards to display upcoming reminders.
-        - Implement a notification system for consultants on the reminder day.
-    - **P0: Frontend for CSV Bulk Report Upload**:
-        - Add Download Sample CSV and Upload CSV functionality to the .
+    - **P0: Test and Verify Analytics Dashboard**: Complete the verification of the newly added analytics charts and bulk upload warning as detailed in the Pending Issue list.
 
     Future Tasks:
-    - **Refactor Dashboards**: Break down the large  and  components into smaller, more manageable pieces.
-    - **Upgrade Authentication**: Replace the current insecure -based session management with a proper JWT-based system.
+    - **P1: Refactor Dashboards**: Break down the large  and  components into smaller, more manageable pieces for better maintainability.
+    - **P1: Upgrade Authentication**: Replace the current insecure -based session management with a proper JWT-based system for enhanced security.
+    - **P2: Dark Theme Consistency**: The user has previously raised concerns about dark theme visibility. A full audit should be performed to ensure all text, inputs, and elements are clearly visible and styled correctly in dark mode across the entire application.
 
 **Completed work in this session**
-- Fixed mobile responsiveness issues in Admin and Consultant dashboards by implementing horizontally scrollable tabs.
-- Updated the Admin user's password in the backend and frontend.
-- Resolved numerous dark theme visibility issues across the entire application, ensuring text, labels, and input fields are clearly visible in dark mode.
-- Reworked the call logging logic:
-    - Quick Log Call is now restricted to Failed and Attempted calls.
-    - Submitting a full Student Calling Report automatically logs a Successful call.
-- Implemented a feature for Admins to delete all call statistics for a specific consultant, secured by a password confirmation modal.
-- Started backend modifications for the next set of 7 feature requests.
+- **Admin Analytics Dashboard**: Implemented a new Analytics tab with 5 charts (Call Stats Over Time, Reports by Consultant, etc.) using  and added corresponding backend endpoints.
+- **Consultant Data Migration**: Moved consultant user data from a hardcoded file into a MongoDB collection.
+- **Full Consultant CRUD**: Implemented functionality for admins to add, edit, and delete consultant accounts directly from the dashboard.
+- **Enhanced Reminder System**:
+    - Added an Ignore option for consultants on reminders.
+    - Added a Delete option for admins on reminders.
+    - Implemented a notification pop-up on consultant login for due reminders.
+- **Bulk Upload Warning**: Added a confirmation modal that warns the user before they upload a bulk report CSV.
+- **Comprehensive Feature Set (7 Features)**: Completed and tested the large batch of features including duplicate report handling, mandatory fields, detailed call stats modals, and the base reminder system.
+- **Testing**: Successfully used the testing agent multiple times to verify the implementation of major features.
 
 **Earlier issues found/mentioned but not fixed**
-   - None. All prior issues were resolved.
+   - None.
 
 **Known issue recurrence from previous fork**
   - None.
@@ -84,71 +83,74 @@ The agent has started implementing a new, large set of 7 features requested by t
 
 
 **Key Technical Concepts**
-- **Frontend**: React, React Router, TailwindCSS, Shadcn UI, React Context API.
+- **Frontend**: React, React Router, TailwindCSS, Shadcn UI, React Context API,  (for charts).
 - **Backend**: FastAPI, Motor (async MongoDB driver), Pydantic.
 - **Database**: MongoDB.
 - **Authentication**: -based session management (slated for refactoring).
 
 **key DB schema**
-  - **consultant_reports**:  (Updated)
-  - **call_logs**:  (Updated)
-  - **consultants**: 
-  - **admissions**: 
+  - **consultants**:  (Now stored in MongoDB)
+  - **consultant_reports**: 
+  - **call_logs**: 
+  - **reminders**:  (An  status is now handled).
 
 **changes in tech stack**
-  - None.
+  - **Added**:  library for the frontend to render analytics charts.
 
 **All files of reference**
-- : **(In Progress)** Core file for implementing the new business logic.
-- : Updated to add  to the report schema.
-- : Recently fixed for UI issues; will require significant updates for new features.
-- : Recently fixed for UI issues; will require significant updates for new features.
-- : Hardcoded admin password was updated here.
+- : Modified to add the Analytics tab and chart components.
+- : Modified to add the bulk upload warning modal and enhanced reminder logic.
+- : Heavily modified to add analytics endpoints, consultant CRUD endpoints, and updated reminder management logic.
+- : Updated to handle the initialization and fetching of consultant data from MongoDB.
+- : Updated with the  dependency.
 
 **Areas that need refactoring**:
-- **Component Complexity**:  and  have grown very large and should be broken down into smaller components.
+- **Component Complexity**:  and  are very large and monolithic. They should be decomposed into smaller, reusable components.
 - **Authentication**: The current session management is insecure and needs to be upgraded to a token-based (JWT) system.
 
 **key api endpoints**
--  (Modified for duplicate handling, mandatory fields, reminders)
--  (Modified to enforce mandatory contact number)
--  (Implemented for admin use)
-- **Planned New Endpoints**:
+- **New Analytics Endpoints**:
   - 
   - 
   - 
   - 
-  -  (for CSV upload)
+  - 
+- **New Consultant CRUD Endpoints**:
+  - 
+  - 
+  - 
+  - 
+- **New Reminder Management Endpoints**:
+  - 
+  - 
 
 **Critical Info for New Agent**
-- The user has approved a large batch of 7 complex features. The project has moved from a bug-fixing/polishing phase to a major feature development phase.
-- The previous agent has already started the backend work. The immediate priority is to complete the implementation in  to support all new features before starting any frontend work.
-- The user has given the agent autonomy to implement the features as understood. It's crucial to follow the plan laid out by the previous agent to ensure all requirements are met.
+- The immediate and highest priority task is to test and verify the new Admin Analytics Dashboard and the bulk upload warning. The implementation is done, but it has not been tested at all.
+- The user has approved multiple large feature sets consecutively. Be prepared for further requests after this verification is complete.
+- The two major technical debt items are the large dashboard components and the insecure authentication system. These should be proposed as the next major tasks after the current feature set is fully delivered and verified by the user.
 
 **documents and test reports created in this job**
-  - 
-  - 
-  - 
+  -  (Updated with new features)
 
 **Last 10 User Messages and any pending HUMAN messages** 
+ - **User:** THERE SHOULD BE A WARNING FOR A CONSULTANT WHO WANTS TO ADD THE BULK REPORT AT ONCE (WHICH MATCH THE SAME REQUIREMENT OF DATA NEEDED IN SAMPLE CSV FORM) AND I ALSO NEED ADMIN Dashboard analytics charts (IN PROGRESS - Agent implemented but did not test)
+ - **User:** YES DO EVERYTHING (COMPLETED - User gave go-ahead for analytics and warning)
+ - **User:** (Provided a long list of requirements for reminder management, consultant CRUD, and dark theme fixes) (COMPLETED)
+ - **User:** YES (COMPLETED - User gave go-ahead for the above features)
+ - **User:** (Provided a list of 7 new major features including duplicate report handling, mandatory fields, call log updates, a reminder system, and CSV upload) (COMPLETED)
  - **User:** yes implement by your own (COMPLETED - User gave go-ahead on the agent's plan for the 7 new features)
- - **User:** (Provided a list of 7 new major features including duplicate report handling, mandatory fields, call log updates, a reminder system, and CSV upload) (IN PROGRESS)
- - **User:** some of the texts and input fields or other options can't be seen in dark theme due to dark colour or other issues, so kindly fixed it by detecting your own (COMPLETED)
- - **User:** when a consultant submitting a report it showing failed submission... and the call stats delete option from admin is not working (COMPLETED - Both issues were debugged and fixed)
- - **User:** call statistics can be also deleted by admin for each consultant and normal student calling report for each consultant will be noted as a successfull call... (COMPLETED)
- - **User:** now change the admin's password with- EDUadvisors@souvikCEO2026 and fix the theme related issues... (COMPLETED)
- - **User:** i want to make it smartphone screen responsive while pc screen responsive also (some of the admin and consultant's options in mobile are overlapping each other) (COMPLETED)
+ - **User:** yes (COMPLETED - User approved initial plan)
 
 **Project Health Check:**
-- **Broken**: None. The application was stable before the new feature work began.
+- **Broken**: None.
 - **Mocked**: None.
-- **In-Progress**: Backend implementation for the 7 new features requested by the user.
+- **In-Progress**: Admin Analytics Dashboard feature (code complete, pending verification).
 
 **3rd Party Integrations**
-- None.
+- : Used for data visualization in the Admin Analytics Dashboard.
 
 **Testing status**
-  - Testing agent used after significant changes: YES (Used to verify mobile responsiveness and dark mode fixes).
+  - Testing agent used after significant changes: YES (Used multiple times for previous features, but not for the latest analytics feature).
   - Troubleshoot agent used after agent stuck in loop: NO
   - Test files created: []
   - Known regressions: None.
@@ -164,4 +166,4 @@ The agent has started implementing a new, large set of 7 features requested by t
   - Password: 
 
 **What agent forgot to execute**
-- The agent was in the middle of a large, multi-step implementation when the session ended. No tasks were forgotten, but the current work is incomplete and is the highest priority for the next session.</analysis>
+- The agent did not perform any testing or verification after implementing the Admin Analytics Dashboard and the bulk upload warning. The next agent must start by thoroughly testing these newly added features.</analysis>

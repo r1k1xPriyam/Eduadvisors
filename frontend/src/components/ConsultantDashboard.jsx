@@ -59,6 +59,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  PieChart as RechartsPieChart, Pie, Cell, AreaChart, Area
+} from 'recharts';
+import { BarChart3, TrendingUp, PieChart } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -127,6 +132,14 @@ const ConsultantDashboard = () => {
   const [showReminderNotification, setShowReminderNotification] = useState(false);
   const [notificationReminders, setNotificationReminders] = useState([]);
   
+  // Analytics State
+  const [analyticsOverview, setAnalyticsOverview] = useState(null);
+  const [callDistribution, setCallDistribution] = useState([]);
+  const [interestDistribution, setInterestDistribution] = useState([]);
+  const [reportsTrend, setReportsTrend] = useState([]);
+  const [dailyCalls, setDailyCalls] = useState([]);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+  
   const [formData, setFormData] = useState({
     student_name: '',
     contact_number: '',
@@ -170,6 +183,9 @@ const ConsultantDashboard = () => {
     if (consultantId && activeTab === 'reminders') {
       fetchReminders();
     }
+    if (consultantId && activeTab === 'analytics') {
+      fetchConsultantAnalytics();
+    }
   }, [consultantId, activeTab]);
 
   // Fetch call stats and reminders on load (with notification on initial load)
@@ -189,6 +205,30 @@ const ConsultantDashboard = () => {
       }
     } catch (error) {
       console.error('Error fetching call stats:', error);
+    }
+  };
+
+  // Fetch Consultant Analytics
+  const fetchConsultantAnalytics = async () => {
+    if (!consultantId) return;
+    setLoadingAnalytics(true);
+    try {
+      const [overview, calls, interest, trend, daily] = await Promise.all([
+        axios.get(`${API}/consultant/analytics/overview/${consultantId}`),
+        axios.get(`${API}/consultant/analytics/call-distribution/${consultantId}`),
+        axios.get(`${API}/consultant/analytics/interest-scope/${consultantId}`),
+        axios.get(`${API}/consultant/analytics/reports-trend/${consultantId}`),
+        axios.get(`${API}/consultant/analytics/daily-calls/${consultantId}`)
+      ]);
+      if (overview.data.success) setAnalyticsOverview(overview.data.overview);
+      if (calls.data.success) setCallDistribution(calls.data.distribution);
+      if (interest.data.success) setInterestDistribution(interest.data.distribution);
+      if (trend.data.success) setReportsTrend(trend.data.trend);
+      if (daily.data.success) setDailyCalls(daily.data.trend);
+    } catch (error) {
+      console.error('Error fetching consultant analytics:', error);
+    } finally {
+      setLoadingAnalytics(false);
     }
   };
 
@@ -862,11 +902,18 @@ const ConsultantDashboard = () => {
                 <Award className="h-3 w-3 mr-1" />
                 Admissions
               </TabsTrigger>
+              <TabsTrigger
+                value="analytics"
+                className="data-[state=active]:bg-cyan-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <BarChart3 className="h-3 w-3 mr-1" />
+                Analytics
+              </TabsTrigger>
             </TabsList>
           </div>
           
           {/* Desktop Tab Navigation */}
-          <TabsList className="hidden md:grid w-full grid-cols-5 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
+          <TabsList className="hidden md:grid w-full grid-cols-6 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="submit"
               className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
@@ -906,6 +953,13 @@ const ConsultantDashboard = () => {
             >
               <Award className="h-4 w-4 mr-2" />
               My Admissions
+            </TabsTrigger>
+            <TabsTrigger
+              value="analytics"
+              className="data-[state=active]:bg-cyan-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
+            >
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Analytics
             </TabsTrigger>
           </TabsList>
 
@@ -1887,6 +1941,225 @@ const ConsultantDashboard = () => {
                   </div>
                 </CardContent>
               </Card>
+            )}
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`} data-testid="consultant-analytics-title">My Analytics</h2>
+                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Your performance overview and trends</p>
+              </div>
+              <Button
+                onClick={fetchConsultantAnalytics}
+                variant="outline"
+                disabled={loadingAnalytics}
+                className={isDark ? 'border-gray-600' : 'border-gray-300'}
+                data-testid="refresh-analytics-btn"
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${loadingAnalytics ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+            </div>
+
+            {loadingAnalytics ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className={`ml-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Loading analytics...</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Overview Cards */}
+                {analyticsOverview && (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4" data-testid="consultant-analytics-overview">
+                    <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Total Reports</p>
+                            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analyticsOverview.total_reports}</p>
+                            <p className={`text-xs ${isDark ? 'text-green-400' : 'text-green-600'}`}>+{analyticsOverview.today_reports} today</p>
+                          </div>
+                          <FileText className={`h-8 w-8 ${isDark ? 'text-green-400' : 'text-green-500'}`} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Total Calls</p>
+                            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analyticsOverview.total_calls}</p>
+                            <p className={`text-xs ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>+{analyticsOverview.today_calls} today</p>
+                          </div>
+                          <PhoneCall className={`h-8 w-8 ${isDark ? 'text-blue-400' : 'text-blue-500'}`} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>This Week</p>
+                            <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{analyticsOverview.week_reports}</p>
+                            <p className={`text-xs ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>reports</p>
+                          </div>
+                          <GraduationCap className={`h-8 w-8 ${isDark ? 'text-purple-400' : 'text-purple-500'}`} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {/* Charts Row 1 - Pie Charts */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Call Distribution Pie Chart */}
+                  <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''} data-testid="consultant-call-distribution-chart">
+                    <CardHeader>
+                      <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
+                        <PieChart className="h-5 w-5 text-cyan-500" />
+                        My Call Distribution
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {callDistribution.length > 0 && callDistribution.some(d => d.value > 0) ? (
+                        <ResponsiveContainer width="100%" height={250}>
+                          <RechartsPieChart>
+                            <Pie
+                              data={callDistribution}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                            >
+                              {callDistribution.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                          </RechartsPieChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No call data available yet</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Interest Scope Distribution */}
+                  <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''} data-testid="consultant-interest-scope-chart">
+                    <CardHeader>
+                      <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
+                        <PieChart className="h-5 w-5 text-purple-500" />
+                        Student Interest Scope
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {interestDistribution.length > 0 ? (
+                        <ResponsiveContainer width="100%" height={250}>
+                          <RechartsPieChart>
+                            <Pie
+                              data={interestDistribution}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                            >
+                              {interestDistribution.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Pie>
+                            <Tooltip />
+                            <Legend />
+                          </RechartsPieChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No interest data available yet</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Reports Trend Line Chart */}
+                <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''} data-testid="consultant-reports-trend-chart">
+                  <CardHeader>
+                    <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
+                      <TrendingUp className="h-5 w-5 text-green-500" />
+                      My Reports Trend (Last 14 Days)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {reportsTrend.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart data={reportsTrend}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
+                          <XAxis dataKey="date" stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                          <YAxis stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: isDark ? '#1f2937' : '#fff',
+                              border: isDark ? '1px solid #374151' : '1px solid #e5e7eb',
+                              color: isDark ? '#fff' : '#000'
+                            }}
+                          />
+                          <Area type="monotone" dataKey="reports" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No trend data available yet</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Daily Calls Stacked Bar Chart */}
+                <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''} data-testid="consultant-daily-calls-chart">
+                  <CardHeader>
+                    <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
+                      <BarChart3 className="h-5 w-5 text-blue-500" />
+                      Daily Call Breakdown (Last 14 Days)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {dailyCalls.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={dailyCalls}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
+                          <XAxis dataKey="date" stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                          <YAxis stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: isDark ? '#1f2937' : '#fff',
+                              border: isDark ? '1px solid #374151' : '1px solid #e5e7eb',
+                              color: isDark ? '#fff' : '#000'
+                            }}
+                          />
+                          <Legend />
+                          <Bar dataKey="successful" stackId="a" fill="#22c55e" name="Successful" />
+                          <Bar dataKey="failed" stackId="a" fill="#ef4444" name="Failed" />
+                          <Bar dataKey="attempted" stackId="a" fill="#eab308" name="Attempted" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className={isDark ? 'text-gray-400' : 'text-gray-500'}>No daily call data available yet</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
             )}
           </TabsContent>
         </Tabs>

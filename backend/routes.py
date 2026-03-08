@@ -1345,6 +1345,174 @@ async def get_consultant_performance():
         raise HTTPException(status_code=500, detail="Failed to fetch consultant performance")
 
 
+# ============ CONSULTANT ANALYTICS ENDPOINTS ============
+
+@router.get("/consultant/analytics/overview/{consultant_id}", response_model=dict)
+async def get_consultant_analytics_overview(consultant_id: str):
+    """Get analytics overview for a specific consultant"""
+    try:
+        from datetime import timedelta
+        consultant_name = await get_consultant_name_async(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        today_iso = today.isoformat()
+        week_start = (today - timedelta(days=today.weekday())).isoformat()
+        month_start = today.replace(day=1).isoformat()
+
+        total_reports = await db.consultant_reports.count_documents({"consultant_id": consultant_id})
+        total_calls = await db.call_logs.count_documents({"consultant_id": consultant_id})
+        total_admissions = await db.admissions.count_documents({"consultant_id": consultant_id})
+        today_reports = await db.consultant_reports.count_documents({"consultant_id": consultant_id, "created_at": {"$gte": today_iso}})
+        today_calls = await db.call_logs.count_documents({"consultant_id": consultant_id, "created_at": {"$gte": today_iso}})
+        week_reports = await db.consultant_reports.count_documents({"consultant_id": consultant_id, "created_at": {"$gte": week_start}})
+
+        return {
+            "success": True,
+            "overview": {
+                "total_reports": total_reports,
+                "total_calls": total_calls,
+                "total_admissions": total_admissions,
+                "today_reports": today_reports,
+                "today_calls": today_calls,
+                "week_reports": week_reports
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching consultant analytics overview: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch analytics")
+
+
+@router.get("/consultant/analytics/call-distribution/{consultant_id}", response_model=dict)
+async def get_consultant_call_distribution(consultant_id: str):
+    """Get call type distribution for a specific consultant"""
+    try:
+        consultant_name = await get_consultant_name_async(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+        successful = await db.call_logs.count_documents({"consultant_id": consultant_id, "call_type": "successful"})
+        failed = await db.call_logs.count_documents({"consultant_id": consultant_id, "call_type": "failed"})
+        attempted = await db.call_logs.count_documents({"consultant_id": consultant_id, "call_type": "attempted"})
+
+        return {
+            "success": True,
+            "distribution": [
+                {"name": "Successful", "value": successful, "color": "#22c55e"},
+                {"name": "Failed", "value": failed, "color": "#ef4444"},
+                {"name": "Attempted", "value": attempted, "color": "#eab308"}
+            ]
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching consultant call distribution: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch call distribution")
+
+
+@router.get("/consultant/analytics/interest-scope/{consultant_id}", response_model=dict)
+async def get_consultant_interest_scope(consultant_id: str):
+    """Get interest scope distribution for a specific consultant"""
+    try:
+        consultant_name = await get_consultant_name_async(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+        pipeline = [
+            {"$match": {"consultant_id": consultant_id}},
+            {"$group": {"_id": "$interest_scope", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ]
+        results = await db.consultant_reports.aggregate(pipeline).to_list(100)
+
+        colors = {
+            "ACTIVELY INTERESTED": "#22c55e",
+            "LESS INTERESTED": "#f97316",
+            "RECALLING NEEDED": "#eab308",
+            "DROPOUT THIS YEAR": "#ef4444",
+            "ALREADY COLLEGE SELECTED": "#3b82f6",
+            "NOT INTERESTED": "#6b7280"
+        }
+
+        distribution = [
+            {"name": r["_id"] or "Unknown", "value": r["count"], "color": colors.get(r["_id"], "#8b5cf6")}
+            for r in results if r["_id"]
+        ]
+
+        return {"success": True, "distribution": distribution}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching consultant interest scope: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch interest scope")
+
+
+@router.get("/consultant/analytics/reports-trend/{consultant_id}", response_model=dict)
+async def get_consultant_reports_trend(consultant_id: str):
+    """Get daily reports trend for a specific consultant (last 14 days)"""
+    try:
+        from datetime import timedelta
+        consultant_name = await get_consultant_name_async(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        trend_data = []
+
+        for i in range(13, -1, -1):
+            date = today - timedelta(days=i)
+            next_date = date + timedelta(days=1)
+            count = await db.consultant_reports.count_documents({
+                "consultant_id": consultant_id,
+                "created_at": {"$gte": date.isoformat(), "$lt": next_date.isoformat()}
+            })
+            trend_data.append({"date": date.strftime("%b %d"), "reports": count})
+
+        return {"success": True, "trend": trend_data}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching consultant reports trend: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch reports trend")
+
+
+@router.get("/consultant/analytics/daily-calls/{consultant_id}", response_model=dict)
+async def get_consultant_daily_calls(consultant_id: str):
+    """Get daily call stats for a specific consultant (last 14 days)"""
+    try:
+        from datetime import timedelta
+        consultant_name = await get_consultant_name_async(consultant_id)
+        if not consultant_name:
+            raise HTTPException(status_code=401, detail="Unauthorized")
+
+        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        trend_data = []
+
+        for i in range(13, -1, -1):
+            date = today - timedelta(days=i)
+            next_date = date + timedelta(days=1)
+            date_filter = {"consultant_id": consultant_id, "created_at": {"$gte": date.isoformat(), "$lt": next_date.isoformat()}}
+            successful = await db.call_logs.count_documents({**date_filter, "call_type": "successful"})
+            failed = await db.call_logs.count_documents({**date_filter, "call_type": "failed"})
+            attempted = await db.call_logs.count_documents({**date_filter, "call_type": "attempted"})
+            trend_data.append({
+                "date": date.strftime("%b %d"),
+                "successful": successful,
+                "failed": failed,
+                "attempted": attempted
+            })
+
+        return {"success": True, "trend": trend_data}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching consultant daily calls: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch daily calls")
+
+
 @router.get("/admin/analytics/monthly-admissions", response_model=dict)
 async def get_monthly_admissions():
     """Get monthly admissions for the last 6 months"""
