@@ -1550,3 +1550,93 @@ async def get_monthly_admissions():
         logger.error(f"Error fetching monthly admissions: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch monthly admissions")
 
+
+# ============ LEADERBOARD ENDPOINTS ============
+
+@router.get("/leaderboard", response_model=dict)
+async def get_leaderboard(period: str = "all"):
+    """Get consultant leaderboard with rankings and badges"""
+    try:
+        from datetime import timedelta
+        consultants = await get_all_consultants_async()
+        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+
+        date_filter = {}
+        if period == "weekly":
+            start = (today - timedelta(days=today.weekday())).isoformat()
+            date_filter = {"created_at": {"$gte": start}}
+        elif period == "monthly":
+            start = today.replace(day=1).isoformat()
+            date_filter = {"created_at": {"$gte": start}}
+
+        leaderboard = []
+        for c in consultants:
+            cid = c["user_id"]
+            cname = c["name"]
+
+            report_filter = {"consultant_id": cid, **date_filter}
+            call_filter = {"consultant_id": cid, **date_filter}
+
+            total_reports = await db.consultant_reports.count_documents(report_filter)
+            total_calls = await db.call_logs.count_documents(call_filter)
+            successful_calls = await db.call_logs.count_documents({**call_filter, "call_type": "successful"})
+            failed_calls = await db.call_logs.count_documents({**call_filter, "call_type": "failed"})
+            attempted_calls = await db.call_logs.count_documents({**call_filter, "call_type": "attempted"})
+            total_admissions = await db.admissions.count_documents({"consultant_id": cid, **date_filter})
+
+            success_rate = round((successful_calls / total_calls * 100), 1) if total_calls > 0 else 0
+            score = (total_reports * 10) + (successful_calls * 5) + (total_admissions * 50) + (attempted_calls * 2)
+
+            # Determine badges
+            badges = []
+            if total_reports >= 50:
+                badges.append({"name": "Report Master", "icon": "file-text", "color": "#8b5cf6"})
+            elif total_reports >= 20:
+                badges.append({"name": "Active Reporter", "icon": "file-text", "color": "#3b82f6"})
+            if successful_calls >= 100:
+                badges.append({"name": "Call Champion", "icon": "phone", "color": "#22c55e"})
+            elif successful_calls >= 30:
+                badges.append({"name": "Steady Caller", "icon": "phone", "color": "#06b6d4"})
+            if success_rate >= 90 and total_calls >= 10:
+                badges.append({"name": "Sharpshooter", "icon": "target", "color": "#f59e0b"})
+            if total_admissions >= 10:
+                badges.append({"name": "Enrollment King", "icon": "crown", "color": "#f59e0b"})
+            elif total_admissions >= 3:
+                badges.append({"name": "Closer", "icon": "award", "color": "#ec4899"})
+            if total_calls >= 5 and total_calls == successful_calls:
+                badges.append({"name": "Perfect Streak", "icon": "zap", "color": "#eab308"})
+
+            leaderboard.append({
+                "consultant_id": cid,
+                "consultant_name": cname,
+                "total_reports": total_reports,
+                "total_calls": total_calls,
+                "successful_calls": successful_calls,
+                "failed_calls": failed_calls,
+                "attempted_calls": attempted_calls,
+                "total_admissions": total_admissions,
+                "success_rate": success_rate,
+                "score": score,
+                "badges": badges
+            })
+
+        # Sort by score descending
+        leaderboard.sort(key=lambda x: x["score"], reverse=True)
+
+        # Assign ranks and medals
+        for i, entry in enumerate(leaderboard):
+            entry["rank"] = i + 1
+            if i == 0:
+                entry["medal"] = "gold"
+            elif i == 1:
+                entry["medal"] = "silver"
+            elif i == 2:
+                entry["medal"] = "bronze"
+            else:
+                entry["medal"] = None
+
+        return {"success": True, "leaderboard": leaderboard, "period": period}
+    except Exception as e:
+        logger.error(f"Error fetching leaderboard: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch leaderboard")
+

@@ -20,6 +20,7 @@ import ConsultantDashboard from './components/ConsultantDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedConsultantRoute from './components/ProtectedConsultantRoute';
 import QueryPopup from './components/QueryPopup';
+import CollegeAdvisorChatbot from './components/CollegeAdvisorChatbot';
 import { Toaster } from './components/ui/sonner';
 
 const Home = () => {
@@ -39,6 +40,7 @@ const Home = () => {
       </main>
       <Footer />
       <QueryPopup />
+      <CollegeAdvisorChatbot />
       <Toaster />
     </div>
   );

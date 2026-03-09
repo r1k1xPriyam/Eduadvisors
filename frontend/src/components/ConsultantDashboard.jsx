@@ -65,6 +65,8 @@ import {
 } from 'recharts';
 import { BarChart3, TrendingUp, PieChart, Plus, Trash2, TableIcon } from 'lucide-react';
 import Papa from 'papaparse';
+import Leaderboard from './Leaderboard';
+import CollegeComparison from './CollegeComparison';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -1019,11 +1021,25 @@ const ConsultantDashboard = () => {
                 <BarChart3 className="h-3 w-3 mr-1" />
                 Analytics
               </TabsTrigger>
+              <TabsTrigger
+                value="leaderboard"
+                className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <Award className="h-3 w-3 mr-1" />
+                Leaderboard
+              </TabsTrigger>
+              <TabsTrigger
+                value="colleges"
+                className="data-[state=active]:bg-rose-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <GraduationCap className="h-3 w-3 mr-1" />
+                Colleges
+              </TabsTrigger>
             </TabsList>
           </div>
           
           {/* Desktop Tab Navigation */}
-          <TabsList className="hidden md:grid w-full grid-cols-6 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
+          <TabsList className="hidden md:grid w-full grid-cols-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="submit"
               className="data-[state=active]:bg-green-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
@@ -1070,6 +1086,20 @@ const ConsultantDashboard = () => {
             >
               <BarChart3 className="h-4 w-4 mr-2" />
               Analytics
+            </TabsTrigger>
+            <TabsTrigger
+              value="leaderboard"
+              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
+            >
+              <Award className="h-4 w-4 mr-2" />
+              Leaderboard
+            </TabsTrigger>
+            <TabsTrigger
+              value="colleges"
+              className="data-[state=active]:bg-rose-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
+            >
+              <GraduationCap className="h-4 w-4 mr-2" />
+              Colleges
             </TabsTrigger>
           </TabsList>
 
@@ -2444,6 +2474,16 @@ const ConsultantDashboard = () => {
                 </Card>
               </div>
             )}
+          </TabsContent>
+
+          {/* Leaderboard Tab */}
+          <TabsContent value="leaderboard">
+            <Leaderboard currentConsultantId={consultantId} />
+          </TabsContent>
+
+          {/* College Comparison Tab */}
+          <TabsContent value="colleges">
+            <CollegeComparison />
           </TabsContent>
         </Tabs>
 

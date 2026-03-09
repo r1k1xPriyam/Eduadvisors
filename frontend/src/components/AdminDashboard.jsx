@@ -26,6 +26,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart as RechartsPieChart, Pie, Cell, LineChart, Line, Area, AreaChart
 } from 'recharts';
+import Leaderboard from './Leaderboard';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -986,11 +987,18 @@ const AdminDashboard = () => {
                 <BarChart3 className="h-3 w-3 mr-1" />
                 Analytics
               </TabsTrigger>
+              <TabsTrigger
+                value="leaderboard"
+                className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-xs px-3 py-2 whitespace-nowrap"
+              >
+                <GraduationCap className="h-3 w-3 mr-1" />
+                Leaderboard
+              </TabsTrigger>
             </TabsList>
           </div>
           
           {/* Desktop Tab Navigation */}
-          <TabsList className="hidden md:grid w-full grid-cols-7 mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
+          <TabsList className="hidden md:grid w-full grid-cols-8 mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg gap-1">
             <TabsTrigger
               value="queries"
               className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
@@ -1044,6 +1052,13 @@ const AdminDashboard = () => {
             >
               <BarChart3 className="h-4 w-4 mr-2" />
               Analytics
+            </TabsTrigger>
+            <TabsTrigger
+              value="leaderboard"
+              className="data-[state=active]:bg-yellow-500 data-[state=active]:text-white font-semibold text-sm px-2 py-2"
+            >
+              <GraduationCap className="h-4 w-4 mr-2" />
+              Leaderboard
             </TabsTrigger>
           </TabsList>
 
@@ -3033,6 +3048,11 @@ const AdminDashboard = () => {
                 </div>
               </div>
             )}
+          </TabsContent>
+
+          {/* Leaderboard Tab */}
+          <TabsContent value="leaderboard">
+            <Leaderboard />
           </TabsContent>
         </Tabs>
 
