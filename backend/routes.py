@@ -613,6 +613,31 @@ async def log_call(
         
         await db.call_logs.insert_one(call_log)
         
+        # AUTO-REMINDER: For attempted calls, create a follow-up reminder 3 days later
+        if call_type == "attempted":
+            from datetime import timedelta
+            reminder_date = (datetime.now(timezone.utc) + timedelta(days=3)).strftime('%Y-%m-%d')
+            auto_reminder = {
+                "id": f"report_auto_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S%f')}_{consultant_id}",
+                "consultant_id": consultant_id,
+                "consultant_name": consultant_name,
+                "student_name": student_name.strip() if student_name else "Unknown (Attempted Call)",
+                "contact_number": contact_number.strip(),
+                "phone_number": contact_number.strip(),
+                "institution_name": "N/A",
+                "competitive_exam_preference": "N/A",
+                "career_interest": "N/A",
+                "college_interest": "",
+                "interest_scope": "RECALLING NEEDED",
+                "other_remarks": f"Auto-reminder: Attempted call on {datetime.now(timezone.utc).strftime('%d %b %Y')}. {remarks.strip() if remarks else ''}".strip(),
+                "next_followup_date": reminder_date,
+                "followup_completed": False,
+                "auto_reminder": True,
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.consultant_reports.insert_one(auto_reminder)
+            logger.info(f"Auto-reminder created for attempted call by {consultant_name} -> {reminder_date}")
+        
         logger.info(f"Call logged by {consultant_name}: {call_type}")
         return {"success": True, "message": "Call logged successfully", "call_id": call_log["id"]}
     except HTTPException:
