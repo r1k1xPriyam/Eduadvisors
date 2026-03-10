@@ -469,8 +469,8 @@ async def create_admission(
             "consultant_name": consultant_name,
             "payout_amount": payout_amount,
             "payout_status": payout_status,
-            "created_at": datetime.utcnow(),
-            "updated_at": datetime.utcnow()
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat()
         }
         
         await db.admissions.insert_one(admission)
