@@ -2954,10 +2954,10 @@ const AdminDashboard = () => {
                   <CardContent>
                     {reportsTrend.length > 0 ? (
                       <ResponsiveContainer width="100%" height={300}>
-                        <AreaChart data={reportsTrend}>
+                        <BarChart data={reportsTrend}>
                           <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
                           <XAxis dataKey="date" stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
-                          <YAxis stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                          <YAxis stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} allowDecimals={false} />
                           <Tooltip 
                             contentStyle={{ 
                               backgroundColor: isDark ? '#1f2937' : '#fff',
@@ -2965,8 +2965,8 @@ const AdminDashboard = () => {
                               color: isDark ? '#fff' : '#000'
                             }}
                           />
-                          <Area type="monotone" dataKey="reports" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} />
-                        </AreaChart>
+                          <Bar dataKey="reports" fill="#22c55e" radius={[4, 4, 0, 0]} />
+                        </BarChart>
                       </ResponsiveContainer>
                     ) : (
                       <div className="text-center py-8">
