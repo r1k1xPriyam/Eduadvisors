@@ -61,7 +61,7 @@ import {
 } from './ui/select';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  PieChart as RechartsPieChart, Pie, Cell, AreaChart, Area
+  PieChart as RechartsPieChart, Pie, Cell
 } from 'recharts';
 import { BarChart3, TrendingUp, PieChart, Plus, Trash2, TableIcon } from 'lucide-react';
 import Papa from 'papaparse';
@@ -1768,6 +1768,7 @@ const ConsultantDashboard = () => {
                           <TableHead className="font-semibold">Student Name</TableHead>
                           <TableHead className="font-semibold">Contact</TableHead>
                           <TableHead className="font-semibold">Institution</TableHead>
+                          <TableHead className="font-semibold">Source</TableHead>
                           <TableHead className="font-semibold">Interest Scope</TableHead>
                           <TableHead className="font-semibold">Actions</TableHead>
                         </TableRow>
@@ -1789,6 +1790,11 @@ const ConsultantDashboard = () => {
                               </a>
                             </TableCell>
                             <TableCell className="text-sm text-gray-700">{report.institution_name}</TableCell>
+                            <TableCell>
+                              <Badge className={report.source === 'bulk' ? 'bg-purple-100 text-purple-800' : 'bg-cyan-100 text-cyan-800'}>
+                                {report.source === 'bulk' ? 'Bulk' : 'Individual'}
+                              </Badge>
+                            </TableCell>
                             <TableCell>
                               <Badge 
                                 className={
@@ -2404,7 +2410,7 @@ const ConsultantDashboard = () => {
                   </Card>
                 </div>
 
-                {/* Reports Trend Line Chart */}
+                {/* Reports Trend Bar Chart */}
                 <Card className={isDark ? 'bg-gray-800 border-gray-700' : ''} data-testid="consultant-reports-trend-chart">
                   <CardHeader>
                     <CardTitle className={`text-lg flex items-center gap-2 ${isDark ? 'text-white' : ''}`}>
@@ -2415,10 +2421,10 @@ const ConsultantDashboard = () => {
                   <CardContent>
                     {reportsTrend.length > 0 ? (
                       <ResponsiveContainer width="100%" height={300}>
-                        <AreaChart data={reportsTrend}>
+                        <BarChart data={reportsTrend}>
                           <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
                           <XAxis dataKey="date" stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
-                          <YAxis stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} />
+                          <YAxis stroke={isDark ? '#9ca3af' : '#6b7280'} fontSize={12} allowDecimals={false} />
                           <Tooltip
                             contentStyle={{
                               backgroundColor: isDark ? '#1f2937' : '#fff',
@@ -2426,8 +2432,8 @@ const ConsultantDashboard = () => {
                               color: isDark ? '#fff' : '#000'
                             }}
                           />
-                          <Area type="monotone" dataKey="reports" stroke="#22c55e" fill="#22c55e" fillOpacity={0.3} />
-                        </AreaChart>
+                          <Bar dataKey="reports" fill="#22c55e" radius={[4, 4, 0, 0]} />
+                        </BarChart>
                       </ResponsiveContainer>
                     ) : (
                       <div className="text-center py-8">
@@ -2544,6 +2550,14 @@ const ConsultantDashboard = () => {
                     >
                       {selectedReport.interest_scope}
                     </Badge>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-600">Report Source</label>
+                    <p className="mt-1">
+                      <Badge className={selectedReport.source === 'bulk' ? 'bg-purple-100 text-purple-800' : 'bg-cyan-100 text-cyan-800'}>
+                        {selectedReport.source === 'bulk' ? 'Bulk Upload' : 'Individual Submission'}
+                      </Badge>
+                    </p>
                   </div>
                   {selectedReport.college_interest && (
                     <div>

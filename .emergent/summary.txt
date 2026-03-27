@@ -2,76 +2,72 @@
 The user wants to build a comprehensive website for their educational consultancy, Edu Advisor. The project started as a landing page and evolved into a full-stack application with a React frontend and FastAPI backend.
 
 PRODUCT REQUIREMENTS:
-1.  **Public Website**: A multi-section landing page with a student query form and a GET COUNSELLING NOW button. The site must support light and dark modes.
+1.  **Public Website**: Landing page with a student query form, light/dark modes, and a hardcoded rule-based College Advisor Chatbot to suggest colleges based on 10+2 marks, region, budget, and stream. 
 2.  **Login Portals**: Secure login for Admin and Consultant roles.
 3.  **Admin Dashboard**:
-    *   View all student queries, consultant reports, and call statistics.
-    *   **Bulk Delete**: Delete data with filters and password confirmation.
-    *   **Manage Consultants**: Admins can permanently add, delete, or modify any consultant's credentials.
-    *   **View & Delete Call Stats**: View detailed call statistics (successful, failed, attempted) for each consultant by clicking on the numbers. Ability to delete call stats for individual consultants.
-    *   **View & Manage Reminders**: Access a list of Next Calling Reminders for all consultants, with the ability to delete them.
-    *   **Analytics Dashboard**: View 5 charts: Call Stats Over Time, Reports by Consultant, Admissions by Consultant, Call Status Distribution, and Top 5 Competitive Exam Preferences.
+    *   View student queries, consultant reports, call statistics, and analytics charts.
+    *   Manage Consultants (CRUD), Reminders, and view Consultant Leaderboards.
+    *   Bulk Delete data.
 4.  **Consultant Portal**:
-    *   Submit detailed student calling reports. Mandatory fields must be enforced with warnings.
-    *   Handle duplicate reports (based on phone number) by overwriting the old report after a confirmation prompt.
-    *   **Quick Call Logging**: A simple form to log only Failed or Attempted calls. Contact number is mandatory.
-    *   **View Data**: View own submitted reports, admissions, and call statistics (summary and detailed).
-    *   **Next Calling Reminder**: An optional calendar input to set a follow-up reminder.
-    *   **Reminder Management**: A dedicated section displays all upcoming reminders, sorted by date. Consultants receive a notification on login for due reminders and can mark them as Already followed up or Ignore.
-    *   **Bulk Report Upload**: Ability to download a sample CSV, fill it, and upload it to submit multiple reports. A warning prompt should appear before uploading.
+    *   Submit individual or bulk reports (via CSV upload using  or an in-app editable spreadsheet).
+    *   Log calls (Attempted calls automatically generate a follow-up reminder 3 days later).
+    *   View personal analytics, Reminders, Leaderboard, and a College Comparison Tool.
 
-**User's preferred language**: English
+**User's preferred language**: English (INSTRUCT next agent to respond in English only)
 
-**what currently exists?**
-A full-stack application with a React/FastAPI/MongoDB stack. The app includes the public website, admin portal, and consultant portal. All major features requested by the user, including dual reporting, bulk delete, a comprehensive reminder system with notifications, full consultant CRUD management, and an analytics dashboard, have been implemented. The consultant data has been migrated from a static file to the MongoDB database.
+**what currently exists?** 
+A robust full-stack React/FastAPI/MongoDB application. Admins have comprehensive dashboards, analytics, and consultant management. Consultants can submit reports via an in-app spreadsheet or CSV, view personal analytics, check leaderboards, and compare colleges. A rule-based, hardcoded client-side chatbot exists on the homepage to suggest colleges to students. Attempted calls automatically trigger follow-up reminders.
 
 **Last working item**:
-    - Last item agent was working: The agent just finished implementing a new Analytics tab in the Admin Dashboard, complete with 5 data visualization charts using . This included adding the necessary backend endpoints to fetch the analytics data. Additionally, a warning modal was added for the bulk CSV upload feature in the Consultant Dashboard.
-    - Status: USER VERIFICATION PENDING
+    - Last item agent was working: The agent was fixing a visual bug in the Reports Trend chart. The user complained it was misleading, so the agent was replacing  with  for discrete daily data. The agent successfully updated  and was in the middle of executing a  to apply the same  fix in . Once done, the agent needed to update the Chatbot to suggest courses based on a student's 12th board subject choices.
+    - Status: IN PROGRESS
     - Agent Testing Done: N
-    - Which testing method agent to use? both
+    - Which testing method agent to use? screenshot tool (for charts) and testing agent v3 fork (for chatbot feature logic).
     - User Testing Done: N
 
 **All Pending/In progress Issue list**:
-  - Issue 1:  (Verify Admin Analytics and Bulk Upload Warning, P0)
-  
+  Issue 1: Fix Reports Trend Chart visual representation in Consultant Portal (P0)
+  Issue 2: Enhance Chatbot with Subject-based Course Suggestions (P0)
+
   Issues Detail:
-  - Issue 1: 
-     - Attempted fixes: The agent has implemented the code for the analytics dashboard and the bulk upload warning. The backend service was restarted successfully. However, the agent did not perform any frontend testing (screenshot) or call the testing agent to verify that the charts render correctly with data and the warning modal functions as expected.
-     - Next debug checklist: 
-        1.  Take a screenshot of the Admin Dashboard to verify the new Analytics tab and the charts within it are rendering.
-        2.  Inspect browser console logs and backend logs for any data fetching errors related to the analytics endpoints.
-        3.  Test the Bulk Report Upload feature in the Consultant Dashboard to ensure the new warning modal appears before the upload.
-        4.  If any issues are found, debug  for the charts and  for the modal. Check  for the analytics API logic.
-     - Why fix this issue and what will be achieved with the fix? This is the final step to complete the user's latest feature request for an analytics dashboard.
-     - Status:  TESTING PENDING
+  - Issue 1: Fix Reports Trend Chart visual representation in Consultant Portal
+     - Attempted fixes: Agent updated  to use  instead of . Was just about to update  but context ended.
+     - Next debug checklist: Check  (around line 2418). Replace  imports and usage with  for the  data.
+     - Why fix this issue and what will be achieved with the fix? Area curves create misleading visual dips between days with 0 reports. Bar charts accurately represent discrete daily counts.
+     - Status: IN PROGRESS
      - Is recurring issue? N
-     - Should Test frontend/backend/both after fix? both
+     - Should Test frontend/backend/both after fix? frontend
      - Blocked on other issue: None
 
+  - Issue 2: Enhance Chatbot with Subject-based Course Suggestions
+     - Attempted fixes: Not started yet.
+     - Next debug checklist: Modify . Add a user input step asking for Class 12th Board Subjects (e.g., PCM, PCB, Commerce, Arts). Write hardcoded logic to map those subjects to eligible courses (e.g., PCM -> B.Tech CSE/ECE; PCB -> B.Pharm, Biotech; Commerce -> B.Com, BBA).
+     - Why fix this issue and what will be achieved with the fix? Specifically requested by the user in their latest message.
+     - Status: NOT STARTED
+     - Is recurring issue? N
+     - Should Test frontend/backend/both after fix? frontend
+     - Blocked on other issue: Issue 1
+
 **In progress Task List**:
-  - None.
+  - None (tracked under issues).
 
 **Upcoming and Future Tasks**
     Upcoming Tasks:
-    - **P0: Test and Verify Analytics Dashboard**: Complete the verification of the newly added analytics charts and bulk upload warning as detailed in the Pending Issue list.
-
+    - **P1: Component Refactoring**: Break down the massive  (>3200 lines) and  (>2800 lines) into smaller, reusable components (e.g., separating out charts, tables, and modals).
+    
     Future Tasks:
-    - **P1: Refactor Dashboards**: Break down the large  and  components into smaller, more manageable pieces for better maintainability.
-    - **P1: Upgrade Authentication**: Replace the current insecure -based session management with a proper JWT-based system for enhanced security.
-    - **P2: Dark Theme Consistency**: The user has previously raised concerns about dark theme visibility. A full audit should be performed to ensure all text, inputs, and elements are clearly visible and styled correctly in dark mode across the entire application.
+    - **P1: Authentication Upgrade**: Replace the current  session handling with secure JWT-based authentication.
+    - **P2: Dark Theme Audit**: Ensure text contrast visibility is consistent across all new features (Leaderboard, Chatbot, Spreadsheet) in dark mode.
+    - **P3: Report Export Feature**: Allow consultants to download their filtered reports as PDF/Excel (Enhancement suggested by previous agent).
 
 **Completed work in this session**
-- **Admin Analytics Dashboard**: Implemented a new Analytics tab with 5 charts (Call Stats Over Time, Reports by Consultant, etc.) using  and added corresponding backend endpoints.
-- **Consultant Data Migration**: Moved consultant user data from a hardcoded file into a MongoDB collection.
-- **Full Consultant CRUD**: Implemented functionality for admins to add, edit, and delete consultant accounts directly from the dashboard.
-- **Enhanced Reminder System**:
-    - Added an Ignore option for consultants on reminders.
-    - Added a Delete option for admins on reminders.
-    - Implemented a notification pop-up on consultant login for due reminders.
-- **Bulk Upload Warning**: Added a confirmation modal that warns the user before they upload a bulk report CSV.
-- **Comprehensive Feature Set (7 Features)**: Completed and tested the large batch of features including duplicate report handling, mandatory fields, detailed call stats modals, and the base reminder system.
-- **Testing**: Successfully used the testing agent multiple times to verify the implementation of major features.
+- **Bulk Upload Revamp**: Replaced broken custom CSV parser with  and added an interactive In-App Spreadsheet mode.
+- **Consultant Analytics**: Added personal data visualization charts for consultants.
+- **College Advisor Chatbot**: Implemented a rule-based, hardcoded, client-side floating chatbot on the landing page.
+- **Leaderboard & Gamification**: Added a point-based ranking system for consultants visible to both Admins and Consultants.
+- **College Comparison Tool**: Added a database of Indian colleges (recently expanded with East India colleges like KIIT, SOA, NIT Rourkela) for consultants to view cutoffs and fees.
+- **Auto-reminders**: Backend logic updated so logging an Attempted call automatically creates a follow-up reminder for 3 days later.
+- **Analytics Date Bug Fix**: Normalized all DB  fields to ISO strings. Previously, some were Python  objects, causing MongoDB string comparisons () to fail and return '0 reports today'.
 
 **Earlier issues found/mentioned but not fixed**
    - None.
@@ -83,87 +79,70 @@ A full-stack application with a React/FastAPI/MongoDB stack. The app includes th
 
 
 **Key Technical Concepts**
-- **Frontend**: React, React Router, TailwindCSS, Shadcn UI, React Context API,  (for charts).
-- **Backend**: FastAPI, Motor (async MongoDB driver), Pydantic.
-- **Database**: MongoDB.
-- **Authentication**: -based session management (slated for refactoring).
+- Frontend: React, TailwindCSS, Shadcn UI,  (charts),  (CSV handling).
+- Backend: FastAPI, Motor (async MongoDB).
+- Database: MongoDB.
 
 **key DB schema**
-  - **consultants**:  (Now stored in MongoDB)
-  - **consultant_reports**: 
-  - **call_logs**: 
-  - **reminders**:  (An  status is now handled).
+  - **consultant_reports**:  (MUST BE ISO STRING), ,  (boolean).
+  - **call_logs**:  (successful, failed, attempted).
 
 **changes in tech stack**
-  - **Added**:  library for the frontend to render analytics charts.
+  -  added to frontend dependencies for robust CSV parsing.
 
 **All files of reference**
-- : Modified to add the Analytics tab and chart components.
-- : Modified to add the bulk upload warning modal and enhanced reminder logic.
-- : Heavily modified to add analytics endpoints, consultant CRUD endpoints, and updated reminder management logic.
-- : Updated to handle the initialization and fetching of consultant data from MongoDB.
-- : Updated with the  dependency.
+- : Updated with auto-reminder logic in  and timestamp string normalization.
+-  & : Analytics, Leaderboard, Spreadsheet added.
+- : Needs updating for subject-based course logic.
+- : Data source for chatbot and comparison tool.
 
 **Areas that need refactoring**:
-- **Component Complexity**:  and  are very large and monolithic. They should be decomposed into smaller, reusable components.
-- **Authentication**: The current session management is insecure and needs to be upgraded to a token-based (JWT) system.
+- Dashboard components are critically bloated (3000+ lines). 
 
 **key api endpoints**
-- **New Analytics Endpoints**:
-  - 
-  - 
-  - 
-  - 
-  - 
-- **New Consultant CRUD Endpoints**:
-  - 
-  - 
-  - 
-  - 
-- **New Reminder Management Endpoints**:
-  - 
-  - 
+-  & 
+-  & 
+- : Logs calls and creates auto-reminders for attempted status.
 
 **Critical Info for New Agent**
-- The immediate and highest priority task is to test and verify the new Admin Analytics Dashboard and the bulk upload warning. The implementation is done, but it has not been tested at all.
-- The user has approved multiple large feature sets consecutively. Be prepared for further requests after this verification is complete.
-- The two major technical debt items are the large dashboard components and the insecure authentication system. These should be proposed as the next major tasks after the current feature set is fully delivered and verified by the user.
+- **DATABASE TIMESTAMP BUG AVOIDANCE**: When inserting records into MongoDB, ALWAYS use . Do NOT use  as it creates a BSON Datetime object. The backend analytics endpoints use string-based  queries, which will completely ignore BSON Datetime objects, causing reports to seemingly disappear from charts.
+- The Chatbot is explicitly requested by the user to be **hardcoded logic/client-side only** with no AI integrations. Do not attempt to hook it up to an LLM.
 
 **documents and test reports created in this job**
-  -  (Updated with new features)
+  - 
+  - 
+  -  (Updated)
 
 **Last 10 User Messages and any pending HUMAN messages** 
- - **User:** THERE SHOULD BE A WARNING FOR A CONSULTANT WHO WANTS TO ADD THE BULK REPORT AT ONCE (WHICH MATCH THE SAME REQUIREMENT OF DATA NEEDED IN SAMPLE CSV FORM) AND I ALSO NEED ADMIN Dashboard analytics charts (IN PROGRESS - Agent implemented but did not test)
- - **User:** YES DO EVERYTHING (COMPLETED - User gave go-ahead for analytics and warning)
- - **User:** (Provided a long list of requirements for reminder management, consultant CRUD, and dark theme fixes) (COMPLETED)
- - **User:** YES (COMPLETED - User gave go-ahead for the above features)
- - **User:** (Provided a list of 7 new major features including duplicate report handling, mandatory fields, call log updates, a reminder system, and CSV upload) (COMPLETED)
- - **User:** yes implement by your own (COMPLETED - User gave go-ahead on the agent's plan for the 7 new features)
- - **User:** yes (COMPLETED - User approved initial plan)
+ 1. User: Please use ask_human tool and confirm your plan now. (Done)
+ 2. User: just please recheck the analytics tool for admin and add it for each consultants too (Done)
+ 3. User: i need a smarter bulk reporting replacement plan(as previous one ain't working properly) (Done)
+ 4. User: option c (Done - Picked Spreadsheet + papaparse)
+ 5. User: suggest me some another updates to make this website more advanced (Done)
+ 6. User: any other (Done)
+ 7. User: Build a hardcoded chatbot... [also add a Consultant Leaderboard... & competitor college comparison tool] (Done)
+ 8. User: yes (Approved plan)
+ 9. User: REVIEW THE ANALYTICS TAB... PUT A LOGIC WHERE EVERY ATTEMPTED CALLS... AUTOMATICALLY GO TO REMEMBER AFTER 3 DAYS (Done)
+ 10. User: PLEASE REVIEW REPORT TRENDS AND TOTAL REPORT (+0 TODAY)... PUT SOME MORE PRIVATE COLLEGES IN COLLEGE COMPARISON NEARBY (WEST BENGAL, ODISHA) (Done - DB datetime bug fixed, colleges added)
+ 11. User: FIX THE ERROR OF REPORTS TREND IN ADMIN'S ANALYTICS and our chatbot should be capable to suggest best available courses best on student's class 12th board exam's subject choice (**PENDING - Current working item**)
 
 **Project Health Check:**
-- **Broken**: None.
-- **Mocked**: None.
-- **In-Progress**: Admin Analytics Dashboard feature (code complete, pending verification).
+- Broken: None.
+- Mocked:  (Intentionally mocked/hardcoded per user instructions).
 
 **3rd Party Integrations**
-- : Used for data visualization in the Admin Analytics Dashboard.
+- None that require API keys. (Recharts and Papaparse are standard NPM libraries).
 
 **Testing status**
-  - Testing agent used after significant changes: YES (Used multiple times for previous features, but not for the latest analytics feature).
+  - Testing agent used after significant changes: YES
   - Troubleshoot agent used after agent stuck in loop: NO
-  - Test files created: []
-  - Known regressions: None.
+  - Test files created: None
+  - Known regressions: None
 
 **Credentials to test flow:**
-- **Admin Portal:**
-  - URL: 
-  - User ID: 
-  - Password: 
-- **Consultant Portal (Example):**
-  - URL: 
-  - User ID: 
-  - Password: 
+- **Admin Portal:** URL: , User ID: , Password: 
+- **Consultant Portal:** URL: , User ID: , Password: 
 
 **What agent forgot to execute**
-- The agent did not perform any testing or verification after implementing the Admin Analytics Dashboard and the bulk upload warning. The next agent must start by thoroughly testing these newly added features.</analysis>
+- Did not finish updating the  area chart to bar chart.
+- Did not implement the student subject-based course logic in the Chatbot requested in the final user message.</analysis>

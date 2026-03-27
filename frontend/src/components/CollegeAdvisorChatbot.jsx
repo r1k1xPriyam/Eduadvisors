@@ -1,15 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, RotateCcw, ChevronDown, ChevronUp, GitCompare, Phone } from 'lucide-react';
+import { MessageCircle, X, Send, RotateCcw, ChevronDown, ChevronUp, GitCompare, Phone, BookOpen } from 'lucide-react';
 import {
   getCollegeRecommendations, getTierLabel, formatFee,
-  STREAMS, REGIONS, BUDGETS, BOARDS, getCollegeById
+  STREAMS, REGIONS, BUDGETS, BOARDS, SUBJECT_GROUPS, SUBJECT_COURSE_MAP,
+  getCollegeById
 } from '../data/collegeDatabase';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const CollegeAdvisorChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [step, setStep] = useState(0);
-  const [userData, setUserData] = useState({ board: '', marks: '', stream: '', region: '', budget: '' });
+  const [userData, setUserData] = useState({ board: '', marks: '', stream: '', region: '', budget: '', subjects: '' });
   const [results, setResults] = useState([]);
   const [expandedCutoff, setExpandedCutoff] = useState(null);
   const [compareMode, setCompareMode] = useState(false);
@@ -18,6 +23,7 @@ const CollegeAdvisorChatbot = () => {
   const [showContactForm, setShowContactForm] = useState(false);
   const [contactData, setContactData] = useState({ name: '', email: '', phone: '', message: '' });
   const [inputValue, setInputValue] = useState('');
+  const [submittingContact, setSubmittingContact] = useState(false);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -28,7 +34,7 @@ const CollegeAdvisorChatbot = () => {
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       setMessages([
-        { from: 'bot', text: "Hi there! I'm your College Advisor from Edu Advisors. Let me help you find the best engineering colleges for you!", type: 'text' },
+        { from: 'bot', text: "Hi there! I'm your College Advisor from Edu Advisors. Let me help you find the best colleges & courses for you!", type: 'text' },
         { from: 'bot', text: "First, which board are you from?", type: 'options', options: BOARDS }
       ]);
       setStep(1);
@@ -39,6 +45,7 @@ const CollegeAdvisorChatbot = () => {
     setMessages(prev => [...prev, { from, text, type, ...extra }]);
   };
 
+  // FLOW: Board(1) → Marks(2) → Subjects(3) → Stream(4) → Region(5) → Budget(6) → Results(7)
   const handleOptionSelect = (value) => {
     if (step === 1) {
       setUserData(p => ({ ...p, board: value }));
@@ -48,20 +55,49 @@ const CollegeAdvisorChatbot = () => {
         setStep(2);
       }, 300);
     } else if (step === 3) {
+      // Subject group selection
+      setUserData(p => ({ ...p, subjects: value }));
+      addMessage('user', value);
+      const courses = SUBJECT_COURSE_MAP[value] || [];
+      setTimeout(() => {
+        if (courses.length > 0) {
+          addMessage('bot', `Based on your ${value} subjects, here are the best courses available for you:`, 'text');
+          setTimeout(() => {
+            addMessage('bot', '', 'courses', { courses, subjectGroup: value });
+            setTimeout(() => {
+              addMessage('bot', "Now, would you also like college recommendations? Pick your preferred engineering stream (or skip):", 'options', { options: ['Skip - No College Search', ...STREAMS] });
+              setStep(4);
+            }, 500);
+          }, 400);
+        } else {
+          addMessage('bot', "Which engineering stream are you interested in?", 'options', { options: ['Any', ...STREAMS] });
+          setStep(4);
+        }
+      }, 300);
+    } else if (step === 4) {
+      if (value === 'Skip - No College Search') {
+        addMessage('user', 'Skip college search');
+        setTimeout(() => {
+          addMessage('bot', "No worries! If you need further guidance, feel free to contact our consultant.", 'text');
+          addMessage('bot', "What would you like to do next?", 'options', { options: ['Restart', 'Contact Consultant'] });
+          setStep(8);
+        }, 300);
+        return;
+      }
       setUserData(p => ({ ...p, stream: value }));
       addMessage('user', value);
       setTimeout(() => {
         addMessage('bot', "Which region do you prefer?", 'options', { options: REGIONS });
-        setStep(4);
+        setStep(5);
       }, 300);
-    } else if (step === 4) {
+    } else if (step === 5) {
       setUserData(p => ({ ...p, region: value }));
       addMessage('user', value);
       setTimeout(() => {
         addMessage('bot', "And your yearly budget for fees?", 'options', { options: BUDGETS });
-        setStep(5);
+        setStep(6);
       }, 300);
-    } else if (step === 5) {
+    } else if (step === 6) {
       const newData = { ...userData, budget: value };
       setUserData(newData);
       addMessage('user', value);
@@ -84,7 +120,7 @@ const CollegeAdvisorChatbot = () => {
       addMessage('user', `${marks}%`);
       const tierInfo = getTierLabel(marks);
       setTimeout(() => {
-        addMessage('bot', `${marks}% — that puts you in the ${tierInfo.tier} category! Now, which stream are you interested in?`, 'options', { options: ['Any', ...STREAMS] });
+        addMessage('bot', `${marks}% — that puts you in the ${tierInfo.tier} category! Now, what were your Class 12th subjects?`, 'options', { options: SUBJECT_GROUPS });
         setStep(3);
       }, 300);
     }
@@ -96,9 +132,9 @@ const CollegeAdvisorChatbot = () => {
     const tierInfo = getTierLabel(data.marks);
 
     if (colleges.length === 0) {
-      addMessage('bot', `Hmm, based on your ${data.marks}% in ${data.board} with ${data.stream} in ${data.region} under ${data.budget}/yr budget, I couldn't find exact matches. Consider broadening your location or budget preference. You can also explore diploma/lateral entry options.`, 'text');
+      addMessage('bot', `Hmm, based on your ${data.marks}% in ${data.board} with ${data.stream} in ${data.region} under ${data.budget}/yr budget, I couldn't find exact matches. Consider broadening your location or budget preference.`, 'text');
       addMessage('bot', "Would you like to try again with different preferences?", 'options', { options: ['Restart', 'Contact Consultant'] });
-      setStep(6);
+      setStep(8);
       return;
     }
 
@@ -138,7 +174,7 @@ const CollegeAdvisorChatbot = () => {
   const restart = () => {
     setMessages([]);
     setStep(0);
-    setUserData({ board: '', marks: '', stream: '', region: '', budget: '' });
+    setUserData({ board: '', marks: '', stream: '', region: '', budget: '', subjects: '' });
     setResults([]);
     setExpandedCutoff(null);
     setCompareMode(false);
@@ -153,14 +189,46 @@ const CollegeAdvisorChatbot = () => {
     }, 100);
   };
 
-  const handleContactSubmit = (e) => {
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
-    addMessage('bot', `Thanks ${contactData.name}! Our counsellor will reach out to you at ${contactData.phone || contactData.email} shortly. You can also email us at info@eduadvisors.in`, 'text');
+    setSubmittingContact(true);
+    try {
+      // Submit as student query to backend
+      const queryPayload = {
+        name: contactData.name,
+        phone: contactData.phone || 'N/A',
+        email: contactData.email || 'noreply@chatbot.edu',
+        current_institution: userData.board ? `${userData.board} Board Student` : 'Chatbot Inquiry',
+        course: userData.subjects || userData.stream || 'General Counselling',
+        message: `[Chatbot Query] ${contactData.message || 'Student requested consultant callback.'}${userData.marks ? ` | Marks: ${userData.marks}%` : ''}${userData.subjects ? ` | Subjects: ${userData.subjects}` : ''}${userData.stream ? ` | Stream: ${userData.stream}` : ''}${userData.region ? ` | Region: ${userData.region}` : ''}${userData.budget ? ` | Budget: ${userData.budget}` : ''}`
+      };
+      await axios.post(`${API}/queries`, queryPayload);
+      addMessage('bot', `Thanks ${contactData.name}! Your query has been submitted. Our counsellor will reach out to you at ${contactData.phone || contactData.email} shortly. You can also email us at info@eduadvisors.in`, 'text');
+    } catch (err) {
+      console.error('Failed to submit chatbot query:', err);
+      addMessage('bot', `Thanks ${contactData.name}! Our counsellor will reach out to you at ${contactData.phone || contactData.email} shortly. You can also email us at info@eduadvisors.in`, 'text');
+    }
     setShowContactForm(false);
     setContactData({ name: '', email: '', phone: '', message: '' });
+    setSubmittingContact(false);
   };
 
-  // Render college card
+  // Course Card Component
+  const CourseCard = ({ course, index }) => (
+    <div className="rounded-lg border border-gray-200 bg-white p-3 mb-2 hover:border-emerald-300 transition-all" data-testid={`course-card-${index}`}>
+      <div className="flex items-start gap-2">
+        <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+          <BookOpen className="h-4 w-4 text-emerald-600" />
+        </div>
+        <div>
+          <h4 className="font-bold text-sm text-gray-900">{course.name}</h4>
+          <p className="text-xs text-gray-500 mt-0.5">{course.description}</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  // College Card
   const CollegeCard = ({ college }) => {
     const isExpanded = expandedCutoff === college.id;
     const isSelected = compareList.includes(college.id);
@@ -358,7 +426,7 @@ const CollegeAdvisorChatbot = () => {
                               key={opt}
                               onClick={() => handleOptionSelect(opt)}
                               className="px-3 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full hover:bg-emerald-100 transition-colors"
-                              data-testid={`option-${opt.replace(/\s+/g, '-').toLowerCase()}`}
+                              data-testid={`option-${opt.replace(/[\s()\/,]+/g, '-').toLowerCase()}`}
                             >
                               {opt}
                             </button>
@@ -369,6 +437,18 @@ const CollegeAdvisorChatbot = () => {
                     {msg.type === 'input' && (
                       <div className="bg-white rounded-xl rounded-tl-sm px-3 py-2 text-sm text-gray-800 shadow-sm border border-gray-100">
                         {msg.text}
+                      </div>
+                    )}
+                    {msg.type === 'courses' && (
+                      <div className="space-y-1" data-testid="course-suggestions">
+                        <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg p-2 mb-2 border border-emerald-200">
+                          <p className="text-xs font-semibold text-emerald-800 flex items-center gap-1">
+                            <BookOpen className="h-3 w-3" /> Recommended Courses for {msg.subjectGroup}
+                          </p>
+                        </div>
+                        {msg.courses.map((course, idx) => (
+                          <CourseCard key={idx} course={course} index={idx} />
+                        ))}
                       </div>
                     )}
                     {msg.type === 'results' && (
@@ -427,7 +507,9 @@ const CollegeAdvisorChatbot = () => {
                   />
                   <div className="flex gap-2">
                     <button type="button" onClick={() => setShowContactForm(false)} className="flex-1 px-3 py-1.5 text-xs border rounded-lg hover:bg-gray-50">Cancel</button>
-                    <button type="submit" className="flex-1 px-3 py-1.5 text-xs bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 font-semibold" data-testid="contact-submit">Send</button>
+                    <button type="submit" disabled={submittingContact} className="flex-1 px-3 py-1.5 text-xs bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 font-semibold disabled:opacity-50" data-testid="contact-submit">
+                      {submittingContact ? 'Sending...' : 'Send'}
+                    </button>
                   </div>
                 </form>
               </div>

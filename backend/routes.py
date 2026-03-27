@@ -185,6 +185,7 @@ async def create_consultant_report(report_data: ConsultantReportCreate, consulta
         report_dict["consultant_id"] = consultant_id
         report_dict["consultant_name"] = consultant_name
         report_dict["followup_completed"] = False
+        report_dict["source"] = "individual"
         report_obj = ConsultantReport(**report_dict)
         
         # Insert into database
@@ -1154,6 +1155,7 @@ async def upload_bulk_reports(consultant_id: str, reports: list = Body(...)):
                     "next_followup_date": report_data.get("next_followup_date", "").strip() or None,
                     "followup_completed": False,
                     "other_remarks": report_data.get("other_remarks", "").strip(),
+                    "source": "bulk",
                     "created_at": datetime.now(timezone.utc).isoformat(),
                     "updated_at": datetime.now(timezone.utc).isoformat()
                 }

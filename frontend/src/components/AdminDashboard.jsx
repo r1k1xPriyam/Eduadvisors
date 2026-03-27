@@ -24,7 +24,7 @@ import ThemeToggle from './ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  PieChart as RechartsPieChart, Pie, Cell, LineChart, Line, Area, AreaChart
+  PieChart as RechartsPieChart, Pie, Cell, LineChart, Line
 } from 'recharts';
 import Leaderboard from './Leaderboard';
 
@@ -1624,6 +1624,7 @@ const AdminDashboard = () => {
                           <TableHead>Student Name</TableHead>
                           <TableHead>Contact</TableHead>
                           <TableHead>Institution</TableHead>
+                          <TableHead>Source</TableHead>
                           <TableHead>Exam Preference</TableHead>
                           <TableHead>Career Interest</TableHead>
                           <TableHead>Actions</TableHead>
@@ -1653,6 +1654,11 @@ const AdminDashboard = () => {
                             </TableCell>
                             <TableCell>
                               <p className="text-sm text-gray-700 font-medium">{report.institution_name}</p>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={report.source === 'bulk' ? 'bg-purple-100 text-purple-800' : 'bg-cyan-100 text-cyan-800'}>
+                                {report.source === 'bulk' ? 'Bulk' : 'Individual'}
+                              </Badge>
                             </TableCell>
                             <TableCell>
                               <Badge variant="outline" className="bg-blue-50">
@@ -1745,6 +1751,14 @@ const AdminDashboard = () => {
                       <div>
                         <label className="text-sm font-semibold text-gray-700">Interest Scope</label>
                         <p className="text-gray-900 mt-1">{selectedReport.interest_scope}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-700">Report Source</label>
+                        <p className="mt-1">
+                          <Badge className={selectedReport.source === 'bulk' ? 'bg-purple-100 text-purple-800' : 'bg-cyan-100 text-cyan-800'}>
+                            {selectedReport.source === 'bulk' ? 'Bulk Upload' : 'Individual Submission'}
+                          </Badge>
+                        </p>
                       </div>
                     </div>
                     

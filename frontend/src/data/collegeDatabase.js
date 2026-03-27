@@ -1440,4 +1440,75 @@ export const BUDGETS = ["<2L", "2-4L", ">4L"];
 // Boards
 export const BOARDS = ["CBSE", "ICSE", "State Board"];
 
+// Class 12th Subject Groups
+export const SUBJECT_GROUPS = [
+  "PCM (Physics, Chemistry, Maths)",
+  "PCB (Physics, Chemistry, Biology)",
+  "PCMB (Physics, Chemistry, Maths, Biology)",
+  "Commerce (Accounts, Business Studies, Economics)",
+  "Arts / Humanities"
+];
+
+// Subject to Course mapping
+export const SUBJECT_COURSE_MAP = {
+  "PCM (Physics, Chemistry, Maths)": [
+    { name: "B.Tech / B.E. (Computer Science & Engineering)", description: "Top demand in IT sector. Avg package 6-15 LPA in top colleges.", icon: "laptop" },
+    { name: "B.Tech / B.E. (Electronics & Communication)", description: "Core + IT placements. Good for VLSI, embedded systems.", icon: "cpu" },
+    { name: "B.Tech / B.E. (Mechanical Engineering)", description: "Evergreen branch. Core + IT roles available.", icon: "wrench" },
+    { name: "B.Tech / B.E. (Civil Engineering)", description: "Government jobs + construction sector.", icon: "building" },
+    { name: "B.Tech / B.E. (Electrical & Electronics)", description: "Power sector, PSUs, and IT companies.", icon: "zap" },
+    { name: "B.Tech / B.E. (Information Technology)", description: "Similar to CSE with IT-focused curriculum.", icon: "monitor" },
+    { name: "B.Arch (Architecture)", description: "5-year course. Requires NATA/JEE Paper 2.", icon: "home" },
+    { name: "B.Sc (Physics / Mathematics / Chemistry)", description: "Research-oriented. Pathway to M.Sc, PhD, UPSC.", icon: "flask" },
+    { name: "Integrated M.Sc / BS-MS (IISERs, NISER)", description: "Top research institutes. KVPY/IAT entrance.", icon: "star" },
+    { name: "B.Tech (Aerospace Engineering)", description: "ISRO, DRDO, aviation companies recruit.", icon: "plane" }
+  ],
+  "PCB (Physics, Chemistry, Biology)": [
+    { name: "MBBS (Medicine)", description: "Most sought-after. NEET required. 5.5 years.", icon: "heart" },
+    { name: "BDS (Dentistry)", description: "Dental surgeon career. NEET required. 5 years.", icon: "smile" },
+    { name: "B.Pharm (Pharmacy)", description: "Pharmaceutical industry. Good career in pharma R&D.", icon: "pill" },
+    { name: "B.Sc Nursing", description: "Healthcare sector. High demand in India & abroad.", icon: "stethoscope" },
+    { name: "BAMS (Ayurvedic Medicine)", description: "Alternative medicine. Growing demand.", icon: "leaf" },
+    { name: "BHMS (Homeopathic Medicine)", description: "Homeopathy practice. NEET required.", icon: "droplet" },
+    { name: "B.Sc (Biotechnology)", description: "Biotech R&D, pharma companies, research labs.", icon: "dna" },
+    { name: "BPT (Physiotherapy)", description: "Sports medicine, rehabilitation centers, hospitals.", icon: "activity" },
+    { name: "B.Sc Agriculture", description: "Agri-tech, farming research, government roles.", icon: "sprout" },
+    { name: "BVSc (Veterinary Science)", description: "Animal healthcare. 5-year course.", icon: "paw" }
+  ],
+  "PCMB (Physics, Chemistry, Maths, Biology)": [
+    { name: "MBBS / BDS (Medical)", description: "Eligible for NEET. Top career choice.", icon: "heart" },
+    { name: "B.Tech / B.E. (All Branches)", description: "Eligible for JEE. Engineering careers.", icon: "laptop" },
+    { name: "B.Sc (Biotechnology)", description: "Biotech + IT intersection. Growing field.", icon: "dna" },
+    { name: "B.Pharm (Pharmacy)", description: "Pharmaceutical industry career.", icon: "pill" },
+    { name: "Integrated M.Sc / BS-MS", description: "Research pathway at IISERs, NISER.", icon: "star" },
+    { name: "B.Sc (Any Science Stream)", description: "Flexible — Physics, Chemistry, Biology, Maths.", icon: "flask" },
+    { name: "B.Tech (Biomedical Engineering)", description: "Medical devices, healthcare technology.", icon: "cpu" },
+    { name: "B.Tech (Food Technology)", description: "Food industry, quality control, FSSAI.", icon: "utensils" }
+  ],
+  "Commerce (Accounts, Business Studies, Economics)": [
+    { name: "B.Com (Bachelor of Commerce)", description: "Foundation for CA, CS, CMA. Accounting & finance.", icon: "calculator" },
+    { name: "BBA (Bachelor of Business Administration)", description: "Management foundation. MBA pathway.", icon: "briefcase" },
+    { name: "CA Foundation (Chartered Accountancy)", description: "Top finance career. High earning potential.", icon: "award" },
+    { name: "CS (Company Secretary)", description: "Corporate governance, legal compliance.", icon: "shield" },
+    { name: "CMA (Cost & Management Accountancy)", description: "Cost accounting, industrial finance.", icon: "bar-chart" },
+    { name: "B.Com (Hons) in Accounting & Finance", description: "Specialized commerce degree.", icon: "trending-up" },
+    { name: "BBA LLB (Integrated Law + Business)", description: "5-year integrated. Corporate law career.", icon: "scale" },
+    { name: "B.Sc Economics (Hons)", description: "Top colleges: St. Stephen's, LSR, Presidency.", icon: "line-chart" },
+    { name: "BMS (Bachelor of Management Studies)", description: "Mumbai University. Strong placements.", icon: "users" },
+    { name: "BBA in Digital Marketing / Analytics", description: "New-age business skills. Growing demand.", icon: "target" }
+  ],
+  "Arts / Humanities": [
+    { name: "BA (Bachelor of Arts)", description: "Flexible. English, History, Political Science, Psychology.", icon: "book" },
+    { name: "BA LLB (Integrated Law)", description: "5-year course. CLAT entrance. Top career in law.", icon: "scale" },
+    { name: "B.Ed (Bachelor of Education)", description: "Teaching career. Government jobs available.", icon: "graduation-cap" },
+    { name: "BJ / BJM (Journalism & Mass Communication)", description: "Media, PR, digital content creation.", icon: "radio" },
+    { name: "BFA (Bachelor of Fine Arts)", description: "Visual arts, design, animation careers.", icon: "palette" },
+    { name: "BSW (Bachelor of Social Work)", description: "NGOs, social welfare, community development.", icon: "heart" },
+    { name: "BA in Psychology", description: "Clinical psychology, counselling, HR roles.", icon: "brain" },
+    { name: "BA in Political Science", description: "UPSC, civil services, public administration.", icon: "landmark" },
+    { name: "BA in English Literature", description: "Writing, publishing, content, academics.", icon: "pen" },
+    { name: "B.Des (Bachelor of Design)", description: "NID, NIFT. Product, fashion, UX design.", icon: "scissors" }
+  ]
+};
+
 export default COLLEGE_DATABASE;
