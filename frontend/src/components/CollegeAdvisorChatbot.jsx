@@ -59,19 +59,28 @@ const CollegeAdvisorChatbot = () => {
       setUserData(p => ({ ...p, subjects: value }));
       addMessage('user', value);
       const courses = SUBJECT_COURSE_MAP[value] || [];
+      const isEngineeringEligible = value.startsWith('PCM') || value.startsWith('PCMB');
       setTimeout(() => {
         if (courses.length > 0) {
           addMessage('bot', `Based on your ${value} subjects, here are the best courses available for you:`, 'text');
           setTimeout(() => {
             addMessage('bot', '', 'courses', { courses, subjectGroup: value });
             setTimeout(() => {
-              addMessage('bot', "Now, would you also like college recommendations? Pick your preferred engineering stream (or skip):", 'options', { options: ['Skip - No College Search', ...STREAMS] });
-              setStep(4);
+              if (isEngineeringEligible) {
+                addMessage('bot', "Since you're eligible for engineering, would you like engineering college recommendations too? Pick a stream:", 'options', { options: ['Skip - No College Search', ...STREAMS] });
+                setStep(4);
+              } else {
+                addMessage('bot', "Want personalized guidance on admission to these courses? Our expert consultants can help you with college selection, entrance exams, and career planning.", 'text');
+                setTimeout(() => {
+                  addMessage('bot', "What would you like to do?", 'options', { options: ['Contact Consultant', 'Restart'] });
+                  setStep(8);
+                }, 300);
+              }
             }, 500);
           }, 400);
         } else {
-          addMessage('bot', "Which engineering stream are you interested in?", 'options', { options: ['Any', ...STREAMS] });
-          setStep(4);
+          addMessage('bot', "What would you like to do?", 'options', { options: ['Contact Consultant', 'Restart'] });
+          setStep(8);
         }
       }, 300);
     } else if (step === 4) {
